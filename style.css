@@ -144,3 +144,80 @@ nav a:hover {
         font-size: 2.2rem;
     }
 }
+/* ===== NOSOTROS ===== */
+.nosotros {
+    padding: 5rem 2rem;
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nosotros-content {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.nosotros-texto {
+    flex: 1;
+}
+
+.nosotros-texto h2 {
+    font-size: 2.4rem;
+    color: #2d5a27;
+    margin-bottom: 0.5rem;
+}
+
+.nosotros-texto .subtitulo {
+    font-size: 1.15rem;
+    color: #4a7c3f;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.nosotros-texto p {
+    margin-bottom: 1.2rem;
+    color: #444;
+    font-size: 1.05rem;
+}
+
+.nosotros-imagen {
+    flex: 1;
+}
+
+.nosotros-imagen img {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    object-fit: cover;
+    height: 380px;
+}
+
+/* Botón outline */
+.btn-outline {
+    background: transparent;
+    border: 2px solid #2d5a27;
+    color: #2d5a27;
+    margin-top: 1rem;
+}
+
+.btn-outline:hover {
+    background: #2d5a27;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .nosotros-content {
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .nosotros-imagen img {
+        height: 300px;
+    }
+}
