@@ -3,176 +3,989 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Gerardo Mayela | Frutería</title>
+    <title>San Gerardo Mayela | Frutas y Verduras Frescas</title>
+
+    <meta
+        name="description"
+        content="Frutas y verduras frescas de la mejor calidad en Aguascalientes. Productos locales seleccionados diariamente."
+    >
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet" >
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- ========== HEADER / NAVEGACIÓN ========== -->
-    <header id="inicio">
-        <div class="logo">
-            <div class="logo-icon">
-                <img src="Imagenes/LogoFrut.jpg" alt="Logo San Gerardo Mayela">
+    <!-- === HERO ===-->
+    <section class="hero" id="inicio">
+        <div class="hero-decoration hero-decoration-1"></div>
+        <div class="hero-decoration hero-decoration-2"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <span class="eyebrow">
+                    <i data-lucide="leaf"></i>
+                    Frescura todos los días
+                </span>
+                <h1>
+                    Lo más fresco,
+                    <span>directo a tu mesa</span>
+                </h1>
+                <p>
+                    Frutas y verduras de la mejor calidad, seleccionadas
+                    cuidadosamente todos los días en San Gerardo Mayela.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#productos" class="btn btn-primary">
+                        Explorar productos
+                        <i data-lucide="arrow-right"></i>
+                    </a>
+                    <a href="inicio_s.html" class="btn btn-outline"> Iniciar sesión </a>
+                </div>
+                <div class="hero-features">
+                    <div>
+                        <strong>100%</strong>
+                        <span>Frescura</span>
+                    </div>
+                    <div>
+                        <strong>Diaria</strong>
+                        <span>Selección</span>
+                    </div>
+                    <div>
+                        <strong>Local</strong>
+                        <span>Producto</span>
+                    </div>
+                </div>
             </div>
-            <div class="logo-text">
-                <h1>San Gerardo Mayela</h1>
-                <span>Frutería · Productos frescos</span>
+            <!-- HERO IMAGE -->
+            <div class="hero-image-wrapper">
+                <div class="hero-image-card">
+                    <img
+                        src="Imagenes/LogoFrut.jpg"
+                        alt="San Gerardo Mayela - Frutas y verduras">
+                </div>
             </div>
         </div>
-    </header>
-
-    <!-- ========== HERO SECTION ========== -->
-    <section class="hero">
-         <div class="logo-i">
-            <div class="logo-inicio">
-                <img src="Imagenes/LogoFrut.jpg" alt="Logo San Gerardo Mayela">
-            </div>
-        <div class="hero-content">
-            <h2>Lo más fresco, directo a tu mesa</h2>
-            <p>Frutas y verduras de la mejor calidad, seleccionadas con cariño todos los días en San Gerardo Mayela.</p>
-            <a href="Productos.html" class="btn">Ver productos</a>
-        </div>
+        <a href="#nosotros" class="scroll-indicator">
+            <span>Descubre más</span>
+            <i data-lucide="chevron-down"></i>
+        </a>
     </section>
-    <!-- ========== NOSOTROS ========== -->
-    <section class="nosotros" id="nosotros">
+    <!-- ===
+         SOBRE NOSOTROS === -->
+    <section class="nosotros section" id="nosotros">
         <div class="container">
+            <div class="section-header">
+                <span class="section-tag">
+                    Nuestra historia
+                </span>
+                <h2>
+                    Tradición y frescura
+                    <span>desde el corazón</span>
+                </h2>
+                <p class="subtitulo">
+                    Productos seleccionados con dedicación para tu familia.
+                </p>
+
+            </div>
+
+
             <div class="nosotros-content">
-                <div class="nosotros-texto">
-                    <h2>Sobre nosotros</h2>
-                    <p class="subtitulo">Tradición y frescura desde el corazón</p>
-                    <p>
-                        En <strong>San Gerardo Mayela</strong> nos dedicamos a ofrecer las mejores frutas y verduras 
-                        frescas, seleccionadas cuidadosamente cada día. Creemos que la calidad comienza en el origen, 
-                        por eso trabajamos con productores locales de confianza.
-                    </p>
-                    <p>
-                        Nuestro compromiso es llevar a tu mesa productos naturales, sabrosos y de la más alta calidad, 
-                        con el cariño y la dedicación que nos caracteriza.
-                    </p>
-                </div>
+
+
+                <!-- IMAGEN -->
                 <div class="nosotros-imagen">
-                    <img src="Imagenes/Frutas.avif" alt="Frutas frescas San Gerardo Mayela">
+
+                    <div class="image-frame">
+
+                        <img
+                            src="Imagenes/Frutas.avif"
+                            alt="Frutas frescas de San Gerardo Mayela"
+                        >
+                    </div>
                 </div>
+
+
+                <!-- TEXTO -->
+                <div class="nosotros-texto">
+
+                    <span class="small-title">
+
+                        <i data-lucide="heart"></i>
+
+                        Más que frutas y verduras
+
+                    </span>
+
+                    <h3>
+                        Calidad que puedes llevar
+                        directamente a tu hogar
+                    </h3>
+
+                    <p>
+                        En <strong>San Gerardo Mayela</strong> nos dedicamos
+                        a ofrecer las mejores frutas y verduras frescas,
+                        seleccionadas cuidadosamente cada día.
+                    </p>
+
+                    <p>
+                        Creemos que la calidad comienza en el origen,
+                        por eso trabajamos con productores locales de
+                        confianza para ofrecer productos naturales,
+                        sabrosos y de excelente calidad.
+                    </p>
+
+
+                    <div class="nosotros-list">
+
+                        <div class="check-item">
+
+                            <span>
+                                <i data-lucide="check"></i>
+                            </span>
+
+                            <p>
+                                Productos seleccionados diariamente
+                            </p>
+
+                        </div>
+
+
+                        <div class="check-item">
+
+                            <span>
+                                <i data-lucide="check"></i>
+                            </span>
+
+                            <p>
+                                Apoyo a productores locales
+                            </p>
+
+                        </div>
+
+
+                        <div class="check-item">
+
+                            <span>
+                                <i data-lucide="check"></i>
+                            </span>
+
+                            <p>
+                                Calidad para toda tu familia
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="#productos" class="text-link">
+
+                        Conoce nuestros productos
+
+                        <i data-lucide="arrow-right"></i>
+
+                    </a>
+
+                </div>
+
             </div>
+
         </div>
+
     </section>
 
-    <!-- ========== CONTACTO ========== -->
-    <section class="contacto" id="contacto">
+
+    <!-- =====================================================
+         BENEFICIOS
+    ====================================================== -->
+    <section class="beneficios section">
+
         <div class="container">
-            <div class="contacto-header">
-                <h2>Contacto</h2>
-                <p>¿Tienes alguna pregunta? Estamos para servirte</p>
+
+            <div class="section-header">
+
+                <span class="section-tag">
+                    ¿Por qué elegirnos?
+                </span>
+
+                <h2>
+                    Frescura que hace
+                    <span>la diferencia</span>
+                </h2>
+
+                <p class="subtitulo">
+                    Nos esforzamos para que cada producto llegue a ti
+                    con la calidad que mereces.
+                </p>
+
             </div>
 
-            <div class="contacto-contenido">
-                <!-- Información de contacto -->
-                <div class="contacto-info">
-                    <!-- Dirección -->
+
+            <div class="beneficios-grid">
+
+
+                <article class="beneficio-card">
+
+                    <div class="beneficio-icon">
+
+                        <i data-lucide="clock-3"></i>
+
+                    </div>
+
+                    <span class="beneficio-number">01</span>
+
+                    <h3>Frescura diaria</h3>
+
+                    <p>
+                        Seleccionamos nuestros productos todos los días
+                        para garantizar la máxima frescura.
+                    </p>
+
+                </article>
+
+
+                <article class="beneficio-card">
+
+                    <div class="beneficio-icon">
+
+                        <i data-lucide="users"></i>
+
+                    </div>
+
+                    <span class="beneficio-number">02</span>
+
+                    <h3>Productores locales</h3>
+
+                    <p>
+                        Trabajamos con agricultores de confianza
+                        de nuestra región.
+                    </p>
+
+                </article>
+
+
+                <article class="beneficio-card">
+
+                    <div class="beneficio-icon">
+
+                        <i data-lucide="badge-check"></i>
+
+                    </div>
+
+                    <span class="beneficio-number">03</span>
+
+                    <h3>Calidad garantizada</h3>
+
+                    <p>
+                        Solo ofrecemos frutas y verduras que nosotros
+                        mismos consumiríamos.
+                    </p>
+
+                </article>
+
+
+                <article class="beneficio-card">
+
+                    <div class="beneficio-icon">
+
+                        <i data-lucide="map-pin"></i>
+
+                    </div>
+
+                    <span class="beneficio-number">04</span>
+
+                    <h3>Cerca de ti</h3>
+
+                    <p>
+                        Estamos ubicados en Morelos I, Aguascalientes,
+                        para que puedas visitarnos fácilmente.
+                    </p>
+
+                </article>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PRODUCTOS
+    ====================================================== -->
+    <section class="productos-destacados section" id="productos">
+
+        <div class="container">
+
+
+            <div class="section-header products-header">
+
+                <div>
+
+                    <span class="section-tag">
+                        Nuestra selección
+                    </span>
+
+                    <h2>
+                        Productos
+                        <span>destacados</span>
+                    </h2>
+
+                </div>
+
+                <p class="subtitulo">
+                    Lo mejor de nuestra selección, elegido especialmente
+                    para ti.
+                </p>
+
+            </div>
+
+
+            <div class="productos-grid">
+
+
+                <!-- FRUTAS -->
+                <article class="producto-card">
+
+                    <div class="producto-img">
+
+                        <img
+                            src="Imagenes/frutas de temporada.jpg"
+                            alt="Frutas frescas de temporada"
+                        >
+
+                        <span class="producto-tag">
+                            Temporada
+                        </span>
+
+                    </div>
+
+
+                    <div class="producto-info">
+
+                        <span class="producto-category">
+
+                            <i data-lucide="apple"></i>
+
+                            Selección natural
+
+                        </span>
+
+                        <h3>
+                            Frutas de temporada
+                        </h3>
+
+                        <p>
+                            Las mejores frutas según la época del año,
+                            seleccionadas a diario para asegurar madurez
+                            y sabor natural.
+                        </p>
+
+                        <a href="Productos.html" class="producto-link">
+
+                            Ver productos
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- VERDURAS -->
+                <article class="producto-card">
+
+                    <div class="producto-img">
+
+                        <img
+                            src="Imagenes/Verduras.avif"
+                            alt="Verduras frescas"
+                        >
+
+                        <span class="producto-tag">
+                            Frescas
+                        </span>
+
+                    </div>
+
+
+                    <div class="producto-info">
+
+                        <span class="producto-category">
+
+                            <i data-lucide="leaf"></i>
+
+                            Selección natural
+
+                        </span>
+
+                        <h3>
+                            Verduras frescas
+                        </h3>
+
+                        <p>
+                            Verduras crujientes, llenas de nutrientes
+                            y seleccionadas cuidadosamente para garantizar
+                            la mejor calidad.
+                        </p>
+
+                        <a href="Productos.html" class="producto-link">
+
+                            Ver productos
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- LOCALES -->
+                <article class="producto-card">
+
+                    <div class="producto-img">
+
+                        <img
+                            src="Imagenes/Local.avif"
+                            alt="Productos locales"
+                        >
+
+                        <span class="producto-tag">
+                            Regional
+                        </span>
+
+                    </div>
+
+
+                    <div class="producto-info">
+
+                        <span class="producto-category">
+
+                            <i data-lucide="sprout"></i>
+
+                            Producto local
+
+                        </span>
+
+                        <h3>
+                            Productos locales
+                        </h3>
+
+                        <p>
+                            Apoyamos el comercio de Aguascalientes
+                            llevando la mejor cosecha regional hasta
+                            tu hogar.
+                        </p>
+
+                        <a href="Productos.html" class="producto-link">
+
+                            Ver productos
+
+                            <i data-lucide="arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+            </div>
+
+
+            <div class="products-cta">
+
+                <div>
+
+                    <strong>
+                        ¿Buscas algo en específico?
+                    </strong>
+
+                    <span>
+                        Consulta nuestra selección completa.
+                    </span>
+
+                </div>
+
+
+                <a href="Productos.html" class="btn btn-primary">
+
+                    Ver todos los productos
+
+                    <i data-lucide="arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- =====================================================
+         CONTACTO
+    ====================================================== -->
+    <section class="contacto-page section" id="contacto">
+
+        <div class="container">
+
+
+            <div class="section-header">
+
+                <span class="section-tag">
+                    Contáctanos
+                </span>
+
+                <h2>
+                    Estamos para
+                    <span>ayudarte</span>
+                </h2>
+
+                <p class="subtitulo">
+                    ¿Tienes alguna pregunta? Ponte en contacto con nosotros.
+                </p>
+
+            </div>
+
+
+            <div class="contacto-page-grid">
+
+
+                <!-- INFORMACIÓN -->
+                <div class="contacto-info-box">
+
+                    <span class="contact-box-label">
+                        Información
+                    </span>
+
+                    <h2>
+                        Visítanos o
+                        <span>escríbenos</span>
+                    </h2>
+
+                    <p class="intro">
+                        Puedes visitarnos o comunicarte con nosotros
+                        por cualquiera de estos medios.
+                    </p>
+
+
+                    <!-- DIRECCIÓN -->
                     <div class="info-item">
+
                         <div class="info-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
+
+                            <i data-lucide="map-pin"></i>
+
                         </div>
+
                         <div>
+
                             <h3>Dirección</h3>
-                            <p>Corregidora 809, Morelos I, 20298 Aguascalientes, Ags.</p>
+
+                            <p>
+                                Corregidora 809, Morelos I<br>
+                                20298 Aguascalientes, Ags.
+                            </p>
+
                         </div>
+
                     </div>
 
-                    <!-- Teléfono -->
+
+                    <!-- TELÉFONO -->
                     <div class="info-item">
+
                         <div class="info-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                            </svg>
+
+                            <i data-lucide="phone"></i>
+
                         </div>
+
                         <div>
+
                             <h3>Teléfono</h3>
-                            <p><a href="tel:+525512345678">+52 449 257 8963</a></p>
+
+                            <p>
+                                <a href="tel:+524492578963">
+                                    +52 449 257 8963
+                                </a>
+                            </p>
+
                         </div>
+
                     </div>
 
-                    <!-- Correo -->
+
+                    <!-- CORREO -->
                     <div class="info-item">
+
                         <div class="info-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
+
+                            <i data-lucide="mail"></i>
+
                         </div>
+
                         <div>
+
                             <h3>Correo</h3>
-                            <p><a href="mailto:contacto@sangerardomayela.com">sangerardomayela@gmail.com</a></p>
+
+                            <p>
+                                <a href="mailto:sangerardomayela@gmail.com">
+                                    sangerardomayela@gmail.com
+                                </a>
+                            </p>
+
                         </div>
+
                     </div>
 
-                    <!-- Horario -->
+
+                    <!-- HORARIO -->
                     <div class="info-item">
+
                         <div class="info-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
+
+                            <i data-lucide="clock-3"></i>
+
                         </div>
+
                         <div>
+
                             <h3>Horario</h3>
-                            <p><strong>Lunes a Sábado:</strong> 7:30 am - 8:00 pm<br><strong>Domingo:</strong> 7:30 am - 4:00 pm</p>
+
+                            <p>
+                                <strong>Lunes a Sábado:</strong>
+                                7:30 am – 8:00 pm<br>
+
+                                <strong>Domingo:</strong>
+                                7:30 am – 4:00 pm
+                            </p>
+
                         </div>
+
                     </div>
+
+
+                    <a
+                        href="https://wa.me/524492578963"
+                        class="btn btn-whatsapp"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        <i data-lucide="message-circle"></i>
+
+                        Escribir por WhatsApp
+
+                    </a>
+
                 </div>
 
-                <!-- Imagen destacada -->
-                <div class="contacto-imagen">
-                    <img src="Imagenes/Fruteria.png" alt="Frutas frescas - San Gerardo Mayela">
+
+                <!-- FORMULARIO -->
+                <div class="contacto-form-box">
+
+                    <span class="contact-box-label">
+                        Mensaje
+                    </span>
+
+                    <h2>
+                        Envíanos un
+                        <span>mensaje</span>
+                    </h2>
+
+                    <p class="intro">
+                        Completa el formulario y te responderemos
+                        lo antes posible.
+                    </p>
+
+
+                    <form
+                        class="contacto-form"
+                        action="#"
+                        method="POST"
+                    >
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label for="nombre">
+                                    Nombre completo
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    placeholder="Tu nombre"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="telefono">
+                                    Teléfono
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    id="telefono"
+                                    name="telefono"
+                                    placeholder="Tu número"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Correo electrónico
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="tu@correo.com"
+                                required
+                            >
+                        </div>
+                        <div class="form-group">
+
+                            <label for="mensaje">
+                                Mensaje
+                            </label>
+
+                            <textarea
+                                id="mensaje"
+                                name="mensaje"
+                                rows="5"
+                                placeholder="¿En qué podemos ayudarte?"
+                                required
+                            ></textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary form-submit"
+                        >
+                            Enviar mensaje
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </form>
                 </div>
-            </div>
-            <div>
-                <a href="Contacto.html" class="btn btn-outline">Contáctanos</a>
             </div>
         </div>
     </section>
+    <!-- =====================================================
+         MAPA
+    ====================================================== -->
+    <section class="mapa-section">
 
-    <!-- ========== FOOTER ========== -->
+        <div class="container">
+
+            <div class="mapa-header">
+
+                <div>
+
+                    <span class="section-tag">
+                        Nuestra ubicación
+                    </span>
+
+                    <h2>
+                        ¿Cómo <span>llegar?</span>
+                    </h2>
+
+                </div>
+            </div>
+            <div class="mapa-container">
+
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3701.8!2d-102.29!3d21.88!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjHCsDUyJzQ4LjAiTiAxMDLCsDE3JzI0LjAiVw!5e0!3m2!1ses!2smx!4v1700000000000"
+                    width="100%"
+                    height="450"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Ubicación de San Gerardo Mayela"
+                ></iframe>
+
+
+                <div class="mapa-overlay">
+
+                    <div class="mapa-overlay-icon">
+
+                        <i data-lucide="map-pin"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            San Gerardo Mayela
+                        </strong>
+
+                        <span>
+                            Morelos I, Aguascalientes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
     <footer class="footer">
         <div class="container">
             <div class="footer-contenido">
+                <!-- LOGO -->
                 <div class="footer-logo">
-                    <h3>San Gerardo Mayela</h3>
-                    <p>Frutas y verduras frescas todos los días</p>
+
+                    <div class="footer-logo-mark">
+
+                        <i data-lucide="leaf"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            San Gerardo Mayela
+                        </h3>
+
+                        <p>
+                            Frutas y verduras frescas todos los días.
+                        </p>
+
+                    </div>
+
                 </div>
 
+
+                <!-- CTA -->
+                <div class="footer-cta">
+
+                    <span>
+                        ¿Quieres contactarnos?
+                    </span>
+
+                    <a
+                        href="https://wa.me/524492578963"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        Escríbenos por WhatsApp
+
+                        <i data-lucide="arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+
+                <!-- REDES -->
                 <div class="footer-redes">
-                    <p>Síguenos en redes</p>
+
+                    <h4>
+                        Síguenos
+                    </h4>
+
                     <div class="redes-iconos">
-                        <a href="#" class="red-social" title="Facebook">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                            </svg>
-                        </a>
-                        <a href="#" class="red-social" title="Instagram">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                            </svg>
-                        </a>
-                        <a href="#" class="red-social" title="WhatsApp">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-                            </svg>
+
+
+                        <a href="#" class="red-social" title="Facebook" aria-label="Facebook">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="22"
+         height="22"
+         viewBox="0 0 24 24"
+         fill="currentColor">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+    </svg>
+</a>
+
+
+                      <a href="#" class="red-social" title="Instagram" aria-label="Instagram">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="22"
+         height="22"
+         viewBox="0 0 24 24"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+    </svg>
+</a>
+    <a href="https://wa.me/524492578963 class="red-social title="WhatsApp"
+                            aria-label="WhatsApp"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+
+                            <i data-lucide="message-circle"></i>
+
                         </a>
                     </div>
                 </div>
             </div>
-
             <div class="footer-copy">
-                <p>© 2026 San Gerardo Mayela. Todos los derechos reservados.</p>
+                <p>
+                    © 2026 San Gerardo Mayela.
+                    Todos los derechos reservados.
+                </p>
+                <a href="#inicio">
+                    Volver arriba
+                    <i data-lucide="arrow-up"></i>
+                </a>
             </div>
         </div>
     </footer>
-
+    <!-- =====================================================
+         WHATSAPP FLOTANTE
+    ====================================================== -->
+    <a
+        href="https://wa.me/524492578963"
+        class="whatsapp-float"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Contactar por WhatsApp"
+    >
+        <i data-lucide="message-circle"></i>
+        <span>
+            WhatsApp
+        </span>
+    </a>
+    <!-- Activar iconos Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
