@@ -1,199 +1,320 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Productos | San Gerardo Mayela</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
- <!-- Lucide Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body class="productos-body">
 
-    <!-- Navbar -->
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
 
     <nav class="productos-navbar">
 
-        <div class="productos-logo">
-            San Gerardo Mayela
-        </div>
+        <!-- LOGO -->
+
+        <a href="#inicio" class="productos-logo">
+
+            <img
+                src="Imagenes/LogoFrut.jpg"
+                alt="San Gerardo Mayela"
+            >
+
+            <span>
+                San Gerardo Mayela
+            </span>
+
+        </a>
+
+
+        <!-- MENU -->
 
         <div class="productos-menu">
 
-            <a href="index.html">Inicio</a>
+            <a href="#inicio" class="active">
+                Inicio
+            </a>
 
-            <a href="Productos.html" class="active">Productos</a>
+            <a href="#nosotros">
+                Nosotros
+            </a>
 
-            <a href="login.html">Cerrar sesión</a>
+            <a href="#beneficios">
+                Beneficios
+            </a>
+
+            <a href="#productos">
+                Productos
+            </a>
+
+            <a href="#contacto">
+                Contacto
+            </a>
+
+            <a href="login.html" class="productos-login">
+
+                <i data-lucide="user"></i>
+
+                Iniciar sesión
+
+            </a>
 
         </div>
 
     </nav>
 
 
-    <!-- Productos -->
 
-    <main class="productos-container">
+    <!-- =====================================================
+         INICIO
+    ====================================================== -->
 
-        <div class="productos-header">
+    <section id="inicio" class="productos-inicio">
 
-            <h1>Nuestros productos</h1>
+        <div class="productos-container">
 
-            <p>
-                Frutas y verduras frescas para tu hogar.
-            </p>
+            <div class="productos-header">
+
+                <span class="section-tag">
+                    Nuestra selección
+                </span>
+
+                <h1>
+                    Nuestros productos
+                </h1>
+
+                <p>
+                    Frutas y verduras frescas para tu hogar.
+                </p>
+
+            </div>
+
+
+            <!-- PRODUCTOS PRINCIPALES -->
+
+            <section class="productos-grid">
+
+
+                <!-- Producto 1 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Producto 2 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Producto 3 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Producto 4 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Producto 5 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Producto 6 -->
+
+                <article class="producto-card">
+
+                    <div class="producto-imagen">
+                        Imagen
+                    </div>
+
+                    <div class="producto-info">
+
+                        <h2>
+                            Producto
+                        </h2>
+
+                        <p>
+                            Descripción del producto
+                        </p>
+
+                        <span>
+                            $00.00 kg
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+            </section>
 
         </div>
 
-
-        <section class="productos-grid">
-
-            <!-- Producto 1 -->
-
-            <article class="producto-card">
-
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
+    </section>
 
 
-            <!-- Producto 2 -->
 
-            <article class="producto-card">
+    <!-- =====================================================
+         SOBRE NOSOTROS
+    ====================================================== -->
 
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
-
-
-            <!-- Producto 3 -->
-
-            <article class="producto-card">
-
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
-
-
-            <!-- Producto 4 -->
-
-            <article class="producto-card">
-
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
-
-
-            <!-- Producto 5 -->
-
-            <article class="producto-card">
-
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
-
-
-            <!-- Producto 6 -->
-
-            <article class="producto-card">
-
-                <div class="producto-imagen">
-                    Imagen
-                </div>
-
-                <div class="producto-info">
-
-                    <h2>Producto</h2>
-
-                    <p>Descripción del producto</p>
-
-                    <span>$00.00 kg</span>
-
-                </div>
-
-            </article>
-
-        </section>
-
-    </main>
-<!-- === SOBRE NOSOTROS === -->
     <section class="nosotros section" id="nosotros">
+
         <div class="container">
+
+
             <div class="section-header">
+
                 <span class="section-tag">
                     Nuestra historia
                 </span>
+
                 <h2>
                     Tradición y frescura
                     <span>desde el corazón</span>
                 </h2>
+
                 <p class="subtitulo">
                     Productos seleccionados con dedicación para tu familia.
                 </p>
@@ -201,10 +322,12 @@
             </div>
 
 
+
             <div class="nosotros-content">
 
 
                 <!-- IMAGEN -->
+
                 <div class="nosotros-imagen">
 
                     <div class="image-frame">
@@ -213,11 +336,15 @@
                             src="Imagenes/Frutas.avif"
                             alt="Frutas frescas de San Gerardo Mayela"
                         >
+
                     </div>
+
                 </div>
 
 
+
                 <!-- TEXTO -->
+
                 <div class="nosotros-texto">
 
                     <span class="small-title">
@@ -228,16 +355,19 @@
 
                     </span>
 
+
                     <h3>
                         Calidad que puedes llevar
                         directamente a tu hogar
                     </h3>
+
 
                     <p>
                         En <strong>San Gerardo Mayela</strong> nos dedicamos
                         a ofrecer las mejores frutas y verduras frescas,
                         seleccionadas cuidadosamente cada día.
                     </p>
+
 
                     <p>
                         Creemos que la calidad comienza en el origen,
@@ -247,7 +377,9 @@
                     </p>
 
 
+
                     <div class="nosotros-list">
+
 
                         <div class="check-item">
 
@@ -260,6 +392,7 @@
                             </p>
 
                         </div>
+
 
 
                         <div class="check-item">
@@ -275,6 +408,7 @@
                         </div>
 
 
+
                         <div class="check-item">
 
                             <span>
@@ -287,7 +421,9 @@
 
                         </div>
 
+
                     </div>
+
 
 
                     <a href="#productos" class="text-link">
@@ -307,12 +443,15 @@
     </section>
 
 
+
     <!-- =====================================================
          BENEFICIOS
     ====================================================== -->
-    <section class="beneficios section">
+
+    <section class="beneficios section" id="beneficios">
 
         <div class="container">
+
 
             <div class="section-header">
 
@@ -333,8 +472,11 @@
             </div>
 
 
+
             <div class="beneficios-grid">
 
+
+                <!-- BENEFICIO 1 -->
 
                 <article class="beneficio-card">
 
@@ -344,9 +486,13 @@
 
                     </div>
 
-                    <span class="beneficio-number">01</span>
+                    <span class="beneficio-number">
+                        01
+                    </span>
 
-                    <h3>Frescura diaria</h3>
+                    <h3>
+                        Frescura diaria
+                    </h3>
 
                     <p>
                         Seleccionamos nuestros productos todos los días
@@ -356,6 +502,9 @@
                 </article>
 
 
+
+                <!-- BENEFICIO 2 -->
+
                 <article class="beneficio-card">
 
                     <div class="beneficio-icon">
@@ -364,9 +513,13 @@
 
                     </div>
 
-                    <span class="beneficio-number">02</span>
+                    <span class="beneficio-number">
+                        02
+                    </span>
 
-                    <h3>Productores locales</h3>
+                    <h3>
+                        Productores locales
+                    </h3>
 
                     <p>
                         Trabajamos con agricultores de confianza
@@ -376,6 +529,9 @@
                 </article>
 
 
+
+                <!-- BENEFICIO 3 -->
+
                 <article class="beneficio-card">
 
                     <div class="beneficio-icon">
@@ -384,9 +540,13 @@
 
                     </div>
 
-                    <span class="beneficio-number">03</span>
+                    <span class="beneficio-number">
+                        03
+                    </span>
 
-                    <h3>Calidad garantizada</h3>
+                    <h3>
+                        Calidad garantizada
+                    </h3>
 
                     <p>
                         Solo ofrecemos frutas y verduras que nosotros
@@ -396,6 +556,9 @@
                 </article>
 
 
+
+                <!-- BENEFICIO 4 -->
+
                 <article class="beneficio-card">
 
                     <div class="beneficio-icon">
@@ -404,9 +567,13 @@
 
                     </div>
 
-                    <span class="beneficio-number">04</span>
+                    <span class="beneficio-number">
+                        04
+                    </span>
 
-                    <h3>Cerca de ti</h3>
+                    <h3>
+                        Cerca de ti
+                    </h3>
 
                     <p>
                         Estamos ubicados en Morelos I, Aguascalientes,
@@ -423,10 +590,15 @@
     </section>
 
 
+
     <!-- =====================================================
-         PRODUCTOS
+         PRODUCTOS DESTACADOS
     ====================================================== -->
-    <section class="productos-destacados section" id="productos">
+
+    <section
+        class="productos-destacados section"
+        id="productos"
+    >
 
         <div class="container">
 
@@ -446,6 +618,7 @@
 
                 </div>
 
+
                 <p class="subtitulo">
                     Lo mejor de nuestra selección, elegido especialmente
                     para ti.
@@ -454,10 +627,12 @@
             </div>
 
 
+
             <div class="productos-grid">
 
 
                 <!-- FRUTAS -->
+
                 <article class="producto-card">
 
                     <div class="producto-img">
@@ -484,9 +659,11 @@
 
                         </span>
 
+
                         <h3>
                             Frutas de temporada
                         </h3>
+
 
                         <p>
                             Las mejores frutas según la época del año,
@@ -494,7 +671,11 @@
                             y sabor natural.
                         </p>
 
-                        <a href="Productos.html" class="producto-link">
+
+                        <a
+                            href="#"
+                            class="producto-link"
+                        >
 
                             Ver productos
 
@@ -507,7 +688,9 @@
                 </article>
 
 
+
                 <!-- VERDURAS -->
+
                 <article class="producto-card">
 
                     <div class="producto-img">
@@ -534,9 +717,11 @@
 
                         </span>
 
+
                         <h3>
                             Verduras frescas
                         </h3>
+
 
                         <p>
                             Verduras crujientes, llenas de nutrientes
@@ -544,7 +729,11 @@
                             la mejor calidad.
                         </p>
 
-                        <a href="Productos.html" class="producto-link">
+
+                        <a
+                            href="#"
+                            class="producto-link"
+                        >
 
                             Ver productos
 
@@ -557,7 +746,9 @@
                 </article>
 
 
-                <!-- LOCALES -->
+
+                <!-- PRODUCTOS LOCALES -->
+
                 <article class="producto-card">
 
                     <div class="producto-img">
@@ -584,9 +775,11 @@
 
                         </span>
 
+
                         <h3>
                             Productos locales
                         </h3>
+
 
                         <p>
                             Apoyamos el comercio de Aguascalientes
@@ -594,7 +787,11 @@
                             tu hogar.
                         </p>
 
-                        <a href="Productos.html" class="producto-link">
+
+                        <a
+                            href="#"
+                            class="producto-link"
+                        >
 
                             Ver productos
 
@@ -608,6 +805,7 @@
 
 
             </div>
+
 
 
             <div class="products-cta">
@@ -625,7 +823,10 @@
                 </div>
 
 
-                <a href="login.html" class="btn btn-primary">
+                <a
+                    href="#inicio"
+                    class="btn btn-primary"
+                >
 
                     Ver todos los productos
 
@@ -638,10 +839,17 @@
         </div>
 
     </section>
+
+
+
     <!-- =====================================================
          CONTACTO
     ====================================================== -->
-    <section class="contacto-page section" id="contacto">
+
+    <section
+        class="contacto-page section"
+        id="contacto"
+    >
 
         <div class="container">
 
@@ -664,20 +872,24 @@
             </div>
 
 
+
             <div class="contacto-page-grid">
 
 
                 <!-- INFORMACIÓN -->
+
                 <div class="contacto-info-box">
 
                     <span class="contact-box-label">
                         Información
                     </span>
 
+
                     <h2>
                         Visítanos o
                         <span>escríbenos</span>
                     </h2>
+
 
                     <p class="intro">
                         Puedes visitarnos o comunicarte con nosotros
@@ -685,7 +897,9 @@
                     </p>
 
 
+
                     <!-- DIRECCIÓN -->
+
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -694,9 +908,12 @@
 
                         </div>
 
+
                         <div>
 
-                            <h3>Dirección</h3>
+                            <h3>
+                                Dirección
+                            </h3>
 
                             <p>
                                 Corregidora 809, Morelos I<br>
@@ -708,7 +925,9 @@
                     </div>
 
 
+
                     <!-- TELÉFONO -->
+
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -717,14 +936,19 @@
 
                         </div>
 
+
                         <div>
 
-                            <h3>Teléfono</h3>
+                            <h3>
+                                Teléfono
+                            </h3>
 
                             <p>
+
                                 <a href="tel:+524492578963">
                                     +52 449 257 8963
                                 </a>
+
                             </p>
 
                         </div>
@@ -732,7 +956,9 @@
                     </div>
 
 
+
                     <!-- CORREO -->
+
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -741,14 +967,19 @@
 
                         </div>
 
+
                         <div>
 
-                            <h3>Correo</h3>
+                            <h3>
+                                Correo
+                            </h3>
 
                             <p>
+
                                 <a href="mailto:sangerardomayela@gmail.com">
                                     sangerardomayela@gmail.com
                                 </a>
+
                             </p>
 
                         </div>
@@ -756,7 +987,9 @@
                     </div>
 
 
+
                     <!-- HORARIO -->
+
                     <div class="info-item">
 
                         <div class="info-icon">
@@ -765,21 +998,35 @@
 
                         </div>
 
+
                         <div>
 
-                            <h3>Horario</h3>
+                            <h3>
+                                Horario
+                            </h3>
 
                             <p>
-                                <strong>Lunes a Sábado:</strong>
-                                7:30 am – 8:00 pm<br>
 
-                                <strong>Domingo:</strong>
+                                <strong>
+                                    Lunes a Sábado:
+                                </strong>
+
+                                7:30 am – 8:00 pm
+
+                                <br>
+
+                                <strong>
+                                    Domingo:
+                                </strong>
+
                                 7:30 am – 4:00 pm
+
                             </p>
 
                         </div>
 
                     </div>
+
 
 
                     <a
@@ -798,22 +1045,27 @@
                 </div>
 
 
+
                 <!-- FORMULARIO -->
+
                 <div class="contacto-form-box">
 
                     <span class="contact-box-label">
                         Mensaje
                     </span>
 
+
                     <h2>
                         Envíanos un
                         <span>mensaje</span>
                     </h2>
 
+
                     <p class="intro">
                         Completa el formulario y te responderemos
                         lo antes posible.
                     </p>
+
 
 
                     <form
@@ -822,7 +1074,9 @@
                         method="POST"
                     >
 
+
                         <div class="form-row">
+
 
                             <div class="form-group">
 
@@ -841,6 +1095,7 @@
                             </div>
 
 
+
                             <div class="form-group">
 
                                 <label for="telefono">
@@ -856,7 +1111,9 @@
 
                             </div>
 
+
                         </div>
+
 
 
                         <div class="form-group">
@@ -872,7 +1129,11 @@
                                 placeholder="tu@correo.com"
                                 required
                             >
+
                         </div>
+
+
+
                         <div class="form-group">
 
                             <label for="mensaje">
@@ -890,25 +1151,45 @@
                         </div>
 
 
+
                         <button
                             type="submit"
                             class="btn btn-primary form-submit"
                         >
+
                             Enviar mensaje
+
                             <i data-lucide="arrow-right"></i>
+
                         </button>
+
+
                     </form>
+
                 </div>
+
+
             </div>
+
         </div>
+
     </section>
+
+
+
     <!-- =====================================================
          FOOTER
     ====================================================== -->
+
     <footer class="footer">
+
         <div class="container">
+
             <div class="footer-contenido">
+
+
                 <!-- LOGO -->
+
                 <div class="footer-logo">
 
                     <div class="footer-logo-mark">
@@ -916,6 +1197,7 @@
                         <i data-lucide="leaf"></i>
 
                     </div>
+
 
                     <div>
 
@@ -932,12 +1214,15 @@
                 </div>
 
 
+
                 <!-- CTA -->
+
                 <div class="footer-cta">
 
                     <span>
                         ¿Quieres contactarnos?
                     </span>
+
 
                     <a
                         href="https://wa.me/524492578963"
@@ -954,59 +1239,131 @@
                 </div>
 
 
+
                 <!-- REDES -->
+
                 <div class="footer-redes">
 
                     <h4>
                         Síguenos
                     </h4>
 
+
                     <div class="redes-iconos">
 
 
-                        <a href="#" class="red-social" title="Facebook" aria-label="Facebook">
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="22"
-         height="22"
-         viewBox="0 0 24 24"
-         fill="currentColor">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-    </svg>
-</a>
+                        <!-- FACEBOOK -->
+
+                        <a
+                            href="#"
+                            class="red-social"
+                            title="Facebook"
+                            aria-label="Facebook"
+                        >
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+
+                                <path
+                                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+                                />
+
+                            </svg>
+
+                        </a>
 
 
-                      <a href="#" class="red-social" title="Instagram" aria-label="Instagram">
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="22"
-         height="22"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-    </svg>
-</a>                   </div>
+
+                        <!-- INSTAGRAM -->
+
+                        <a
+                            href="#"
+                            class="red-social"
+                            title="Instagram"
+                            aria-label="Instagram"
+                        >
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+
+                                <rect
+                                    x="2"
+                                    y="2"
+                                    width="20"
+                                    height="20"
+                                    rx="5"
+                                    ry="5"
+                                />
+
+                                <path
+                                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                                />
+
+                                <line
+                                    x1="17.5"
+                                    y1="6.5"
+                                    x2="17.51"
+                                    y2="6.5"
+                                />
+
+                            </svg>
+
+                        </a>
+
+
+                    </div>
+
                 </div>
+
+
             </div>
+
+
+
             <div class="footer-copy">
+
                 <p>
+
                     © 2026 San Gerardo Mayela.
                     Todos los derechos reservados.
+
                 </p>
+
+
                 <a href="#inicio">
+
                     Volver arriba
+
                     <i data-lucide="arrow-up"></i>
+
                 </a>
+
             </div>
+
         </div>
+
     </footer>
+
+
+
     <!-- =====================================================
          WHATSAPP FLOTANTE
     ====================================================== -->
+
     <a
         href="https://wa.me/524492578963"
         class="whatsapp-float"
@@ -1014,14 +1371,28 @@
         rel="noopener noreferrer"
         aria-label="Contactar por WhatsApp"
     >
+
         <i data-lucide="message-circle"></i>
+
         <span>
             WhatsApp
         </span>
+
     </a>
-    <!-- Activar iconos Lucide -->
+
+
+
+    <!-- =====================================================
+         ACTIVAR ICONOS
+    ====================================================== -->
+
     <script>
+
         lucide.createIcons();
+
     </script>
+
+
 </body>
+
 </html>
