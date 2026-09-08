@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi perfil | San Gerardo Mayela</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="productos-body">
+
+<nav class="productos-navbar">
+    <a href="Productos.html" class="productos-logo">
+        <img src="Imagenes/LogoFrut.jpg" alt="San Gerardo Mayela">
+        <span>San Gerardo Mayela</span>
+    </a>
+
+    <button class="menu-hamburguesa" id="menu-hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="productos-menu" id="productos-menu">
+        <a href="Productos.html">Productos</a>
+        <a href="Productos.html#nosotros">Nosotros</a>
+        <a href="Productos.html#beneficios">Beneficios</a>
+        <a href="Productos.html#contacto">Contacto</a>
+        <div class="menu-separador"></div>
+        <a href="perfil.html" class="active"><span class="icono-local" data-icon="user"></span> Mi perfil</a>
+        <a href="#configuracion"><span class="icono-local" data-icon="settings"></span> Configuración</a>
+        <button type="button" id="cerrar-sesion"><span class="icono-local" data-icon="logout"></span> Cerrar sesión</button>
+    </div>
+</nav>
+
+<main class="perfil-page">
+    <div class="perfil-container">
+        <div class="perfil-header">
+            <span class="section-tag">Cuenta</span>
+            <h1>Mi perfil</h1>
+            <p>Administra tu información y preferencias de cuenta.</p>
+        </div>
+
+        <section class="perfil-card">
+            <div class="perfil-resumen">
+                <div class="perfil-avatar"><span class="icono-local" data-icon="user"></span></div>
+                <div>
+                    <span class="perfil-estado">Cuenta activa</span>
+                    <h2 id="perfil-nombre-resumen">Usuario</h2>
+                    <p id="perfil-email-resumen">correo@ejemplo.com</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="perfil-card" id="configuracion">
+            <div class="perfil-section-title">
+                <div>
+                    <span class="section-tag">Configuración</span>
+                    <h2>Información personal</h2>
+                    <p>Modifica los datos que deseas conservar en tu perfil.</p>
+                </div>
+                <span class="config-icon"><span class="icono-local" data-icon="settings"></span></span>
+            </div>
+
+            <form id="form-perfil" class="perfil-form">
+                <div class="perfil-form-grid">
+                    <label>
+                        Nombre completo
+                        <input type="text" id="perfil-nombre" required>
+                    </label>
+                    <label>
+                        Correo electrónico
+                        <input type="email" id="perfil-email" readonly>
+                    </label>
+                    <label>
+                        Teléfono
+                        <input type="tel" id="perfil-telefono" placeholder="No registrado">
+                    </label>
+                    <label>
+                        Ciudad
+                        <input type="text" id="perfil-ciudad" placeholder="Aguascalientes">
+                    </label>
+                    <label class="campo-completo">
+                        Dirección
+                        <input type="text" id="perfil-direccion" placeholder="No registrada">
+                    </label>
+                </div>
+
+                <button class="btn btn-primary" type="submit">
+                    Guardar cambios
+                </button>
+                <p id="mensaje-guardado" class="mensaje-guardado"></p>
+            </form>
+        </section>
+
+        <div class="perfil-acciones">
+            <a href="Productos.html" class="btn btn-outline">Volver a productos</a>
+        </div>
+    </div>
+</main>
+
+<script>
+const ICONOS = {
+    user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
+    settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .3 2l.1.1-2 2-.1-.1a1.8 1.8 0 0 0-2-.3 1.8 1.8 0 0 0-1.1 1.7V20h-2.8v-.2a1.8 1.8 0 0 0-1.1-1.7 1.8 1.8 0 0 0-2 .3l-.1.1-2-2 .1-.1a1.8 1.8 0 0 0 .3-2 1.8 1.8 0 0 0-1.7-1.1H4v-2.8h.2A1.8 1.8 0 0 0 5.9 9a1.8 1.8 0 0 0-.3-2l-.1-.1 2-2 .1.1a1.8 1.8 0 0 0 2 .3 1.8 1.8 0 0 0 1.1-1.7V3h2.8v.2a1.8 1.8 0 0 0 1.1 1.7 1.8 1.8 0 0 0 2-.3l.1-.1 2 2-.1.1a1.8 1.8 0 0 0-.3 2 1.8 1.8 0 0 0 1.7 1.1h.2v2.8h-.2a1.8 1.8 0 0 0-1.7 1.1Z"></path></svg>',
+    logout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m14 8 4 4-4 4"></path><path d="M18 12H8"></path></svg>'
+};
+
+document.querySelectorAll('.icono-local').forEach(el => {
+    const icon = ICONOS[el.dataset.icon];
+    if (icon) el.outerHTML = icon;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('sesionActiva') !== 'true') {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const email = sessionStorage.getItem('usuario') || '';
+    const datos = JSON.parse(sessionStorage.getItem('datosPerfil') || '{}');
+    const nombre = datos.nombre || email.split('@')[0] || 'Usuario';
+
+    document.getElementById('perfil-nombre').value = nombre;
+    document.getElementById('perfil-email').value = email;
+    document.getElementById('perfil-telefono').value = datos.telefono || '';
+    document.getElementById('perfil-ciudad').value = datos.ciudad || 'Aguascalientes';
+    document.getElementById('perfil-direccion').value = datos.direccion || '';
+    document.getElementById('perfil-nombre-resumen').textContent = nombre;
+    document.getElementById('perfil-email-resumen').textContent = email;
+
+    const menu = document.getElementById('productos-menu');
+    const botonMenu = document.getElementById('menu-hamburguesa');
+    botonMenu.addEventListener('click', () => {
+        const abierto = menu.classList.toggle('menu-abierto');
+        botonMenu.classList.toggle('abierto', abierto);
+        botonMenu.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    });
+
+    document.getElementById('form-perfil').addEventListener('submit', e => {
+        e.preventDefault();
+        const nuevosDatos = {
+            nombre: document.getElementById('perfil-nombre').value.trim(),
+            telefono: document.getElementById('perfil-telefono').value.trim(),
+            ciudad: document.getElementById('perfil-ciudad').value.trim(),
+            direccion: document.getElementById('perfil-direccion').value.trim()
+        };
+        sessionStorage.setItem('datosPerfil', JSON.stringify(nuevosDatos));
+        document.getElementById('perfil-nombre-resumen').textContent = nuevosDatos.nombre;
+        const mensaje = document.getElementById('mensaje-guardado');
+        mensaje.textContent = 'Los cambios se guardaron correctamente.';
+        setTimeout(() => mensaje.textContent = '', 3000);
+    });
+
+    document.getElementById('cerrar-sesion').addEventListener('click', () => {
+        sessionStorage.removeItem('sesionActiva');
+        sessionStorage.removeItem('usuario');
+        alert('Tu sesión se ha cerrado correctamente.');
+        window.location.href = 'index.html';
+    });
+});
+</script>
+</body>
+</html>

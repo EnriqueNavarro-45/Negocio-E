@@ -2,373 +2,495 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Productos | San Gerardo Mayela</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-
 </head>
 
-
 <body class="productos-body">
-
 
     <!-- =====================================================
          NAVBAR
     ====================================================== -->
-
     <nav class="productos-navbar">
-
         <!-- LOGO -->
-
         <a href="#inicio" class="productos-logo">
-
-            <img
-                src="Imagenes/LogoFrut.jpg"
-                alt="San Gerardo Mayela"
-            >
-
-            <span>
-                San Gerardo Mayela
-            </span>
-
+            <img src="Imagenes/LogoFrut.jpg" alt="San Gerardo Mayela">
+            <span>San Gerardo Mayela</span>
         </a>
 
+        <!-- MENU HAMBURGUESA -->
+        <button class="menu-hamburguesa" id="menu-hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-        <!-- MENU -->
+        <div class="productos-menu" id="productos-menu">
+            <a href="#Productos" class="active">Productos</a>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#beneficios">Beneficios</a>
+            <a href="#contacto">Contacto</a>
 
-        <div class="productos-menu">
+            <div class="menu-separador"></div>
 
-            <a href="#inicio" class="active">
-                Inicio
-            </a>
-
-            <a href="#nosotros">
-                Nosotros
-            </a>
-
-            <a href="#beneficios">
-                Beneficios
-            </a>
-
-            <a href="#productos">
-                Productos
-            </a>
-
-            <a href="#contacto">
-                Contacto
-            </a>
-
-            <a href="login.html" class="productos-login">
-
-                <i data-lucide="user"></i>
-
-                Iniciar sesión
-
-            </a>
-
+            <button type="button" class="menu-cerrar-sesion solo-sesion" id="menu-cerrar-sesion">
+                <i data-lucide="log-out"></i>
+                Cerrar sesión
+            </button>
         </div>
 
+        <div class="navbar-acciones">
+            <a href="login.html" class="navbar-login solo-no-sesion" id="navbar-login">
+                <i data-lucide="log-in"></i>
+                Iniciar sesión
+            </a>
+
+            <a href="perfil.html" class="navbar-perfil solo-sesion" id="navbar-perfil">
+                <i data-lucide="user"></i>
+                Perfil
+            </a>
+
+            <a href="perfil.html#configuracion" class="navbar-config solo-sesion" id="navbar-config">
+                <i data-lucide="settings"></i>
+                Configuración
+            </a>
+
+            <button type="button" class="navbar-carrito" id="navbar-carrito" aria-label="Carrito de compras" title="Carrito de compras">
+                <i data-lucide="shopping-cart"></i>
+            </button>
+        </div>
     </nav>
 
-
-
     <!-- =====================================================
-         INICIO
+         CATÁLOGO DE PRODUCTOS
     ====================================================== -->
+    <section class="catalogo-inicio" id="Productos">
+        <div class="catalogo-container">
 
-    <section id="inicio" class="productos-inicio">
+            <!-- ENCABEZADO -->
+            <div class="catalogo-header">
+                <div class="header-titulos">
+                    <span class="section-tag">— NUESTRA SELECCIÓN</span>
+                    <h1>Frutas, verduras y más</h1>
+                    <p>Encuentra productos frescos y de calidad para tu hogar.</p>
+                </div>
 
-        <div class="productos-container">
-
-            <div class="productos-header">
-
-                <span class="section-tag">
-                    Nuestra selección
-                </span>
-
-                <h1>
-                    Nuestros productos
-                </h1>
-
-                <p>
-                    Frutas y verduras frescas para tu hogar.
-                </p>
-
+                <a href="index.html" class="volver-inicio">
+                    <i data-lucide="arrow-left"></i>
+                    Volver a la página principal
+                </a>
             </div>
 
+            <!-- BARRA DE FILTROS -->
+            <div class="catalogo-filtros">
+                <button class="filtro-btn activo" data-filter="todos">
+                    <i data-lucide="grid"></i> Todos
+                </button>
+                <button class="filtro-btn" data-filter="frutas">
+                    <i data-lucide="apple"></i> Frutas
+                </button>
+                <button class="filtro-btn" data-filter="verduras">
+                    <i data-lucide="leaf"></i> Verduras
+                </button>
+                <button class="filtro-btn" data-filter="cereales">
+                    <i data-lucide="wheat"></i> Cereales
+                </button>
+                <button class="filtro-btn" data-filter="chiles">
+                    <i data-lucide="flame"></i> Chiles
+                </button>
+            </div>
 
-            <!-- PRODUCTOS PRINCIPALES -->
+            <!-- GRID DE PRODUCTOS -->
+            <div class="catalogo-grid">
 
-            <section class="productos-grid">
-
-
-                <!-- Producto 1 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- MANGO -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80" alt="Mango fresco">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Mango</h2>
+                        <p>Mango fresco y seleccionado para disfrutar en cualquier momento.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Mango" data-precio="45.00">Comprar producto</button>
                 </article>
 
-
-
-                <!-- Producto 2 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- MANZANA -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80" alt="Manzana fresca">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Manzana</h2>
+                        <p>Manzanas frescas y crujientes, ideales para toda la familia.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Manzana" data-precio="40.00">Comprar producto</button>
                 </article>
 
-
-
-                <!-- Producto 3 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- PLÁTANO -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80" alt="Plátano fresco">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Plátano</h2>
+                        <p>Plátanos maduros y dulces, perfectos para el desayuno o snack del día.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Plátano" data-precio="22.00">Comprar producto</button>
                 </article>
 
-
-
-                <!-- Producto 4 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- FRESA -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80" alt="Fresas frescas">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Fresa</h2>
+                        <p>Fresas maduras, dulces y con gran sabor.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Fresa" data-precio="65.00">Comprar producto</button>
                 </article>
 
-
-
-                <!-- Producto 5 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- PAPAYA -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&w=600&q=80" alt="Papaya fresca">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Papaya</h2>
+                        <p>Papaya dulce y fresca, perfecta para licuados o desayunos.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Papaya" data-precio="28.00">Comprar producto</button>
                 </article>
 
-
-
-                <!-- Producto 6 -->
-
-                <article class="producto-card">
-
-                    <div class="producto-imagen">
-                        Imagen
+                <!-- LIMÓN -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/limon.jpg" alt="Limón fresco">
                     </div>
-
-                    <div class="producto-info">
-
-                        <h2>
-                            Producto
-                        </h2>
-
-                        <p>
-                            Descripción del producto
-                        </p>
-
-                        <span>
-                            $00.00 kg
-                        </span>
-
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Limón</h2>
+                        <p>Limones jugosos para aderezar tus comidas y preparar bebidas.</p>
                     </div>
-
+                    <button class="btn-accion-comprar" data-nombre="Limón" data-precio="30.00">Comprar producto</button>
                 </article>
 
+                <!-- NARANJA -->
+                <article class="catalogo-card" data-category="frutas">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=80" alt="Naranja fresca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Naranja</h2>
+                        <p>Naranjas frescas, jugosas y seleccionadas diariamente.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Naranja" data-precio="18.00">Comprar producto</button>
+                </article>
 
-            </section>
+                <!-- JITOMATE -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80" alt="Tomate fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Jitomate</h2>
+                        <p>Jitomates frescos para ensaladas, guisos y preparaciones diarias.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Tomate" data-precio="28.00">Comprar producto</button>
+                </article>
 
+                <!-- CEBOLLA -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/cebolla.jpg" alt="Cebolla fresca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Cebolla</h2>
+                        <p>Cebolla seleccionada para acompañar todo tipo de platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Cebolla" data-precio="20.00">Comprar producto</button>
+                </article>
+
+                <!-- PAPA -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80" alt="Papa fresca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Papa</h2>
+                        <p>Papas frescas ideales para cocinar diferentes platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Papa" data-precio="25.00">Comprar producto</button>
+                </article>
+
+                <!-- AGUACATE -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80" alt="Aguacate fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Aguacate</h2>
+                        <p>Aguacate Hass cremoso y en su punto óptimo de maduración.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Aguacate Hass" data-precio="75.00">Comprar producto</button>
+                </article>
+
+                <!-- BRÓCOLI -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=80" alt="Brócoli fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Brócoli</h2>
+                        <p>Brócoli fresco de color verde intenso, ideal para cocinar al vapor.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Brócoli" data-precio="34.00">Comprar producto</button>
+                </article>
+
+                <!-- CALABACITA -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/calabacita.jpg" alt="Calabacita fresca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Calabacita</h2>
+                        <p>Calabacitas tiernas y frescas para caldos o guisados.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Calabacita" data-precio="26.00">Comprar producto</button>
+                </article>
+
+                <!-- ZANAHORIA -->
+                <article class="catalogo-card" data-category="verduras">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/zanahoria.jpg" alt="Zanahoria fresca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Zanahoria</h2>
+                        <p>Zanahorias frescas y seleccionadas diariamente.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Zanahoria" data-precio="16.00">Comprar producto</button>
+                </article>
+
+                <!-- ARROZ -->
+                <article class="catalogo-card" data-category="cereales">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80" alt="Arroz de calidad">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Arroz</h2>
+                        <p>Arroz para preparar diferentes platillos del día a día.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Arroz" data-precio="24.00">Comprar producto</button>
+                </article>
+
+                <!-- AVENA -->
+                <article class="catalogo-card" data-category="cereales">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/avena.jpg" alt="Avena natural">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Avena</h2>
+                        <p>Avena ideal para desayunos y diferentes preparaciones.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Avena" data-precio="30.00">Comprar producto</button>
+                </article>
+
+                <!-- FRIJOL NEGRO -->
+                <article class="catalogo-card" data-category="cereales">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/frijol negro.jpg" alt="Frijol negro">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">LEGUMBRES</span>
+                        <h2>Frijol Negro</h2>
+                        <p>Frijol seleccionado, suave al cocer y de excelente sabor.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Frijol Negro" data-precio="38.00">Comprar producto</button>
+                </article>
+
+                <!-- ALMENDRAS -->
+                <article class="catalogo-card" data-category="cereales">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/almendra.jpg" alt="Almendras naturales">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTOS SECOS</span>
+                        <h2>Almendras</h2>
+                        <p>Almendras naturales sin sal, perfectas para snacks saludables.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Almendras Naturales" data-precio="180.00">Comprar producto</button>
+                </article>
+
+                <!-- CHILE POBLANO -->
+                <article class="catalogo-card" data-category="chiles">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/poblano.jpg" alt="Chile Poblano fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Poblano</h2>
+                        <p>Ideal para rellenar, rajas con crema y salsas tradicionales.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Poblano" data-precio="45.00">Comprar producto</button>
+                </article>
+
+                <!-- CHILE JALAPEÑO -->
+                <article class="catalogo-card" data-category="chiles">
+                    <div class="card-imagen-wrapper">
+                        <img src="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=600&q=80" alt="Chile Jalapeño fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Jalapeño</h2>
+                        <p>Chile fresco para darle sabor y un toque picante a tus platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Jalapeño" data-precio="32.00">Comprar producto</button>
+                </article>
+
+                <!-- CHILE SERRANO -->
+                <article class="catalogo-card" data-category="chiles">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/serrano.jpg" alt="Chile Serrano fresco">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Serrano</h2>
+                        <p>Chile fresco con sabor intenso para tus comidas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Serrano" data-precio="36.00">Comprar producto</button>
+                </article>
+
+            </div>
         </div>
-
     </section>
 
+    <!-- =====================================================
+         MODAL DE COMPRA
+    ====================================================== -->
+    <div id="modal-compra" class="modal-compra-overlay">
+        <div class="modal-compra-card modal-producto-detalle">
+            <button class="btn-modal-close" id="cerrar-modal" aria-label="Cerrar ventana">&times;</button>
 
+            <div class="modal-producto-layout">
+                <div class="modal-galeria">
+                    <div class="modal-imagen-principal">
+                        <img id="modal-imagen-principal" src="" alt="Producto seleccionado">
+                    </div>
+                    <div class="modal-miniaturas" id="modal-miniaturas"></div>
+                </div>
+
+                <div class="modal-producto-contenido">
+                    <span class="badge-disponibilidad">En Stock</span>
+                    <span class="modal-categoria" id="modal-categoria">PRODUCTO</span>
+                    <h3 id="modal-titulo-producto">Producto</h3>
+                    <div class="modal-precio-grande">$<span id="modal-precio-numero">0.00</span> <small>MXN / kg</small></div>
+                    <p class="modal-descripcion" id="modal-descripcion">Descripción del producto.</p>
+
+                    <div class="modal-detalles-lista">
+                        <div><strong>Calidad:</strong> Selección diaria</div>
+                        <div><strong>Disponibilidad:</strong> Sujeta a existencia</div>
+                        <div><strong>Venta:</strong> Por kilogramo o gramos</div>
+                    </div>
+
+                    <div class="unidad-selector-wrapper">
+                        <span class="label-unidad">Unidad de medida:</span>
+                        <div class="unidad-toggle-group">
+                            <button type="button" class="btn-unidad-toggle activo" data-unidad="kg">Kilogramos (kg)</button>
+                            <button type="button" class="btn-unidad-toggle" data-unidad="g">Gramos (g)</button>
+                        </div>
+                    </div>
+
+                    <label for="cantidad-input" class="label-cantidad" id="label-cantidad-texto">Ingresa la cantidad deseada en kg:</label>
+                    <div class="cantidad-input-container">
+                        <button type="button" class="btn-stepper" id="btn-menos" aria-label="Reducir cantidad">−</button>
+                        <div class="input-unit-wrapper">
+                            <input type="number" id="cantidad-input" value="1" min="0.1" step="0.1" placeholder="Ej. 1.5">
+                            <span class="unit-tag" id="unit-tag-display">kg</span>
+                        </div>
+                        <button type="button" class="btn-stepper" id="btn-mas" aria-label="Aumentar cantidad">+</button>
+                    </div>
+                    <p class="input-ayuda-texto" id="input-ayuda-texto">Puedes teclear decimales, por ejemplo 0.5 para medio kilo.</p>
+
+                    <div class="modal-footer">
+                        <div class="resumen-calculo">
+                            <span>Total estimado</span>
+                            <strong id="modal-total">$0.00</strong> MXN
+                        </div>
+                        <button class="btn-confirmar-pedido" id="btn-confirmar" type="button">
+                            Confirmar compra
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- =====================================================
          SOBRE NOSOTROS
     ====================================================== -->
-
     <section class="nosotros section" id="nosotros">
-
         <div class="container">
-
-
             <div class="section-header">
-
-                <span class="section-tag">
-                    Nuestra historia
-                </span>
-
+                <span class="section-tag">Nuestra historia</span>
                 <h2>
                     Tradición y frescura
                     <span>desde el corazón</span>
                 </h2>
-
                 <p class="subtitulo">
                     Productos seleccionados con dedicación para tu familia.
                 </p>
-
             </div>
 
-
-
             <div class="nosotros-content">
-
-
                 <!-- IMAGEN -->
-
                 <div class="nosotros-imagen">
-
                     <div class="image-frame">
-
-                        <img
-                            src="Imagenes/Frutas.avif"
-                            alt="Frutas frescas de San Gerardo Mayela"
-                        >
-
+                        <img src="Imagenes/Frutas.avif" alt="Frutas frescas de San Gerardo Mayela">
                     </div>
-
                 </div>
 
-
-
                 <!-- TEXTO -->
-
                 <div class="nosotros-texto">
-
                     <span class="small-title">
-
                         <i data-lucide="heart"></i>
-
                         Más que frutas y verduras
-
                     </span>
-
 
                     <h3>
                         Calidad que puedes llevar
                         directamente a tu hogar
                     </h3>
 
-
                     <p>
                         En <strong>San Gerardo Mayela</strong> nos dedicamos
                         a ofrecer las mejores frutas y verduras frescas,
                         seleccionadas cuidadosamente cada día.
                     </p>
-
-
                     <p>
                         Creemos que la calidad comienza en el origen,
                         por eso trabajamos con productores locales de
@@ -376,1023 +498,547 @@
                         sabrosos y de excelente calidad.
                     </p>
 
-
-
                     <div class="nosotros-list">
-
-
                         <div class="check-item">
-
-                            <span>
-                                <i data-lucide="check"></i>
-                            </span>
-
-                            <p>
-                                Productos seleccionados diariamente
-                            </p>
-
+                            <span><i data-lucide="check"></i></span>
+                            <p>Productos seleccionados diariamente</p>
                         </div>
-
-
-
                         <div class="check-item">
-
-                            <span>
-                                <i data-lucide="check"></i>
-                            </span>
-
-                            <p>
-                                Apoyo a productores locales
-                            </p>
-
+                            <span><i data-lucide="check"></i></span>
+                            <p>Apoyo a productores locales</p>
                         </div>
-
-
-
                         <div class="check-item">
-
-                            <span>
-                                <i data-lucide="check"></i>
-                            </span>
-
-                            <p>
-                                Calidad para toda tu familia
-                            </p>
-
+                            <span><i data-lucide="check"></i></span>
+                            <p>Calidad para toda tu familia</p>
                         </div>
-
-
                     </div>
 
-
-
-                    <a href="#productos" class="text-link">
-
+                    <a href="#Productos" class="text-link">
                         Conoce nuestros productos
-
                         <i data-lucide="arrow-right"></i>
-
                     </a>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
-
 
     <!-- =====================================================
          BENEFICIOS
     ====================================================== -->
-
     <section class="beneficios section" id="beneficios">
-
         <div class="container">
-
-
             <div class="section-header">
-
-                <span class="section-tag">
-                    ¿Por qué elegirnos?
-                </span>
-
+                <span class="section-tag">¿Por qué elegirnos?</span>
                 <h2>
                     Frescura que hace
                     <span>la diferencia</span>
                 </h2>
-
                 <p class="subtitulo">
                     Nos esforzamos para que cada producto llegue a ti
                     con la calidad que mereces.
                 </p>
-
             </div>
 
-
-
             <div class="beneficios-grid">
-
-
                 <!-- BENEFICIO 1 -->
-
                 <article class="beneficio-card">
-
                     <div class="beneficio-icon">
-
                         <i data-lucide="clock-3"></i>
-
                     </div>
-
-                    <span class="beneficio-number">
-                        01
-                    </span>
-
-                    <h3>
-                        Frescura diaria
-                    </h3>
-
+                    <span class="beneficio-number">01</span>
+                    <h3>Frescura diaria</h3>
                     <p>
                         Seleccionamos nuestros productos todos los días
                         para garantizar la máxima frescura.
                     </p>
-
                 </article>
 
-
-
                 <!-- BENEFICIO 2 -->
-
                 <article class="beneficio-card">
-
                     <div class="beneficio-icon">
-
                         <i data-lucide="users"></i>
-
                     </div>
-
-                    <span class="beneficio-number">
-                        02
-                    </span>
-
-                    <h3>
-                        Productores locales
-                    </h3>
-
+                    <span class="beneficio-number">02</span>
+                    <h3>Productores locales</h3>
                     <p>
                         Trabajamos con agricultores de confianza
                         de nuestra región.
                     </p>
-
                 </article>
 
-
-
                 <!-- BENEFICIO 3 -->
-
                 <article class="beneficio-card">
-
                     <div class="beneficio-icon">
-
                         <i data-lucide="badge-check"></i>
-
                     </div>
-
-                    <span class="beneficio-number">
-                        03
-                    </span>
-
-                    <h3>
-                        Calidad garantizada
-                    </h3>
-
+                    <span class="beneficio-number">03</span>
+                    <h3>Calidad garantizada</h3>
                     <p>
                         Solo ofrecemos frutas y verduras que nosotros
                         mismos consumiríamos.
                     </p>
-
                 </article>
 
-
-
                 <!-- BENEFICIO 4 -->
-
                 <article class="beneficio-card">
-
                     <div class="beneficio-icon">
-
                         <i data-lucide="map-pin"></i>
-
                     </div>
-
-                    <span class="beneficio-number">
-                        04
-                    </span>
-
-                    <h3>
-                        Cerca de ti
-                    </h3>
-
+                    <span class="beneficio-number">04</span>
+                    <h3>Cerca de ti</h3>
                     <p>
                         Estamos ubicados en Morelos I, Aguascalientes,
                         para que puedas visitarnos fácilmente.
                     </p>
-
                 </article>
-
-
             </div>
-
         </div>
-
     </section>
-
-
-
-    <!-- =====================================================
-         PRODUCTOS DESTACADOS
-    ====================================================== -->
-
-    <section
-        class="productos-destacados section"
-        id="productos"
-    >
-
-        <div class="container">
-
-
-            <div class="section-header products-header">
-
-                <div>
-
-                    <span class="section-tag">
-                        Nuestra selección
-                    </span>
-
-                    <h2>
-                        Productos
-                        <span>destacados</span>
-                    </h2>
-
-                </div>
-
-
-                <p class="subtitulo">
-                    Lo mejor de nuestra selección, elegido especialmente
-                    para ti.
-                </p>
-
-            </div>
-
-
-
-            <div class="productos-grid">
-
-
-                <!-- FRUTAS -->
-
-                <article class="producto-card">
-
-                    <div class="producto-img">
-
-                        <img
-                            src="Imagenes/frutas de temporada.jpg"
-                            alt="Frutas frescas de temporada"
-                        >
-
-                        <span class="producto-tag">
-                            Temporada
-                        </span>
-
-                    </div>
-
-
-                    <div class="producto-info">
-
-                        <span class="producto-category">
-
-                            <i data-lucide="apple"></i>
-
-                            Selección natural
-
-                        </span>
-
-
-                        <h3>
-                            Frutas de temporada
-                        </h3>
-
-
-                        <p>
-                            Las mejores frutas según la época del año,
-                            seleccionadas a diario para asegurar madurez
-                            y sabor natural.
-                        </p>
-
-
-                        <a
-                            href="#"
-                            class="producto-link"
-                        >
-
-                            Ver productos
-
-                            <i data-lucide="arrow-right"></i>
-
-                        </a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- VERDURAS -->
-
-                <article class="producto-card">
-
-                    <div class="producto-img">
-
-                        <img
-                            src="Imagenes/Verduras.avif"
-                            alt="Verduras frescas"
-                        >
-
-                        <span class="producto-tag">
-                            Frescas
-                        </span>
-
-                    </div>
-
-
-                    <div class="producto-info">
-
-                        <span class="producto-category">
-
-                            <i data-lucide="leaf"></i>
-
-                            Selección natural
-
-                        </span>
-
-
-                        <h3>
-                            Verduras frescas
-                        </h3>
-
-
-                        <p>
-                            Verduras crujientes, llenas de nutrientes
-                            y seleccionadas cuidadosamente para garantizar
-                            la mejor calidad.
-                        </p>
-
-
-                        <a
-                            href="#"
-                            class="producto-link"
-                        >
-
-                            Ver productos
-
-                            <i data-lucide="arrow-right"></i>
-
-                        </a>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- PRODUCTOS LOCALES -->
-
-                <article class="producto-card">
-
-                    <div class="producto-img">
-
-                        <img
-                            src="Imagenes/Local.avif"
-                            alt="Productos locales"
-                        >
-
-                        <span class="producto-tag">
-                            Regional
-                        </span>
-
-                    </div>
-
-
-                    <div class="producto-info">
-
-                        <span class="producto-category">
-
-                            <i data-lucide="sprout"></i>
-
-                            Producto local
-
-                        </span>
-
-
-                        <h3>
-                            Productos locales
-                        </h3>
-
-
-                        <p>
-                            Apoyamos el comercio de Aguascalientes
-                            llevando la mejor cosecha regional hasta
-                            tu hogar.
-                        </p>
-
-
-                        <a
-                            href="#"
-                            class="producto-link"
-                        >
-
-                            Ver productos
-
-                            <i data-lucide="arrow-right"></i>
-
-                        </a>
-
-                    </div>
-
-                </article>
-
-
-            </div>
-
-
-
-            <div class="products-cta">
-
-                <div>
-
-                    <strong>
-                        ¿Buscas algo en específico?
-                    </strong>
-
-                    <span>
-                        Consulta nuestra selección completa.
-                    </span>
-
-                </div>
-
-
-                <a
-                    href="#inicio"
-                    class="btn btn-primary"
-                >
-
-                    Ver todos los productos
-
-                    <i data-lucide="arrow-right"></i>
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
 
     <!-- =====================================================
          CONTACTO
     ====================================================== -->
-
-    <section
-        class="contacto-page section"
-        id="contacto"
-    >
-
+    <section class="contacto-page section" id="contacto">
         <div class="container">
-
-
             <div class="section-header">
-
-                <span class="section-tag">
-                    Contáctanos
-                </span>
-
+                <span class="section-tag">Contáctanos</span>
                 <h2>
                     Estamos para
                     <span>ayudarte</span>
                 </h2>
-
                 <p class="subtitulo">
                     ¿Tienes alguna pregunta? Ponte en contacto con nosotros.
                 </p>
-
             </div>
 
-
-
             <div class="contacto-page-grid">
-
-
                 <!-- INFORMACIÓN -->
-
                 <div class="contacto-info-box">
-
-                    <span class="contact-box-label">
-                        Información
-                    </span>
-
-
+                    <span class="contact-box-label">Información</span>
                     <h2>
                         Visítanos o
                         <span>escríbenos</span>
                     </h2>
-
-
                     <p class="intro">
                         Puedes visitarnos o comunicarte con nosotros
                         por cualquiera de estos medios.
                     </p>
 
-
-
                     <!-- DIRECCIÓN -->
-
                     <div class="info-item">
-
                         <div class="info-icon">
-
                             <i data-lucide="map-pin"></i>
-
                         </div>
-
-
                         <div>
-
-                            <h3>
-                                Dirección
-                            </h3>
-
+                            <h3>Dirección</h3>
                             <p>
                                 Corregidora 809, Morelos I<br>
                                 20298 Aguascalientes, Ags.
                             </p>
-
                         </div>
-
                     </div>
-
-
 
                     <!-- TELÉFONO -->
-
                     <div class="info-item">
-
                         <div class="info-icon">
-
                             <i data-lucide="phone"></i>
-
                         </div>
-
-
                         <div>
-
-                            <h3>
-                                Teléfono
-                            </h3>
-
+                            <h3>Teléfono</h3>
                             <p>
-
-                                <a href="tel:+524492578963">
-                                    +52 449 257 8963
-                                </a>
-
+                                <a href="tel:+524492578963">+52 449 257 8963</a>
                             </p>
-
                         </div>
-
                     </div>
-
-
 
                     <!-- CORREO -->
-
                     <div class="info-item">
-
                         <div class="info-icon">
-
                             <i data-lucide="mail"></i>
-
                         </div>
-
-
                         <div>
-
-                            <h3>
-                                Correo
-                            </h3>
-
+                            <h3>Correo</h3>
                             <p>
-
-                                <a href="mailto:sangerardomayela@gmail.com">
-                                    sangerardomayela@gmail.com
-                                </a>
-
+                                <a href="mailto:sangerardomayela@gmail.com">sangerardomayela@gmail.com</a>
                             </p>
-
                         </div>
-
                     </div>
-
-
 
                     <!-- HORARIO -->
-
                     <div class="info-item">
-
                         <div class="info-icon">
-
                             <i data-lucide="clock-3"></i>
-
                         </div>
-
-
                         <div>
-
-                            <h3>
-                                Horario
-                            </h3>
-
+                            <h3>Horario</h3>
                             <p>
-
-                                <strong>
-                                    Lunes a Sábado:
-                                </strong>
-
+                                <strong>Lunes a Sábado:</strong>
                                 7:30 am – 8:00 pm
-
                                 <br>
-
-                                <strong>
-                                    Domingo:
-                                </strong>
-
+                                <strong>Domingo:</strong>
                                 7:30 am – 4:00 pm
-
                             </p>
-
                         </div>
-
                     </div>
 
-
-
-                    <a
-                        href="https://wa.me/524492578963"
-                        class="btn btn-whatsapp"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
+                    <a href="https://wa.me/524492578963" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
                         <i data-lucide="message-circle"></i>
-
                         Escribir por WhatsApp
-
                     </a>
-
                 </div>
 
-
-
                 <!-- FORMULARIO -->
-
                 <div class="contacto-form-box">
-
-                    <span class="contact-box-label">
-                        Mensaje
-                    </span>
-
-
+                    <span class="contact-box-label">Mensaje</span>
                     <h2>
                         Envíanos un
                         <span>mensaje</span>
                     </h2>
-
-
                     <p class="intro">
                         Completa el formulario y te responderemos
                         lo antes posible.
                     </p>
 
-
-
-                    <form
-                        class="contacto-form"
-                        action="#"
-                        method="POST"
-                    >
-
-
+                    <form class="contacto-form" action="#" method="POST">
                         <div class="form-row">
-
-
                             <div class="form-group">
-
-                                <label for="nombre">
-                                    Nombre completo
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="nombre"
-                                    name="nombre"
-                                    placeholder="Tu nombre"
-                                    required
-                                >
-
+                                <label for="nombre">Nombre completo</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
                             </div>
 
-
-
                             <div class="form-group">
-
-                                <label for="telefono">
-                                    Teléfono
-                                </label>
-
-                                <input
-                                    type="tel"
-                                    id="telefono"
-                                    name="telefono"
-                                    placeholder="Tu número"
-                                >
-
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="Tu número">
                             </div>
-
-
                         </div>
-
-
 
                         <div class="form-group">
-
-                            <label for="email">
-                                Correo electrónico
-                            </label>
-
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="tu@correo.com"
-                                required
-                            >
-
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
                         </div>
-
-
 
                         <div class="form-group">
-
-                            <label for="mensaje">
-                                Mensaje
-                            </label>
-
-                            <textarea
-                                id="mensaje"
-                                name="mensaje"
-                                rows="5"
-                                placeholder="¿En qué podemos ayudarte?"
-                                required
-                            ></textarea>
-
+                            <label for="mensaje">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" placeholder="¿En qué podemos ayudarte?" required></textarea>
                         </div>
 
-
-
-                        <button
-                            type="submit"
-                            class="btn btn-primary form-submit"
-                        >
-
+                        <button type="submit" class="btn btn-primary form-submit">
                             Enviar mensaje
-
                             <i data-lucide="arrow-right"></i>
-
                         </button>
-
-
                     </form>
-
                 </div>
-
-
             </div>
-
         </div>
-
     </section>
-
-
 
     <!-- =====================================================
          FOOTER
     ====================================================== -->
-
     <footer class="footer">
-
         <div class="container">
-
             <div class="footer-contenido">
-
-
                 <!-- LOGO -->
-
                 <div class="footer-logo">
-
                     <div class="footer-logo-mark">
-
                         <i data-lucide="leaf"></i>
-
                     </div>
-
-
                     <div>
-
-                        <h3>
-                            San Gerardo Mayela
-                        </h3>
-
-                        <p>
-                            Frutas y verduras frescas todos los días.
-                        </p>
-
+                        <h3>San Gerardo Mayela</h3>
+                        <p>Frutas y verduras frescas todos los días.</p>
                     </div>
-
                 </div>
-
-
 
                 <!-- CTA -->
-
                 <div class="footer-cta">
-
-                    <span>
-                        ¿Quieres contactarnos?
-                    </span>
-
-
-                    <a
-                        href="https://wa.me/524492578963"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
+                    <span>¿Quieres contactarnos?</span>
+                    <a href="https://wa.me/524492578963" target="_blank" rel="noopener noreferrer">
                         Escríbenos por WhatsApp
-
                         <i data-lucide="arrow-right"></i>
-
                     </a>
-
                 </div>
-
-
 
                 <!-- REDES -->
-
                 <div class="footer-redes">
-
-                    <h4>
-                        Síguenos
-                    </h4>
-
-
+                    <h4>Síguenos</h4>
                     <div class="redes-iconos">
-
-
                         <!-- FACEBOOK -->
-
-                        <a
-                            href="#"
-                            class="red-social"
-                            title="Facebook"
-                            aria-label="Facebook"
-                        >
-
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                            >
-
-                                <path
-                                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
-                                />
-
+                        <a href="#" class="red-social" title="Facebook" aria-label="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                             </svg>
-
                         </a>
-
-
 
                         <!-- INSTAGRAM -->
-
-                        <a
-                            href="#"
-                            class="red-social"
-                            title="Instagram"
-                            aria-label="Instagram"
-                        >
-
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-
-                                <rect
-                                    x="2"
-                                    y="2"
-                                    width="20"
-                                    height="20"
-                                    rx="5"
-                                    ry="5"
-                                />
-
-                                <path
-                                    d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
-                                />
-
-                                <line
-                                    x1="17.5"
-                                    y1="6.5"
-                                    x2="17.51"
-                                    y2="6.5"
-                                />
-
+                        <a href="#" class="red-social" title="Instagram" aria-label="Instagram">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                             </svg>
-
                         </a>
-
-
                     </div>
-
                 </div>
-
-
             </div>
-
-
 
             <div class="footer-copy">
-
-                <p>
-
-                    © 2026 San Gerardo Mayela.
-                    Todos los derechos reservados.
-
-                </p>
-
-
+                <p>© 2026 San Gerardo Mayela. Todos los derechos reservados.</p>
                 <a href="#inicio">
-
                     Volver arriba
-
                     <i data-lucide="arrow-up"></i>
-
                 </a>
-
             </div>
-
         </div>
-
     </footer>
-
-
 
     <!-- =====================================================
          WHATSAPP FLOTANTE
     ====================================================== -->
-
-    <a
-        href="https://wa.me/524492578963"
-        class="whatsapp-float"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Contactar por WhatsApp"
-    >
-
+    <a href="https://wa.me/524492578963" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
         <i data-lucide="message-circle"></i>
-
-        <span>
-            WhatsApp
-        </span>
-
+        <span>WhatsApp</span>
     </a>
 
-
-
     <!-- =====================================================
-         ACTIVAR ICONOS
+         ICONOS LOCALES + FUNCIONES DE LA PÁGINA
     ====================================================== -->
-
     <script>
+        /* Los iconos se dibujan desde este mapa local. No dependen de Lucide ni de Internet. */
+        const ICONOS = {
+            user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
+            settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path><path d="m19.4 15 .1.1a2 2 0 0 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4V19a2 2 0 0 1-4 0v-.2A2 2 0 0 0 5.8 17l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 10.8H2a2 2 0 0 1 0-4h.2A2 2 0 0 0 4.6 3.4l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A2 2 0 0 0 10.8 2H11a2 2 0 0 1 4 0v.2A2 2 0 0 0 18.4 4l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A2 2 0 0 0 22.6 10H22a2 2 0 0 1 0 4h-.2a2 2 0 0 0-2.4 1Z"></path></svg>',
+            'log-out': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H8"></path></svg>',
+            'log-in': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"></path><path d="M10 16l4-4-4-4"></path><path d="M14 12H4"></path></svg>',
+            'shopping-cart': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.5 12h11l2-8H7"></path></svg>',
+            'arrow-left': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path><path d="M9 12h11"></path></svg>',
+            grid: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>',
+            apple: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-2-3 1-5 1-5"></path><path d="M9.5 8C5 6.5 3 10 4.5 15c1.2 4 3.2 6 5.3 6 1.1 0 1.5-.8 2.2-.8s1.1.8 2.2.8c2.1 0 4.1-2 5.3-6 1-3.2.2-5.9-2-7.1-1.7-.9-3.3.1-4.5.1-1.2 0-2-.8-3.5 0Z"></path></svg>',
+            leaf: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4C11 4 5 7 5 13c0 4 3 6 6 6 6 0 9-6 9-15Z"></path><path d="M4 20c3-5 7-8 12-10"></path></svg>',
+            wheat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V4"></path><path d="M12 8c-4 0-6-2-6-5 4 0 6 2 6 5Z"></path><path d="M12 13c-4 0-6-2-6-5 4 0 6 2 6 5Z"></path><path d="M12 18c-4 0-6-2-6-5 4 0 6 2 6 5Z"></path><path d="M12 8c4 0 6-2 6-5-4 0-6 2-6 5Z"></path><path d="M12 13c4 0 6-2 6-5-4 0-6 2-6 5Z"></path><path d="M12 18c4 0 6-2 6-5-4 0-6 2-6 5Z"></path></svg>',
+            flame: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c4 0 7-2.7 7-7 0-3.5-2.2-6.2-5.2-8.8.1 2.6-1 4.2-2.5 5.2.1-3.7-1.5-6-3.5-7.9C8 8 5 10.5 5 15c0 4.3 3 7 7 7Z"></path></svg>',
+            'chevron-down': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>',
+            'arrow-right': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15"></path><path d="m13 6 6 6-6 6"></path></svg>',
+            'arrow-up': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5"></path><path d="m6 11 6-6 6 6"></path></svg>',
+            'badge-check': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 14 5.2l3-.2.8 2.9 2.4 1.8-1.3 2.7.9 2.9-2.7 1.3-.9 2.9-3-.2L12 21l-2-2.2-3 .2-.8-2.9-2.4-1.8 1.3-2.7-.9-2.9 2.7-1.3.9-2.9 3 .2L12 3Z"></path><path d="m9 12 2 2 4-4"></path></svg>',
+            check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>',
+            'clock-3': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>',
+            heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.4-8.8 10.2-8.8 10.2S3.2 14.2 3.2 8.8A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg>',
+            'map-pin': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>',
+            phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 3.5 9 3l2 5-2 1.5c1 2.2 2.3 3.5 4.5 4.5L15 12l5 2-.5 2.4c-.3 1.6-1.7 2.6-3.3 2.3C9.9 17.5 6.5 14.1 4.7 7.8 4.2 6.2 5 4 6.6 3.5Z"></path></svg>',
+            mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>',
+            users: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path><path d="M16 5.5a3 3 0 0 1 0 5.8M18 14c1.8.7 3 2.2 3 4"></path></svg>',
+            'message-circle': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8 8.5 8.5 0 0 1-4-.9L4 20l1.4-3.4A8 8 0 1 1 20 11.5Z"></path></svg>',
+            sprout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11"></path><path d="M12 13c-4 0-7-2-7-7 4 0 7 2 7 7Z"></path><path d="M12 16c4 0 7-2 7-7-4 0-7 2-7 7Z"></path></svg>'
+        };
 
-        lucide.createIcons();
+        function activarIconosLocales() {
+            document.querySelectorAll('[data-lucide]').forEach(el => {
+                const nombre = el.getAttribute('data-lucide');
+                if (ICONOS[nombre]) {
+                    el.outerHTML = ICONOS[nombre];
+                }
+            });
+        }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            activarIconosLocales();
+
+            const menu = document.getElementById('productos-menu');
+            const botonMenu = document.getElementById('menu-hamburguesa');
+            const sesionActiva = sessionStorage.getItem('sesionActiva') === 'true';
+
+            document.querySelectorAll('.solo-sesion').forEach(el => {
+                el.style.display = sesionActiva ? '' : 'none';
+            });
+            document.querySelectorAll('.solo-no-sesion').forEach(el => {
+                el.style.display = sesionActiva ? 'none' : '';
+            });
+
+            const carritoNavbar = document.getElementById('navbar-carrito');
+            if (carritoNavbar) {
+                carritoNavbar.addEventListener('click', () => {
+                    // Botón reservado para la futura implementación del carrito.
+                });
+            }
+
+            if (botonMenu && menu) {
+                botonMenu.addEventListener('click', () => {
+                    const abierto = menu.classList.toggle('menu-abierto');
+                    botonMenu.classList.toggle('abierto', abierto);
+                    botonMenu.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+                });
+
+                menu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        menu.classList.remove('menu-abierto');
+                        botonMenu.classList.remove('abierto');
+                        botonMenu.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+
+            const cerrarSesion = document.getElementById('menu-cerrar-sesion');
+            if (cerrarSesion) {
+                cerrarSesion.addEventListener('click', () => {
+                    sessionStorage.removeItem('sesionActiva');
+                    sessionStorage.removeItem('usuario');
+                    alert('Tu sesión se ha cerrado correctamente.');
+                    window.location.href = 'index.html';
+                });
+            }
+
+            // FILTROS
+            const botonesFiltro = document.querySelectorAll('.filtro-btn');
+            const tarjetasProductos = document.querySelectorAll('.catalogo-card');
+
+            botonesFiltro.forEach(boton => {
+                boton.addEventListener('click', () => {
+                    botonesFiltro.forEach(btn => btn.classList.remove('activo'));
+                    boton.classList.add('activo');
+                    const categoria = boton.getAttribute('data-filter');
+                    tarjetasProductos.forEach(tarjeta => {
+                        tarjeta.classList.toggle('oculto', categoria !== 'todos' && tarjeta.getAttribute('data-category') !== categoria);
+                    });
+                });
+            });
+
+            // MODAL DE COMPRA
+            const modal = document.getElementById('modal-compra');
+            const btnCerrar = document.getElementById('cerrar-modal');
+            const tituloProducto = document.getElementById('modal-titulo-producto');
+            const precioNumero = document.getElementById('modal-precio-numero');
+            const descripcion = document.getElementById('modal-descripcion');
+            const categoriaModal = document.getElementById('modal-categoria');
+            const imagenPrincipal = document.getElementById('modal-imagen-principal');
+            const miniaturas = document.getElementById('modal-miniaturas');
+            const cantidadInput = document.getElementById('cantidad-input');
+            const totalValor = document.getElementById('modal-total');
+            const btnMenos = document.getElementById('btn-menos');
+            const btnMas = document.getElementById('btn-mas');
+            const btnConfirmar = document.getElementById('btn-confirmar');
+            const togglesUnidad = document.querySelectorAll('.btn-unidad-toggle');
+            const labelCantidadTexto = document.getElementById('label-cantidad-texto');
+            const unitTagDisplay = document.getElementById('unit-tag-display');
+            const inputAyudaTexto = document.getElementById('input-ayuda-texto');
+
+            let precioUnitarioPorKg = 0;
+            let unidadActual = 'kg';
+            let productoActual = '';
+
+            function obtenerImagenes(card) {
+                const principal = card.querySelector('.card-imagen-wrapper img');
+                if (!principal) return [];
+                const extras = (card.dataset.imagenes || '').split('|').map(x => x.trim()).filter(Boolean);
+                return [principal.getAttribute('src'), ...extras];
+            }
+
+            function mostrarGaleria(imagenes, alt) {
+                miniaturas.innerHTML = '';
+                imagenes.forEach((src, index) => {
+                    const thumb = document.createElement('button');
+                    thumb.type = 'button';
+                    thumb.className = 'modal-miniatura' + (index === 0 ? ' activa' : '');
+                    thumb.innerHTML = `<img src="${src}" alt="${alt} ${index + 1}">`;
+                    thumb.addEventListener('click', () => {
+                        imagenPrincipal.src = src;
+                        miniaturas.querySelectorAll('.modal-miniatura').forEach(t => t.classList.remove('activa'));
+                        thumb.classList.add('activa');
+                    });
+                    miniaturas.appendChild(thumb);
+                });
+                if (imagenes[0]) imagenPrincipal.src = imagenes[0];
+                imagenPrincipal.alt = alt;
+            }
+
+            function calcularTotal() {
+                const val = parseFloat(cantidadInput.value);
+                if (isNaN(val) || val <= 0) {
+                    totalValor.textContent = '$0.00';
+                    return;
+                }
+                const total = unidadActual === 'kg' ? val * precioUnitarioPorKg : (val / 1000) * precioUnitarioPorKg;
+                totalValor.textContent = `$${total.toFixed(2)}`;
+            }
+
+            function cambiarUnidad(unidad) {
+                unidadActual = unidad;
+                togglesUnidad.forEach(b => b.classList.toggle('activo', b.dataset.unidad === unidad));
+                if (unidad === 'kg') {
+                    labelCantidadTexto.textContent = 'Ingresa la cantidad deseada en kg:';
+                    unitTagDisplay.textContent = 'kg';
+                    inputAyudaTexto.textContent = 'Puedes teclear decimales, por ejemplo 0.5 para medio kilo.';
+                    cantidadInput.step = '0.1';
+                    cantidadInput.min = '0.1';
+                    cantidadInput.value = '1';
+                } else {
+                    labelCantidadTexto.textContent = 'Ingresa la cantidad deseada en gramos:';
+                    unitTagDisplay.textContent = 'g';
+                    inputAyudaTexto.textContent = 'Ejemplo: 250 para un cuarto de kilo, 500 para medio kilo.';
+                    cantidadInput.step = '50';
+                    cantidadInput.min = '50';
+                    cantidadInput.value = '250';
+                }
+                calcularTotal();
+            }
+
+            document.addEventListener('click', e => {
+                const target = e.target.closest('.btn-accion-comprar, .btn-comprar-variante');
+                if (!target) return;
+
+                const card = target.closest('.catalogo-card');
+                productoActual = target.dataset.nombre || card?.querySelector('h2')?.textContent.trim() || 'Producto';
+                precioUnitarioPorKg = parseFloat(target.dataset.precio) || 0;
+
+                tituloProducto.textContent = productoActual;
+                precioNumero.textContent = precioUnitarioPorKg.toFixed(2);
+                descripcion.textContent = card?.querySelector('.catalogo-info p')?.textContent.trim() || 'Producto fresco y seleccionado diariamente.';
+                categoriaModal.textContent = card?.querySelector('.producto-categoria')?.textContent.trim() || 'PRODUCTO';
+
+                mostrarGaleria(obtenerImagenes(card), productoActual);
+                cambiarUnidad('kg');
+                modal.classList.add('activo');
+                document.body.classList.add('modal-abierto');
+            });
+
+            function cerrarModal() {
+                modal.classList.remove('activo');
+                document.body.classList.remove('modal-abierto');
+            }
+
+            btnCerrar.addEventListener('click', cerrarModal);
+            modal.addEventListener('click', e => { if (e.target === modal) cerrarModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+
+            togglesUnidad.forEach(btn => btn.addEventListener('click', () => cambiarUnidad(btn.dataset.unidad)));
+            cantidadInput.addEventListener('input', calcularTotal);
+
+            btnMenos.addEventListener('click', () => {
+                let val = parseFloat(cantidadInput.value) || 0;
+                val = unidadActual === 'kg' ? Math.max(0.1, val - 0.5) : Math.max(50, val - 100);
+                cantidadInput.value = unidadActual === 'kg' ? val.toFixed(1) : val;
+                calcularTotal();
+            });
+
+            btnMas.addEventListener('click', () => {
+                let val = parseFloat(cantidadInput.value) || 0;
+                val = unidadActual === 'kg' ? val + 0.5 : val + 100;
+                cantidadInput.value = unidadActual === 'kg' ? val.toFixed(1) : val;
+                calcularTotal();
+            });
+
+            btnConfirmar.addEventListener('click', () => {
+                const cantidad = parseFloat(cantidadInput.value);
+                if (!cantidad || cantidad <= 0) {
+                    alert('Ingresa una cantidad válida antes de confirmar la compra.');
+                    return;
+                }
+                const total = totalValor.textContent;
+                const unidadTexto = unidadActual === 'kg' ? `${cantidad} kg` : `${cantidad} g`;
+                alert(`Compra realizada correctamente.\n\nProducto: ${productoActual}\nCantidad: ${unidadTexto}\nTotal: ${total} MXN\n\nGracias por comprar en San Gerardo Mayela.`);
+                cerrarModal();
+            });
+        });
     </script>
 
-
 </body>
-
 </html>
