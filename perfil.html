@@ -99,6 +99,15 @@
     </div>
 </main>
 
+<div id="notificacion-personalizada" class="notificacion-overlay" role="dialog" aria-modal="true" aria-labelledby="notificacion-titulo">
+    <div class="notificacion-card">
+        <div class="notificacion-icono exito" id="notificacion-icono">✓</div>
+        <h3 id="notificacion-titulo">Aviso</h3>
+        <p id="notificacion-mensaje"></p>
+        <button type="button" id="notificacion-cerrar">Aceptar</button>
+    </div>
+</div>
+
 <script>
 const ICONOS = {
     user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
@@ -111,7 +120,29 @@ document.querySelectorAll('.icono-local').forEach(el => {
     if (icon) el.outerHTML = icon;
 });
 
+function mostrarNotificacion(titulo, mensaje, tipo = 'exito') {
+    const overlay = document.getElementById('notificacion-personalizada');
+    const tituloElemento = document.getElementById('notificacion-titulo');
+    const mensajeElemento = document.getElementById('notificacion-mensaje');
+    const icono = document.getElementById('notificacion-icono');
+
+    tituloElemento.textContent = titulo;
+    mensajeElemento.innerHTML = mensaje;
+    icono.textContent = tipo === 'error' ? '!' : '✓';
+    icono.className = `notificacion-icono ${tipo === 'error' ? 'error' : 'exito'}`;
+    overlay.classList.add('activo');
+}
+
+function cerrarNotificacion() {
+    const overlay = document.getElementById('notificacion-personalizada');
+    if (overlay) overlay.classList.remove('activo');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('notificacion-cerrar').addEventListener('click', cerrarNotificacion);
+    document.getElementById('notificacion-personalizada').addEventListener('click', e => {
+        if (e.target.id === 'notificacion-personalizada') cerrarNotificacion();
+    });
     if (sessionStorage.getItem('sesionActiva') !== 'true') {
         window.location.href = 'login.html';
         return;
@@ -155,8 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cerrar-sesion').addEventListener('click', () => {
         sessionStorage.removeItem('sesionActiva');
         sessionStorage.removeItem('usuario');
-        alert('Tu sesión se ha cerrado correctamente.');
-        window.location.href = 'index.html';
+        mostrarNotificacion(
+            'Sesión cerrada',
+            'Tu sesión se ha cerrado correctamente.'
+        );
+
+        setTimeout(() => {
+            window.location.href = 'Productos.html';
+        }, 1200);
     });
 });
 </script>

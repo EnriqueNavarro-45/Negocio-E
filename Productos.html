@@ -27,13 +27,6 @@
             <span>San Gerardo Mayela</span>
         </a>
 
-        <!-- MENU HAMBURGUESA -->
-        <button class="menu-hamburguesa" id="menu-hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
         <div class="productos-menu" id="productos-menu">
             <a href="#Productos" class="active">Productos</a>
             <a href="#nosotros">Nosotros</a>
@@ -41,11 +34,6 @@
             <a href="#contacto">Contacto</a>
 
             <div class="menu-separador"></div>
-
-            <button type="button" class="menu-cerrar-sesion solo-sesion" id="menu-cerrar-sesion">
-                <i data-lucide="log-out"></i>
-                Cerrar sesión
-            </button>
         </div>
 
         <div class="navbar-acciones">
@@ -64,8 +52,20 @@
                 Configuración
             </a>
 
+            <button type="button" class="navbar-cerrar-sesion solo-sesion" id="navbar-cerrar-sesion">
+                <i data-lucide="log-out"></i>
+                Cerrar sesión
+            </button>
+
             <button type="button" class="navbar-carrito" id="navbar-carrito" aria-label="Carrito de compras" title="Carrito de compras">
                 <i data-lucide="shopping-cart"></i>
+            </button>
+
+            <button class="menu-hamburguesa" id="menu-hamburguesa" type="button"
+                    aria-label="Abrir menú" aria-expanded="false" title="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
             </button>
         </div>
     </nav>
@@ -113,7 +113,7 @@
             <div class="catalogo-grid">
 
                 <!-- MANGO -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80" alt="Mango fresco">
                     </div>
@@ -126,7 +126,7 @@
                 </article>
 
                 <!-- MANZANA -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80" alt="Manzana fresca">
                     </div>
@@ -139,7 +139,7 @@
                 </article>
 
                 <!-- PLÁTANO -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80" alt="Plátano fresco">
                     </div>
@@ -152,7 +152,7 @@
                 </article>
 
                 <!-- FRESA -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80" alt="Fresas frescas">
                     </div>
@@ -165,7 +165,7 @@
                 </article>
 
                 <!-- PAPAYA -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?auto=format&fit=crop&w=600&q=80" alt="Papaya fresca">
                     </div>
@@ -178,7 +178,7 @@
                 </article>
 
                 <!-- LIMÓN -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/limon.jpg|Imagenes/limon.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/limon.jpg" alt="Limón fresco">
                     </div>
@@ -191,7 +191,7 @@
                 </article>
 
                 <!-- NARANJA -->
-                <article class="catalogo-card" data-category="frutas">
+                <article class="catalogo-card" data-category="frutas" data-imagenes="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=80" alt="Naranja fresca">
                     </div>
@@ -204,7 +204,7 @@
                 </article>
 
                 <!-- JITOMATE -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80" alt="Tomate fresco">
                     </div>
@@ -217,7 +217,7 @@
                 </article>
 
                 <!-- CEBOLLA -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/cebolla.jpg|Imagenes/cebolla.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/cebolla.jpg" alt="Cebolla fresca">
                     </div>
@@ -230,7 +230,7 @@
                 </article>
 
                 <!-- PAPA -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80" alt="Papa fresca">
                     </div>
@@ -243,7 +243,7 @@
                 </article>
 
                 <!-- AGUACATE -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80" alt="Aguacate fresco">
                     </div>
@@ -256,7 +256,7 @@
                 </article>
 
                 <!-- BRÓCOLI -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?auto=format&fit=crop&w=600&q=80" alt="Brócoli fresco">
                     </div>
@@ -269,7 +269,7 @@
                 </article>
 
                 <!-- CALABACITA -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/calabacita.jpg|Imagenes/calabacita.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/calabacita.jpg" alt="Calabacita fresca">
                     </div>
@@ -282,7 +282,7 @@
                 </article>
 
                 <!-- ZANAHORIA -->
-                <article class="catalogo-card" data-category="verduras">
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/zanahoria.jpg|Imagenes/zanahoria.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/zanahoria.jpg" alt="Zanahoria fresca">
                     </div>
@@ -295,7 +295,7 @@
                 </article>
 
                 <!-- ARROZ -->
-                <article class="catalogo-card" data-category="cereales">
+                <article class="catalogo-card" data-category="cereales" data-imagenes="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80" alt="Arroz de calidad">
                     </div>
@@ -308,7 +308,7 @@
                 </article>
 
                 <!-- AVENA -->
-                <article class="catalogo-card" data-category="cereales">
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/avena.jpg|Imagenes/avena.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/avena.jpg" alt="Avena natural">
                     </div>
@@ -321,7 +321,7 @@
                 </article>
 
                 <!-- FRIJOL NEGRO -->
-                <article class="catalogo-card" data-category="cereales">
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/frijol negro.jpg|Imagenes/frijol negro.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/frijol negro.jpg" alt="Frijol negro">
                     </div>
@@ -334,7 +334,7 @@
                 </article>
 
                 <!-- ALMENDRAS -->
-                <article class="catalogo-card" data-category="cereales">
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/almendra.jpg|Imagenes/almendra.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/almendra.jpg" alt="Almendras naturales">
                     </div>
@@ -347,7 +347,7 @@
                 </article>
 
                 <!-- CHILE POBLANO -->
-                <article class="catalogo-card" data-category="chiles">
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/poblano.jpg|Imagenes/poblano.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/poblano.jpg" alt="Chile Poblano fresco">
                     </div>
@@ -360,7 +360,7 @@
                 </article>
 
                 <!-- CHILE JALAPEÑO -->
-                <article class="catalogo-card" data-category="chiles">
+                <article class="catalogo-card" data-category="chiles" data-imagenes="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.30&fp-y=0.35|https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&auto=format&fit=crop&w=900&q=85&crop=entropy&fp-x=0.70&fp-y=0.65">
                     <div class="card-imagen-wrapper">
                         <img src="https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=600&q=80" alt="Chile Jalapeño fresco">
                     </div>
@@ -373,7 +373,7 @@
                 </article>
 
                 <!-- CHILE SERRANO -->
-                <article class="catalogo-card" data-category="chiles">
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/serrano.jpg|Imagenes/serrano.jpg">
                     <div class="card-imagen-wrapper">
                         <img src="Imagenes/serrano.jpg" alt="Chile Serrano fresco">
                     </div>
@@ -398,10 +398,15 @@
 
             <div class="modal-producto-layout">
                 <div class="modal-galeria">
-                    <div class="modal-imagen-principal">
+                    <div class="modal-galeria-etiqueta">Vista del producto</div>
+                    <div class="modal-galeria-contenedor">
+                        <div class="modal-miniaturas modal-miniaturas-lateral" id="modal-miniaturas"></div>
+                        <div class="modal-imagen-principal">
+                            <button type="button" class="modal-galeria-flecha modal-galeria-anterior" id="modal-galeria-anterior" aria-label="Imagen anterior">‹</button>
                         <img id="modal-imagen-principal" src="" alt="Producto seleccionado">
+                            <button type="button" class="modal-galeria-flecha modal-galeria-siguiente" id="modal-galeria-siguiente" aria-label="Imagen siguiente">›</button>
+                        </div>
                     </div>
-                    <div class="modal-miniaturas" id="modal-miniaturas"></div>
                 </div>
 
                 <div class="modal-producto-contenido">
@@ -415,6 +420,10 @@
                         <div><strong>Calidad:</strong> Selección diaria</div>
                         <div><strong>Disponibilidad:</strong> Sujeta a existencia</div>
                         <div><strong>Venta:</strong> Por kilogramo o gramos</div>
+                    </div>
+
+                    <div class="modal-compra-segura">
+                        <span class="modal-check">✓</span> Producto seleccionado y disponible para compra
                     </div>
 
                     <div class="unidad-selector-wrapper">
@@ -699,27 +708,27 @@
                         lo antes posible.
                     </p>
 
-                    <form class="contacto-form" action="#" method="POST">
+                    <form class="contacto-form" id="contactoForm" action="#" method="POST">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nombre">Nombre completo</label>
-                                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+                                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
                             </div>
 
                             <div class="form-group">
                                 <label for="telefono">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" placeholder="Tu número">
+                                <input type="text" id="telefono" name="telefono" placeholder="Tu número">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Correo electrónico</label>
-                            <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
+                            <input type="text" id="email" name="email" placeholder="tu@correo.com">
                         </div>
 
                         <div class="form-group">
                             <label for="mensaje">Mensaje</label>
-                            <textarea id="mensaje" name="mensaje" rows="5" placeholder="¿En qué podemos ayudarte?" required></textarea>
+                            <textarea id="mensaje" name="mensaje" rows="5" placeholder="¿En qué podemos ayudarte?"></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary form-submit">
@@ -800,6 +809,18 @@
     </a>
 
     <!-- =====================================================
+         NOTIFICACIÓN PERSONALIZADA
+    ====================================================== -->
+    <div id="notificacion-personalizada" class="notificacion-overlay" role="dialog" aria-modal="true" aria-labelledby="notificacion-titulo">
+        <div class="notificacion-card">
+            <div class="notificacion-icono exito" id="notificacion-icono">✓</div>
+            <h3 id="notificacion-titulo">Aviso</h3>
+            <p id="notificacion-mensaje"></p>
+            <button type="button" id="notificacion-cerrar">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- =====================================================
          ICONOS LOCALES + FUNCIONES DE LA PÁGINA
     ====================================================== -->
     <script>
@@ -840,12 +861,50 @@
             });
         }
 
+        function mostrarNotificacion(titulo, mensaje, tipo = 'exito') {
+            const overlay = document.getElementById('notificacion-personalizada');
+            const tituloElemento = document.getElementById('notificacion-titulo');
+            const mensajeElemento = document.getElementById('notificacion-mensaje');
+            const icono = document.getElementById('notificacion-icono');
+
+            tituloElemento.textContent = titulo;
+            mensajeElemento.innerHTML = mensaje;
+
+            if (tipo === 'error') {
+                icono.textContent = '!';
+                icono.className = 'notificacion-icono error';
+            } else {
+                icono.textContent = '✓';
+                icono.className = 'notificacion-icono exito';
+            }
+
+            overlay.classList.add('activo');
+        }
+
+        function cerrarNotificacion() {
+            const overlay = document.getElementById('notificacion-personalizada');
+            if (overlay) overlay.classList.remove('activo');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             activarIconosLocales();
 
             const menu = document.getElementById('productos-menu');
             const botonMenu = document.getElementById('menu-hamburguesa');
             const sesionActiva = sessionStorage.getItem('sesionActiva') === 'true';
+
+            const botonCerrarNotificacion = document.getElementById('notificacion-cerrar');
+            const notificacionOverlay = document.getElementById('notificacion-personalizada');
+
+            if (botonCerrarNotificacion) {
+                botonCerrarNotificacion.addEventListener('click', cerrarNotificacion);
+            }
+
+            if (notificacionOverlay) {
+                notificacionOverlay.addEventListener('click', e => {
+                    if (e.target === notificacionOverlay) cerrarNotificacion();
+                });
+            }
 
             document.querySelectorAll('.solo-sesion').forEach(el => {
                 el.style.display = sesionActiva ? '' : 'none';
@@ -877,13 +936,20 @@
                 });
             }
 
-            const cerrarSesion = document.getElementById('menu-cerrar-sesion');
+            const cerrarSesion = document.getElementById('navbar-cerrar-sesion');
             if (cerrarSesion) {
                 cerrarSesion.addEventListener('click', () => {
                     sessionStorage.removeItem('sesionActiva');
                     sessionStorage.removeItem('usuario');
-                    alert('Tu sesión se ha cerrado correctamente.');
-                    window.location.href = 'index.html';
+                    sessionStorage.removeItem('datosPerfil');
+                    mostrarNotificacion(
+                        'Sesión cerrada',
+                        'Tu sesión se ha cerrado correctamente.'
+                    );
+
+                    setTimeout(() => {
+                        window.location.href = 'Productos.html';
+                    }, 1200);
                 });
             }
 
@@ -901,6 +967,21 @@
                     });
                 });
             });
+
+            // FORMULARIO DE CONTACTO
+            const contactoForm = document.getElementById('contactoForm');
+            if (contactoForm) {
+                contactoForm.addEventListener('submit', e => {
+                    e.preventDefault();
+
+                    mostrarNotificacion(
+                        'Mensaje enviado',
+                        'Gracias por escribirnos. Te responderemos lo antes posible.'
+                    );
+
+                    contactoForm.reset();
+                });
+            }
 
             // MODAL DE COMPRA
             const modal = document.getElementById('modal-compra');
@@ -932,21 +1013,33 @@
                 return [principal.getAttribute('src'), ...extras];
             }
 
+            let imagenesActuales = [];
+            let indiceImagenActual = 0;
+
+            function seleccionarImagen(indice) {
+                if (!imagenesActuales.length) return;
+                indiceImagenActual = (indice + imagenesActuales.length) % imagenesActuales.length;
+                const src = imagenesActuales[indiceImagenActual];
+                imagenPrincipal.src = src;
+                miniaturas.querySelectorAll('.modal-miniatura').forEach((t, i) => {
+                    t.classList.toggle('activa', i === indiceImagenActual);
+                });
+            }
+
             function mostrarGaleria(imagenes, alt) {
+                imagenesActuales = imagenes.slice(0, 3);
+                indiceImagenActual = 0;
                 miniaturas.innerHTML = '';
-                imagenes.forEach((src, index) => {
+                imagenesActuales.forEach((src, index) => {
                     const thumb = document.createElement('button');
                     thumb.type = 'button';
                     thumb.className = 'modal-miniatura' + (index === 0 ? ' activa' : '');
+                    thumb.setAttribute('aria-label', `Ver imagen ${index + 1} de ${imagenesActuales.length}`);
                     thumb.innerHTML = `<img src="${src}" alt="${alt} ${index + 1}">`;
-                    thumb.addEventListener('click', () => {
-                        imagenPrincipal.src = src;
-                        miniaturas.querySelectorAll('.modal-miniatura').forEach(t => t.classList.remove('activa'));
-                        thumb.classList.add('activa');
-                    });
+                    thumb.addEventListener('click', () => seleccionarImagen(index));
                     miniaturas.appendChild(thumb);
                 });
-                if (imagenes[0]) imagenPrincipal.src = imagenes[0];
+                seleccionarImagen(0);
                 imagenPrincipal.alt = alt;
             }
 
@@ -1000,6 +1093,16 @@
                 document.body.classList.add('modal-abierto');
             });
 
+            const btnGaleriaAnterior = document.getElementById('modal-galeria-anterior');
+            const btnGaleriaSiguiente = document.getElementById('modal-galeria-siguiente');
+
+            if (btnGaleriaAnterior) {
+                btnGaleriaAnterior.addEventListener('click', () => seleccionarImagen(indiceImagenActual - 1));
+            }
+            if (btnGaleriaSiguiente) {
+                btnGaleriaSiguiente.addEventListener('click', () => seleccionarImagen(indiceImagenActual + 1));
+            }
+
             function cerrarModal() {
                 modal.classList.remove('activo');
                 document.body.classList.remove('modal-abierto');
@@ -1007,7 +1110,12 @@
 
             btnCerrar.addEventListener('click', cerrarModal);
             modal.addEventListener('click', e => { if (e.target === modal) cerrarModal(); });
-            document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    cerrarModal();
+                    cerrarNotificacion();
+                }
+            });
 
             togglesUnidad.forEach(btn => btn.addEventListener('click', () => cambiarUnidad(btn.dataset.unidad)));
             cantidadInput.addEventListener('input', calcularTotal);
@@ -1029,13 +1137,26 @@
             btnConfirmar.addEventListener('click', () => {
                 const cantidad = parseFloat(cantidadInput.value);
                 if (!cantidad || cantidad <= 0) {
-                    alert('Ingresa una cantidad válida antes de confirmar la compra.');
+                    mostrarNotificacion(
+                        'Cantidad no válida',
+                        'Ingresa una cantidad mayor a cero.',
+                        'error'
+                    );
                     return;
                 }
                 const total = totalValor.textContent;
                 const unidadTexto = unidadActual === 'kg' ? `${cantidad} kg` : `${cantidad} g`;
-                alert(`Compra realizada correctamente.\n\nProducto: ${productoActual}\nCantidad: ${unidadTexto}\nTotal: ${total} MXN\n\nGracias por comprar en San Gerardo Mayela.`);
                 cerrarModal();
+
+                mostrarNotificacion(
+                    'Compra realizada',
+                    `
+                        <strong>${productoActual}</strong><br>
+                        Cantidad: ${unidadTexto}<br>
+                        Total: <strong>${total} MXN</strong><br><br>
+                        Gracias por comprar en San Gerardo Mayela.
+                    `
+                );
             });
         });
     </script>

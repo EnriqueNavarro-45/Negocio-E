@@ -8,6 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
@@ -31,9 +32,13 @@
 
             <form id="loginForm">
 
+                <!-- CORREO -->
+
                 <div class="input-group">
 
-                    <label for="email">Correo electrónico</label>
+                    <label for="email">
+                        Correo electrónico
+                    </label>
 
                     <div class="input-wrapper">
 
@@ -42,10 +47,9 @@
                         </svg>
 
                         <input
-                            type="email"
+                            type="text"
                             id="email"
                             placeholder="correo@ejemplo.com"
-                            required
                         >
 
                     </div>
@@ -53,9 +57,13 @@
                 </div>
 
 
+                <!-- CONTRASEÑA -->
+
                 <div class="input-group">
 
-                    <label for="password">Contraseña</label>
+                    <label for="password">
+                        Contraseña
+                    </label>
 
                     <div class="input-wrapper">
 
@@ -67,7 +75,6 @@
                             type="password"
                             id="password"
                             placeholder="Ingresa tu contraseña"
-                            required
                         >
 
                         <button
@@ -88,11 +95,21 @@
                 </div>
 
 
+                <!-- OPCIONES -->
+
                 <div class="login-options">
 
                     <label class="remember-me">
-                        <input type="checkbox" id="remember">
-                        <span>Recordarme</span>
+
+                        <input
+                            type="checkbox"
+                            id="remember"
+                        >
+
+                        <span>
+                            Recordarme
+                        </span>
+
                     </label>
 
                     <a href="#" id="forgotPassword">
@@ -102,7 +119,12 @@
                 </div>
 
 
-                <button type="submit" class="login-button">
+                <!-- BOTÓN -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
 
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M10 17l5-5-5-5v3H3v4h7v3zm9-14H5c-1.1 0-2 .9-2 2v3h2V5h14v14H5v-3H3v3c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
@@ -117,10 +139,14 @@
             </form>
 
 
+            <!-- DIVISOR -->
+
             <div class="login-divider">
                 <span>San Gerardo Mayela</span>
             </div>
 
+
+            <!-- REGRESAR -->
 
             <a href="index.html" class="back-home">
 
@@ -131,16 +157,22 @@
                 Regresar al inicio
 
             </a>
-            
-<div class="registro-link">
 
-    <span>¿No tienes una cuenta?</span>
 
-    <a href="registro.html">
-        Crear una cuenta
-    </a>
+            <!-- REGISTRO -->
 
-</div>
+            <div class="registro-link">
+
+                <span>
+                    ¿No tienes una cuenta?
+                </span>
+
+                <a href="registro.html">
+                    Crear una cuenta
+                </a>
+
+            </div>
+
         </section>
 
     </main>
@@ -149,14 +181,19 @@
     <script>
 
         const loginForm = document.getElementById("loginForm");
+
         const email = document.getElementById("email");
+
         const password = document.getElementById("password");
+
         const loginMessage = document.getElementById("loginMessage");
 
         const showPassword = document.getElementById("showPassword");
 
 
-        /* Mostrar / ocultar contraseña */
+        /* =========================================
+           MOSTRAR / OCULTAR CONTRASEÑA
+        ========================================= */
 
         showPassword.addEventListener("click", function () {
 
@@ -173,47 +210,57 @@
         });
 
 
-        /* Simulación del inicio de sesión */
+        /* =========================================
+           INICIO DE SESIÓN
+           
+           SIN VALIDACIONES
+        ========================================= */
 
         loginForm.addEventListener("submit", function (event) {
 
             event.preventDefault();
 
-            if (email.value.trim() === "" || password.value.trim() === "") {
-
-                loginMessage.textContent = "Completa todos los campos.";
-                loginMessage.className = "login-message error";
-
-                return;
-
-            }
-
-
             loginMessage.textContent = "Iniciando sesión...";
+
             loginMessage.className = "login-message success";
 
 
             setTimeout(function () {
 
-                sessionStorage.setItem("sesionActiva", "true");
-                sessionStorage.setItem("usuario", email.value);
+                sessionStorage.setItem(
+                    "sesionActiva",
+                    "true"
+                );
+
+                sessionStorage.setItem(
+                    "usuario",
+                    email.value
+                );
 
                 window.location.href = "Productos.html";
 
-            }, 1200);
+            }, 700);
 
         });
 
 
-        /* Simulación de recuperar contraseña */
+        /* =========================================
+           RECUPERAR CONTRASEÑA
+        ========================================= */
 
-        document.getElementById("forgotPassword").addEventListener("click", function (event) {
+        document
+            .getElementById("forgotPassword")
+            .addEventListener("click", function (event) {
 
-            event.preventDefault();
+                event.preventDefault();
 
-            alert("Esta función es únicamente una simulación.");
+                loginMessage.textContent =
+                    "La recuperación de contraseña es una función de demostración.";
 
-        });
+                loginMessage.className =
+                    "login-message error";
+
+            });
 
     </script>
 

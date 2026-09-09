@@ -67,7 +67,6 @@
                                 type="text"
                                 id="nombre"
                                 placeholder="Tu nombre"
-                                required
                             >
 
                         </div>
@@ -91,7 +90,6 @@
                                 type="text"
                                 id="apellido"
                                 placeholder="Tu apellido"
-                                required
                             >
 
                         </div>
@@ -116,10 +114,9 @@
                         </svg>
 
                         <input
-                            type="email"
+                            type="text"
                             id="registroEmail"
                             placeholder="correo@ejemplo.com"
-                            required
                         >
 
                     </div>
@@ -142,10 +139,9 @@
                         </svg>
 
                         <input
-                            type="tel"
+                            type="text"
                             id="telefono"
                             placeholder="449 000 0000"
-                            required
                         >
 
                     </div>
@@ -171,7 +167,6 @@
                             type="password"
                             id="registroPassword"
                             placeholder="Crea una contraseña"
-                            required
                         >
 
                         <button
@@ -214,7 +209,6 @@
                             type="password"
                             id="confirmarPassword"
                             placeholder="Repite tu contraseña"
-                            required
                         >
 
                     </div>
@@ -229,7 +223,6 @@
                     <input
                         type="checkbox"
                         id="terminos"
-                        required
                     >
 
                     <span>
@@ -326,36 +319,11 @@
         });
 
 
-        /* Registro simulado */
+        /* Registro simulado, sin validaciones obligatorias */
 
         registroForm.addEventListener("submit", function(event) {
 
             event.preventDefault();
-
-
-            if (password.value.length < 6) {
-
-                message.textContent =
-                    "La contraseña debe tener al menos 6 caracteres.";
-
-                message.className = "registro-message error";
-
-                return;
-
-            }
-
-
-            if (password.value !== confirmarPassword.value) {
-
-                message.textContent =
-                    "Las contraseñas no coinciden.";
-
-                message.className = "registro-message error";
-
-                return;
-
-            }
-
 
             message.textContent =
                 "Cuenta creada correctamente. Redirigiendo...";
