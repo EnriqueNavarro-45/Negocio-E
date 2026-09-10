@@ -50,6 +50,39 @@
                     <p id="perfil-email-resumen">correo@ejemplo.com</p>
                 </div>
             </div>
+            <section class="perfil-card historial-compras" id="historial">
+    
+    <div class="perfil-section-title">
+        <div>
+            <span class="section-tag">Mis compras</span>
+            <h2>Historial de compras</h2>
+            <p>Consulta aquí tus compras realizadas.</p>
+        </div>
+
+        <span class="config-icon">
+            <span class="icono-local" data-icon="shopping-bag"></span>
+        </span>
+    </div>
+
+    <div class="historial-vacio">
+        
+        <div class="historial-vacio-icono">
+            <span class="icono-local" data-icon="shopping-bag"></span>
+        </div>
+
+        <h3>Aún no tienes compras</h3>
+
+        <p>
+            Cuando realices una compra, aparecerá aquí.
+        </p>
+
+        <a href="Productos.html" class="btn btn-primary">
+            Ver productos
+        </a>
+
+    </div>
+
+</section>
         </section>
 
         <section class="perfil-card" id="configuracion">
@@ -112,7 +145,8 @@
 const ICONOS = {
     user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
     settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .3 2l.1.1-2 2-.1-.1a1.8 1.8 0 0 0-2-.3 1.8 1.8 0 0 0-1.1 1.7V20h-2.8v-.2a1.8 1.8 0 0 0-1.1-1.7 1.8 1.8 0 0 0-2 .3l-.1.1-2-2 .1-.1a1.8 1.8 0 0 0 .3-2 1.8 1.8 0 0 0-1.7-1.1H4v-2.8h.2A1.8 1.8 0 0 0 5.9 9a1.8 1.8 0 0 0-.3-2l-.1-.1 2-2 .1.1a1.8 1.8 0 0 0 2 .3 1.8 1.8 0 0 0 1.1-1.7V3h2.8v.2a1.8 1.8 0 0 0 1.1 1.7 1.8 1.8 0 0 0 2-.3l.1-.1 2 2-.1.1a1.8 1.8 0 0 0-.3 2 1.8 1.8 0 0 0 1.7 1.1h.2v2.8h-.2a1.8 1.8 0 0 0-1.7 1.1Z"></path></svg>',
-    logout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m14 8 4 4-4 4"></path><path d="M18 12H8"></path></svg>'
+    logout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m14 8 4 4-4 4"></path><path d="M18 12H8"></path></svg>',
+    'shopping-bag': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>'
 };
 
 document.querySelectorAll('.icono-local').forEach(el => {

@@ -4511,3 +4511,59 @@ body.modal-abierto {
         flex-basis: 40px;
     }
 }
+/* =====================================================
+   HISTORIAL DE COMPRAS
+===================================================== */
+
+.historial-compras {
+    margin-top: 25px;
+}
+
+.historial-vacio {
+    text-align: center;
+    padding: 45px 25px;
+    border: 1px dashed var(--border);
+    border-radius: 20px;
+    background: var(--cream);
+}
+
+.historial-vacio-icono {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.historial-vacio-icono svg {
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.historial-vacio h3 {
+    margin: 0 0 8px;
+    color: var(--green-dark);
+    font-size: 20px;
+}
+
+.historial-vacio p {
+    margin: 0 auto 22px;
+    color: var(--text-light);
+    max-width: 450px;
+    line-height: 1.6;
+}
+
+.historial-vacio .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
