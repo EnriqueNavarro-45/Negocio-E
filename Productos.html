@@ -808,7 +808,75 @@
                 </div>
         </div>
     </footer>
+<!-- =====================================================
+     CARRITO 
+===================================================== -->
 
+<div class="carrito-overlay" id="carrito-overlay">
+    <div class="carrito-panel">
+
+        <div class="carrito-header">
+            <div>
+                <span class="section-tag">Mi compra</span>
+                <h2>Carrito de compras</h2>
+            </div>
+
+            <button type="button"
+                    class="carrito-cerrar"
+                    id="carrito-cerrar"
+                    aria-label="Cerrar carrito">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+
+        <div class="carrito-contenido" id="carrito-contenido">
+
+            <div class="carrito-vacio" id="carrito-vacio">
+                <div class="carrito-vacio-icono">
+                    <i data-lucide="shopping-cart"></i>
+                </div>
+
+                <h3>Tu carrito está vacío</h3>
+
+                <p>
+                    Agrega algunos productos para comenzar tu compra.
+                </p>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        id="seguir-comprando">
+                    Ver productos
+                </button>
+            </div>
+
+            <div class="carrito-productos" id="carrito-productos"></div>
+
+        </div>
+
+        <div class="carrito-footer" id="carrito-footer">
+
+            <div class="carrito-resumen">
+                <div>
+                    <span>Productos</span>
+                    <strong id="carrito-cantidad-total">0</strong>
+                </div>
+
+                <div class="carrito-total">
+                    <span>Total</span>
+                    <strong>$<span id="carrito-total">0.00</span> MXN</strong>
+                </div>
+            </div>
+
+            <button type="button"
+                    class="btn btn-primary carrito-comprar"
+                    id="carrito-comprar">
+                Finalizar compra
+            </button>
+
+        </div>
+
+    </div>
+</div>
     <!-- =====================================================
          WHATSAPP FLOTANTE
     ====================================================== -->
@@ -1167,6 +1235,292 @@
                     `
                 );
             });
+            
+/* =====================================================
+   CARRITO 
+===================================================== */
+
+let carrito = JSON.parse(
+    sessionStorage.getItem('carrito') || '[]'
+);
+
+const carritoOverlay = document.getElementById('carrito-overlay');
+const carritoCerrar = document.getElementById('carrito-cerrar');
+const carritoProductos = document.getElementById('carrito-productos');
+const carritoVacio = document.getElementById('carrito-vacio');
+const carritoFooter = document.getElementById('carrito-footer');
+const carritoCantidadTotal = document.getElementById('carrito-cantidad-total');
+const carritoTotal = document.getElementById('carrito-total');
+const seguirComprando = document.getElementById('seguir-comprando');
+const carritoComprar = document.getElementById('carrito-comprar');
+const navbarCarrito = document.getElementById('navbar-carrito');
+
+
+function guardarCarrito() {
+    sessionStorage.setItem(
+        'carrito',
+        JSON.stringify(carrito)
+    );
+}
+
+
+function abrirCarrito() {
+    carritoOverlay.classList.add('activo');
+    document.body.style.overflow = 'hidden';
+    renderizarCarrito();
+}
+
+
+function cerrarCarrito() {
+    carritoOverlay.classList.remove('activo');
+    document.body.style.overflow = '';
+}
+
+
+function agregarAlCarrito(producto, precio, cantidad, unidad, imagen) {
+
+    const productoExistente = carrito.find(
+        item =>
+            item.producto === producto &&
+            item.unidad === unidad
+    );
+
+    if (productoExistente) {
+
+        productoExistente.cantidad += cantidad;
+
+    } else {
+
+        carrito.push({
+            id: Date.now(),
+            producto: producto,
+            precio: precio,
+            cantidad: cantidad,
+            unidad: unidad,
+            imagen: imagen
+        });
+
+    }
+
+    guardarCarrito();
+    renderizarCarrito();
+
+    mostrarNotificacion(
+        'Producto añadido',
+        `${producto} se agregó correctamente al carrito.`
+    );
+}
+
+
+function cambiarCantidad(id, cambio) {
+
+    const producto = carrito.find(
+        item => item.id === id
+    );
+
+    if (!producto) return;
+
+    producto.cantidad += cambio;
+
+    if (producto.cantidad <= 0) {
+        carrito = carrito.filter(
+            item => item.id !== id
+        );
+    }
+
+    guardarCarrito();
+    renderizarCarrito();
+}
+
+
+function eliminarDelCarrito(id) {
+
+    carrito = carrito.filter(
+        item => item.id !== id
+    );
+
+    guardarCarrito();
+    renderizarCarrito();
+}
+
+
+function renderizarCarrito() {
+
+    carritoProductos.innerHTML = '';
+
+    if (carrito.length === 0) {
+
+        carritoVacio.style.display = 'flex';
+        carritoFooter.style.display = 'none';
+
+    } else {
+
+        carritoVacio.style.display = 'none';
+        carritoFooter.style.display = 'block';
+
+        let total = 0;
+        let cantidadTotal = 0;
+
+        carrito.forEach(item => {
+
+            const subtotal = item.precio * item.cantidad;
+
+            total += subtotal;
+            cantidadTotal += item.cantidad;
+
+            const div = document.createElement('div');
+
+            div.className = 'carrito-item';
+
+            div.innerHTML = `
+                <div class="carrito-item-imagen">
+                    <img src="${item.imagen}" alt="${item.producto}">
+                </div>
+
+                <div class="carrito-item-info">
+
+                    <h3>${item.producto}</h3>
+
+                    <div class="carrito-item-precio">
+                        $${item.precio.toFixed(2)} MXN / ${item.unidad}
+                    </div>
+
+                    <div class="carrito-item-controles">
+
+                        <button
+                            type="button"
+                            class="carrito-cantidad-btn"
+                            onclick="cambiarCantidad(${item.id}, -1)"
+                            aria-label="Disminuir cantidad">
+                            <i data-lucide="minus"></i>
+                        </button>
+
+                        <span class="carrito-cantidad">
+                            ${item.cantidad}
+                        </span>
+
+                        <button
+                            type="button"
+                            class="carrito-cantidad-btn"
+                            onclick="cambiarCantidad(${item.id}, 1)"
+                            aria-label="Aumentar cantidad">
+                            <i data-lucide="plus"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="carrito-item-total">
+
+                    <strong>
+                        $${subtotal.toFixed(2)} MXN
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="carrito-eliminar"
+                        onclick="eliminarDelCarrito(${item.id})">
+
+                        <i data-lucide="trash-2"></i>
+                        Quitar
+
+                    </button>
+
+                </div>
+            `;
+
+            carritoProductos.appendChild(div);
+        });
+
+        carritoCantidadTotal.textContent = cantidadTotal;
+        carritoTotal.textContent = total.toFixed(2);
+
+        if (typeof convertirIconos === 'function') {
+            convertirIconos();
+        }
+    }
+
+    actualizarContadorCarrito();
+}
+
+
+function actualizarContadorCarrito() {
+
+    const cantidad = carrito.reduce(
+        (total, item) => total + item.cantidad,
+        0
+    );
+
+    let contador = document.getElementById(
+        'contador-carrito'
+    );
+
+    if (!contador) {
+
+        contador = document.createElement('span');
+
+        contador.id = 'contador-carrito';
+        contador.className = 'contador-carrito';
+
+        navbarCarrito.appendChild(contador);
+    }
+
+    contador.textContent = cantidad;
+
+    contador.style.display =
+        cantidad > 0 ? 'flex' : 'none';
+}
+
+
+navbarCarrito.addEventListener(
+    'click',
+    abrirCarrito
+);
+
+
+carritoCerrar.addEventListener(
+    'click',
+    cerrarCarrito
+);
+
+
+seguirComprando.addEventListener(
+    'click',
+    cerrarCarrito
+);
+
+
+carritoOverlay.addEventListener(
+    'click',
+    event => {
+
+        if (event.target === carritoOverlay) {
+            cerrarCarrito();
+        }
+
+    }
+);
+
+
+carritoComprar.addEventListener(
+    'click',
+    () => {
+
+        if (carrito.length === 0) {
+            return;
+        }
+
+        mostrarNotificacion(
+            'Carrito listo',
+            'La función de finalizar compra está disponible como simulación.'
+        );
+
+    }
+);
+
+
+renderizarCarrito();
         });
     </script>
 
