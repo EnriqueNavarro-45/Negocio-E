@@ -13,6 +13,19 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+    <style>
+        .catalogo-herramientas{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 30px;flex-wrap:wrap}
+        .catalogo-busqueda{display:flex;align-items:center;width:min(100%,360px);min-height:52px;background:#fff;border:1px solid #e3ebe5;border-radius:16px;box-shadow:0 8px 25px rgba(25,62,42,.07);padding:0 14px}
+        .catalogo-busqueda svg{width:20px;height:20px;flex:0 0 auto;stroke:currentColor;fill:none}
+        .catalogo-busqueda input{width:100%;border:0;outline:0;background:transparent;padding:12px 10px;font:inherit;color:#243329}
+        .catalogo-busqueda input::placeholder{color:#8a968e}
+        .catalogo-busqueda:focus-within{border-color:#4f9b68;box-shadow:0 0 0 4px rgba(79,155,104,.12)}
+        #limpiar-busqueda{display:none;border:0;background:transparent;color:#6b786f;font-size:24px;line-height:1;cursor:pointer;padding:4px 2px}
+        #limpiar-busqueda.visible{display:block}
+        .catalogo-sin-resultados{text-align:center;background:#fff;border:1px solid #e3ebe5;border-radius:20px;padding:45px 20px;margin:10px 0 40px;color:#6b786f}
+        .catalogo-sin-resultados h3{margin:10px 0 6px;color:#173f2a}.catalogo-sin-resultados p{margin:0}.sin-resultados-icono{font-size:36px;color:#287348}
+        @media(max-width:700px){.catalogo-herramientas{align-items:stretch}.catalogo-busqueda{width:100%}}
+    </style>
 </head>
 
 <body class="productos-body">
@@ -91,603 +104,550 @@
                 </a>
             </div>
 
-            <!-- BARRA DE FILTROS -->
-            <div class="catalogo-filtros">
-                <button class="filtro-btn activo" data-filter="todos">
-                    <i data-lucide="grid"></i> Todos
-                </button>
-                <button class="filtro-btn" data-filter="frutas">
-                    <i data-lucide="apple"></i> Frutas
-                </button>
-                <button class="filtro-btn" data-filter="verduras">
-                    <i data-lucide="leaf"></i> Verduras
-                </button>
-                <button class="filtro-btn" data-filter="cereales">
-                    <i data-lucide="wheat"></i> Cereales
-                </button>
-                <button class="filtro-btn" data-filter="chiles">
-                    <i data-lucide="flame"></i> Chiles
-                </button>
+            <!-- BARRA DE FILTROS Y BÚSQUEDA -->
+            <div class="catalogo-herramientas">
+                <div class="catalogo-filtros">
+                    <button class="filtro-btn activo" data-filter="todos"><i data-lucide="grid"></i> Todos</button>
+                    <button class="filtro-btn" data-filter="frutas"><i data-lucide="apple"></i> Frutas</button>
+                    <button class="filtro-btn" data-filter="verduras"><i data-lucide="leaf"></i> Verduras</button>
+                    <button class="filtro-btn" data-filter="cereales"><i data-lucide="wheat"></i> Cereales</button>
+                    <button class="filtro-btn" data-filter="chiles"><i data-lucide="flame"></i> Chiles</button>
+                </div>
+                <div class="catalogo-busqueda">
+                    <i data-lucide="search"></i>
+                    <input type="search" id="busqueda-productos" placeholder="Buscar producto..." autocomplete="off" aria-label="Buscar productos">
+                    <button type="button" id="limpiar-busqueda" aria-label="Limpiar búsqueda" title="Limpiar búsqueda">&times;</button>
+                </div>
             </div>
 
             <!-- GRID DE PRODUCTOS -->
-         <div class="catalogo-grid">
+            <div class="catalogo-grid" id="catalogo-grid">
+                <!-- MANGO -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Mango2.jpg|Imagenes/Img productos/Mango3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Mango1.jpg" alt="Mango">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Mango</h2>
+                        <p>Mango fresco y seleccionado para disfrutar en cualquier momento.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Mango" data-precio="45.00">Comprar producto</button>
+                </article>
 
-    <!-- ==================== FRUTAS ==================== -->
+                <!-- MANZANA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Manzana2.jpg|Imagenes/Img productos/Manzana3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Manzana1.jpg" alt="Manzana">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Manzana</h2>
+                        <p>Manzanas frescas y crujientes, ideales para toda la familia.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Manzana" data-precio="40.00">Comprar producto</button>
+                </article>
 
-   <!-- MANGO -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Mango2.jpg|Imagenes/Img productos/Mango3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Mango1.jpg" alt="Mango fresco">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Mango</h2>
-        <p>Mango fresco y seleccionado para disfrutar en cualquier momento.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Mango" data-precio="45.00">Comprar producto</button>
-</article>
+                <!-- PLÁTANO -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Platano2.jpg|Imagenes/Img productos/Platano3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Platano1.jpg" alt="Plátano">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Plátano</h2>
+                        <p>Plátanos maduros y dulces, perfectos para el desayuno o snack del día.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Plátano" data-precio="22.00">Comprar producto</button>
+                </article>
 
-<!-- MANZANA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Manzana2.jpg|Imagenes/Img productos/Manzana3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Manzana1.jpg" alt="Manzana fresca">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Manzana</h2>
-        <p>Manzanas frescas y crujientes, ideales para toda la familia.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Manzana" data-precio="40.00">Comprar producto</button>
-</article>
+                <!-- FRESA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Fresa2.jpg|Imagenes/Img productos/Fresa3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Fresa1.jpg" alt="Fresa">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Fresa</h2>
+                        <p>Fresas maduras, dulces y con gran sabor.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Fresa" data-precio="65.00">Comprar producto</button>
+                </article>
 
-<!-- PLÁTANO -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Platano2.jpg|Imagenes/Img productos/Platano3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Platano1.jpg" alt="Plátano fresco">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Plátano</h2>
-        <p>Plátanos maduros y dulces, perfectos para el desayuno o snack del día.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Plátano" data-precio="22.00">Comprar producto</button>
-</article>
+                <!-- PAPAYA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Papaya2.jpg|Imagenes/Img productos/Papaya3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Papaya1.jpg" alt="Papaya">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Papaya</h2>
+                        <p>Papaya dulce y fresca, perfecta para licuados o desayunos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Papaya" data-precio="28.00">Comprar producto</button>
+                </article>
 
-<!-- FRESA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Fresa2.jpg|Imagenes/Img productos/Fresa3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Fresa1.jpg" alt="Fresas frescas">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Fresa</h2>
-        <p>Fresas maduras, dulces y con gran sabor.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Fresa" data-precio="65.00">Comprar producto</button>
-</article>
+                <!-- LIMÓN -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/limon2.jpg|Imagenes/Img productos/limon3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/limon.jpg" alt="Limón">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Limón</h2>
+                        <p>Limones jugosos para aderezar tus comidas y preparar bebidas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Limón" data-precio="30.00">Comprar producto</button>
+                </article>
 
-<!-- PAPAYA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Papaya2.jpg|Imagenes/Img productos/Papaya3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Papaya1.jpg" alt="Papaya fresca">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Papaya</h2>
-        <p>Papaya dulce y fresca, perfecta para licuados o desayunos.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Papaya" data-precio="28.00">Comprar producto</button>
-</article>
+                <!-- NARANJA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Naranja2.jpg|Imagenes/Img productos/Naranja3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Naranja1.jpg" alt="Naranja">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Naranja</h2>
+                        <p>Naranjas frescas, jugosas y seleccionadas diariamente.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Naranja" data-precio="18.00">Comprar producto</button>
+                </article>
 
-<!-- LIMÓN -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/limon2.jpg|Imagenes/Img productos/limon3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/limon.jpg" alt="Limón fresco">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Limón</h2>
-        <p>Limones jugosos para aderezar tus comidas y preparar bebidas.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Limón" data-precio="30.00">Comprar producto</button>
-</article>
+                <!-- PIÑA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Pina2.jpg|Imagenes/Img productos/Pina3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Pina1.jpg" alt="Piña">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Piña</h2>
+                        <p>Piña dulce y jugosa, ideal para bebidas y postres.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Piña" data-precio="32.00">Comprar producto</button>
+                </article>
 
-<!-- NARANJA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Naranja2.jpg|Imagenes/Img productos/Naranja3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Naranja1.jpg" alt="Naranja fresca">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Naranja</h2>
-        <p>Naranjas frescas, jugosas y seleccionadas diariamente.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Naranja" data-precio="18.00">Comprar producto</button>
-</article>
+                <!-- SANDÍA -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Sandia2.jpg|Imagenes/Img productos/Sandia3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Sandia1.jpg" alt="Sandía">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Sandía</h2>
+                        <p>Sandía fresca y jugosa, perfecta para los días calurosos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Sandía" data-precio="20.00">Comprar producto</button>
+                </article>
 
-<!-- PIÑA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Piña2.jpg|Imagenes/Img productos/Piña3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Piña1.jpg" alt="Piña fresca">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Piña</h2>
-        <p>Piña dulce y jugosa, ideal para bebidas y postres.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Piña" data-precio="32.00">Comprar producto</button>
-</article>
+                <!-- MELÓN -->
+                <article class="catalogo-card" data-category="frutas" data-imagenes="Imagenes/Img productos/Melon2.jpg|Imagenes/Img productos/Melon3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Melon1.jpg" alt="Melón">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTA</span>
+                        <h2>Melón</h2>
+                        <p>Melón dulce y fresco, ideal para desayunos y ensaladas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Melón" data-precio="25.00">Comprar producto</button>
+                </article>
 
-<!-- SANDÍA -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Sandia2.jpg|Imagenes/Img productos/Sandia3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Sandia1.jpg" alt="Sandía fresca">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Sandía</h2>
-        <p>Sandía fresca y jugosa, perfecta para los días calurosos.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Sandía" data-precio="20.00">Comprar producto</button>
-</article>
+                <!-- JITOMATE -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Jitomate2.jpg|Imagenes/Img productos/Jitomate3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Jitomate1.jpg" alt="Jitomate">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Jitomate</h2>
+                        <p>Jitomates frescos para ensaladas, guisos y preparaciones diarias.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Jitomate" data-precio="28.00">Comprar producto</button>
+                </article>
 
-<!-- MELÓN -->
-<article class="catalogo-card" data-category="frutas"
-    data-imagenes="Imagenes/Img productos/Melon2.jpg|Imagenes/Img productos/Melon3.jpg">
-    <div class="card-imagen-wrapper">
-        <img src="Imagenes/Img productos/Melon1.jpg" alt="Melón fresco">
-    </div>
-    <div class="catalogo-info">
-        <span class="producto-categoria">FRUTA</span>
-        <h2>Melón</h2>
-        <p>Melón dulce y fresco, ideal para desayunos y ensaladas.</p>
-    </div>
-    <button class="btn-accion-comprar" data-nombre="Melón" data-precio="25.00">Comprar producto</button>
-</article>
+                <!-- CEBOLLA -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Cebolla2.jpg|Imagenes/Img productos/Cebolla3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Cebolla1.jpg" alt="Cebolla">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Cebolla</h2>
+                        <p>Cebolla seleccionada para acompañar todo tipo de platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Cebolla" data-precio="20.00">Comprar producto</button>
+                </article>
 
-    <!-- ==================== VERDURAS ==================== -->
+                <!-- PAPA -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Papa2.jpg|Imagenes/Img productos/Papa3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Papa1.jpg" alt="Papa">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Papa</h2>
+                        <p>Papas frescas ideales para cocinar diferentes platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Papa" data-precio="25.00">Comprar producto</button>
+                </article>
 
-    <!-- JITOMATE -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/tomato?lock=121|https://loremflickr.com/900/900/tomato?lock=122">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/tomato?lock=121" alt="Jitomate fresco">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Jitomate</h2>
-            <p>Jitomates frescos para ensaladas, guisos y preparaciones diarias.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Jitomate" data-precio="28.00">Comprar producto</button>
-    </article>
+                <!-- AGUACATE -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Aguacate2.jpg|Imagenes/Img productos/Aguacate3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Aguacate1.jpg" alt="Aguacate">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Aguacate</h2>
+                        <p>Aguacate Hass cremoso y en su punto óptimo de maduración.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Aguacate" data-precio="75.00">Comprar producto</button>
+                </article>
 
-    <!-- CEBOLLA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/onion?lock=123|https://loremflickr.com/900/900/onion?lock=124">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/onion?lock=123" alt="Cebolla fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Cebolla</h2>
-            <p>Cebolla seleccionada para acompañar todo tipo de platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Cebolla" data-precio="20.00">Comprar producto</button>
-    </article>
+                <!-- BRÓCOLI -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Brocoli2.jpg|Imagenes/Img productos/Brocoli3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Brocoli1.jpg" alt="Brócoli">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Brócoli</h2>
+                        <p>Brócoli fresco de color verde intenso, ideal para cocinar al vapor.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Brócoli" data-precio="34.00">Comprar producto</button>
+                </article>
 
-    <!-- PAPA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/potato?lock=125|https://loremflickr.com/900/900/potato?lock=126">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/potato?lock=125" alt="Papa fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Papa</h2>
-            <p>Papas frescas ideales para cocinar diferentes platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Papa" data-precio="25.00">Comprar producto</button>
-    </article>
+                <!-- CALABACITA -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Calabacita2.jpg|Imagenes/Img productos/Calabacita3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Calabacita1.jpg" alt="Calabacita">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Calabacita</h2>
+                        <p>Calabacitas tiernas y frescas para caldos o guisados.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Calabacita" data-precio="26.00">Comprar producto</button>
+                </article>
 
-    <!-- AGUACATE -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/avocado?lock=127|https://loremflickr.com/900/900/avocado?lock=128">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/avocado?lock=127" alt="Aguacate fresco">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Aguacate</h2>
-            <p>Aguacate Hass cremoso y en su punto óptimo de maduración.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Aguacate" data-precio="75.00">Comprar producto</button>
-    </article>
+                <!-- ZANAHORIA -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Zanahoria2.jpg|Imagenes/Img productos/Zanahoria3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Zanahoria1.jpg" alt="Zanahoria">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Zanahoria</h2>
+                        <p>Zanahorias frescas y seleccionadas diariamente.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Zanahoria" data-precio="16.00">Comprar producto</button>
+                </article>
 
-    <!-- BRÓCOLI -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/broccoli?lock=129|https://loremflickr.com/900/900/broccoli?lock=130">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/broccoli?lock=129" alt="Brócoli fresco">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Brócoli</h2>
-            <p>Brócoli fresco de color verde intenso, ideal para cocinar al vapor.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Brócoli" data-precio="34.00">Comprar producto</button>
-    </article>
+                <!-- PEPINO -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Pepino2.jpg|Imagenes/Img productos/Pepino3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Pepino1.jpg" alt="Pepino">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Pepino</h2>
+                        <p>Pepinos frescos y crujientes, ideales para ensaladas y aguas frescas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Pepino" data-precio="22.00">Comprar producto</button>
+                </article>
 
-    <!-- CALABACITA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/zucchini?lock=131|https://loremflickr.com/900/900/zucchini?lock=132">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/zucchini?lock=131" alt="Calabacita fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Calabacita</h2>
-            <p>Calabacitas tiernas y frescas para caldos o guisados.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Calabacita" data-precio="26.00">Comprar producto</button>
-    </article>
+                <!-- ESPINACA -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Espinaca2.jpg|Imagenes/Img productos/Espinaca3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Espinaca1.jpg" alt="Espinaca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Espinaca</h2>
+                        <p>Espinaca fresca, ideal para ensaladas, guisos y licuados.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Espinaca" data-precio="30.00">Comprar producto</button>
+                </article>
 
-    <!-- ZANAHORIA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/carrot?lock=133|https://loremflickr.com/900/900/carrot?lock=134">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/carrot?lock=133" alt="Zanahoria fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Zanahoria</h2>
-            <p>Zanahorias frescas y seleccionadas diariamente.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Zanahoria" data-precio="16.00">Comprar producto</button>
-    </article>
+                <!-- ELOTE -->
+                <article class="catalogo-card" data-category="verduras" data-imagenes="Imagenes/Img productos/Elote2.jpg|Imagenes/Img productos/Elote3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Elote1.jpg" alt="Elote">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">VERDURA</span>
+                        <h2>Elote</h2>
+                        <p>Elote fresco para preparar esquites, guisos y acompañamientos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Elote" data-precio="24.00">Comprar producto</button>
+                </article>
 
-    <!-- PEPINO -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/cucumber?lock=135|https://loremflickr.com/900/900/cucumber?lock=136">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/cucumber?lock=135" alt="Pepino fresco">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Pepino</h2>
-            <p>Pepinos frescos y crujientes, ideales para ensaladas y aguas frescas.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Pepino" data-precio="22.00">Comprar producto</button>
-    </article>
+                <!-- ARROZ -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Arroz2.jpg|Imagenes/Img productos/Arroz3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Arroz1.jpg" alt="Arroz">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Arroz</h2>
+                        <p>Arroz de calidad para preparar diferentes platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Arroz" data-precio="24.00">Comprar producto</button>
+                </article>
 
-    <!-- LECHUGA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/lettuce?lock=137|https://loremflickr.com/900/900/lettuce?lock=138">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/lettuce?lock=137" alt="Lechuga fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Lechuga</h2>
-            <p>Lechuga fresca y crujiente para ensaladas y acompañamientos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Lechuga" data-precio="18.00">Comprar producto</button>
-    </article>
+                <!-- AVENA -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Avena2.jpg|Imagenes/Img productos/Avena3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Avena1.jpg" alt="Avena">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Avena</h2>
+                        <p>Avena ideal para desayunos y diferentes preparaciones.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Avena" data-precio="30.00">Comprar producto</button>
+                </article>
 
-    <!-- ESPINACA -->
-    <article class="catalogo-card" data-category="verduras"
-        data-imagenes="https://loremflickr.com/900/900/spinach?lock=139|https://loremflickr.com/900/900/spinach?lock=140">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/spinach?lock=139" alt="Espinaca fresca">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">VERDURA</span>
-            <h2>Espinaca</h2>
-            <p>Espinaca fresca, ideal para ensaladas, guisos y licuados.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Espinaca" data-precio="30.00">Comprar producto</button>
-    </article>
+                <!-- FRIJOL NEGRO -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Frijol2.jpg|Imagenes/Img productos/Frijol3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Frijol1.jpg" alt="Frijol Negro">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">LEGUMBRE</span>
+                        <h2>Frijol Negro</h2>
+                        <p>Frijol seleccionado, suave al cocer y de excelente sabor.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Frijol Negro" data-precio="38.00">Comprar producto</button>
+                </article>
 
+                <!-- ALMENDRAS -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Almendra2.jpg|Imagenes/Img productos/Almendra3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Almendra1.jpg" alt="Almendras">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">FRUTOS SECOS</span>
+                        <h2>Almendras</h2>
+                        <p>Almendras naturales, ideales para snacks y preparaciones.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Almendras" data-precio="180.00">Comprar producto</button>
+                </article>
 
-    <!-- ==================== CEREALES ==================== -->
+                <!-- MAÍZ -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Maiz2.jpg|Imagenes/Img productos/Maiz3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Maiz1.jpg" alt="Maíz">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Maíz</h2>
+                        <p>Maíz seleccionado para diferentes preparaciones tradicionales.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Maíz" data-precio="26.00">Comprar producto</button>
+                </article>
 
-    <!-- ARROZ -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/rice?lock=141|https://loremflickr.com/900/900/rice?lock=142">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/rice?lock=141" alt="Arroz">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Arroz</h2>
-            <p>Arroz de calidad para preparar diferentes platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Arroz" data-precio="24.00">Comprar producto</button>
-    </article>
+                <!-- TRIGO -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Trigo2.jpg|Imagenes/Img productos/Trigo3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Trigo1.jpg" alt="Trigo">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Trigo</h2>
+                        <p>Trigo seleccionado para diferentes preparaciones y harinas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Trigo" data-precio="28.00">Comprar producto</button>
+                </article>
 
-    <!-- AVENA -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/oats?lock=143|https://loremflickr.com/900/900/oats?lock=144">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/oats?lock=143" alt="Avena">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Avena</h2>
-            <p>Avena ideal para desayunos y diferentes preparaciones.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Avena" data-precio="30.00">Comprar producto</button>
-    </article>
+                <!-- QUINOA -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Quinoa2.jpg|Imagenes/Img productos/Quinoa3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Quinoa1.jpg" alt="Quinoa">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Quinoa</h2>
+                        <p>Quinoa seleccionada para ensaladas, guarniciones y platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Quinoa" data-precio="95.00">Comprar producto</button>
+                </article>
 
-    <!-- FRIJOL -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/beans?lock=145|https://loremflickr.com/900/900/beans?lock=146">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/beans?lock=145" alt="Frijol negro">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">LEGUMBRE</span>
-            <h2>Frijol Negro</h2>
-            <p>Frijol seleccionado, suave al cocer y de excelente sabor.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Frijol Negro" data-precio="38.00">Comprar producto</button>
-    </article>
+                <!-- LENTEJA -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Lenteja2.jpg|Imagenes/Img productos/Lenteja3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Lenteja1.jpg" alt="Lenteja">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">LEGUMBRE</span>
+                        <h2>Lenteja</h2>
+                        <p>Lentejas seleccionadas para sopas, guisos y ensaladas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Lenteja" data-precio="36.00">Comprar producto</button>
+                </article>
 
-    <!-- ALMENDRAS -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/almonds?lock=147|https://loremflickr.com/900/900/almonds?lock=148">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/almonds?lock=147" alt="Almendras">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">FRUTOS SECOS</span>
-            <h2>Almendras</h2>
-            <p>Almendras naturales, ideales para snacks y preparaciones.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Almendras" data-precio="180.00">Comprar producto</button>
-    </article>
+                <!-- GARBANZO -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Garbanzo2.jpg|Imagenes/Img productos/Garbanzo3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Garbanzo1.jpg" alt="Garbanzo">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">LEGUMBRE</span>
+                        <h2>Garbanzo</h2>
+                        <p>Garbanzos seleccionados para guisos, ensaladas y preparaciones.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Garbanzo" data-precio="42.00">Comprar producto</button>
+                </article>
 
-    <!-- MAÍZ -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/corn?lock=149|https://loremflickr.com/900/900/corn?lock=150">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/corn?lock=149" alt="Maíz">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Maíz</h2>
-            <p>Maíz seleccionado para diferentes preparaciones tradicionales.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Maíz" data-precio="26.00">Comprar producto</button>
-    </article>
+                <!-- AMARANTO -->
+                <article class="catalogo-card" data-category="cereales" data-imagenes="Imagenes/Img productos/Amaranto2.jpg|Imagenes/Img productos/Amaranto3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Amaranto1.jpg" alt="Amaranto">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CEREAL</span>
+                        <h2>Amaranto</h2>
+                        <p>Amaranto seleccionado para desayunos, barras y snacks.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Amaranto" data-precio="70.00">Comprar producto</button>
+                </article>
 
-    <!-- TRIGO -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/wheat?lock=151|https://loremflickr.com/900/900/wheat?lock=152">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/wheat?lock=151" alt="Trigo">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Trigo</h2>
-            <p>Trigo seleccionado para diferentes preparaciones y harinas.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Trigo" data-precio="28.00">Comprar producto</button>
-    </article>
+                <!-- CHILE POBLANO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Poblano2.jpg|Imagenes/Img productos/Poblano3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Poblano1.jpg" alt="Chile Poblano">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Poblano</h2>
+                        <p>Ideal para rellenar, preparar rajas y salsas tradicionales.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Poblano" data-precio="45.00">Comprar producto</button>
+                </article>
 
-    <!-- GRANOLA -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/granola?lock=153|https://loremflickr.com/900/900/granola?lock=154">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/granola?lock=153" alt="Granola">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Granola</h2>
-            <p>Granola con ingredientes seleccionados para desayunos y snacks.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Granola" data-precio="85.00">Comprar producto</button>
-    </article>
+                <!-- CHILE JALAPEÑO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Jalapeno2.jpg|Imagenes/Img productos/Jalapeno3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Jalapeno1.jpg" alt="Chile Jalapeño">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Jalapeño</h2>
+                        <p>Chile fresco para darle sabor y un toque picante a tus platillos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Jalapeño" data-precio="32.00">Comprar producto</button>
+                </article>
 
-    <!-- QUINOA -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/quinoa?lock=155|https://loremflickr.com/900/900/quinoa?lock=156">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/quinoa?lock=155" alt="Quinoa">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Quinoa</h2>
-            <p>Quinoa seleccionada para ensaladas, guarniciones y platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Quinoa" data-precio="95.00">Comprar producto</button>
-    </article>
+                <!-- CHILE SERRANO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Serrano2.jpg|Imagenes/Img productos/Serrano3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Serrano1.jpg" alt="Chile Serrano">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Serrano</h2>
+                        <p>Chile fresco con sabor intenso para tus comidas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Serrano" data-precio="36.00">Comprar producto</button>
+                </article>
 
-    <!-- AMARANTO -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/amaranth?lock=157|https://loremflickr.com/900/900/amaranth?lock=158">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/amaranth?lock=157" alt="Amaranto">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Amaranto</h2>
-            <p>Amaranto seleccionado para barras, desayunos y snacks.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Amaranto" data-precio="70.00">Comprar producto</button>
-    </article>
+                <!-- CHILE HABANERO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Habanero2.jpg|Imagenes/Img productos/Habanero3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Habanero1.jpg" alt="Chile Habanero">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Habanero</h2>
+                        <p>Chile de sabor intenso y picante para salsas y preparaciones.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Habanero" data-precio="80.00">Comprar producto</button>
+                </article>
 
-    <!-- CEBADA -->
-    <article class="catalogo-card" data-category="cereales"
-        data-imagenes="https://loremflickr.com/900/900/barley?lock=159|https://loremflickr.com/900/900/barley?lock=160">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/barley?lock=159" alt="Cebada">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CEREAL</span>
-            <h2>Cebada</h2>
-            <p>Cebada seleccionada para diferentes preparaciones.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Cebada" data-precio="32.00">Comprar producto</button>
-    </article>
+                <!-- CHILE ANCHO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Ancho2.jpg|Imagenes/Img productos/Ancho3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Ancho1.jpg" alt="Chile Ancho">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Ancho</h2>
+                        <p>Chile seco tradicional para salsas, moles y guisos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Ancho" data-precio="88.00">Comprar producto</button>
+                </article>
 
+                <!-- CHILE GUAJILLO -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Guajillo2.jpg|Imagenes/Img productos/Guajillo3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Guajillo1.jpg" alt="Chile Guajillo">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Guajillo</h2>
+                        <p>Chile seco de sabor característico para salsas y adobos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Guajillo" data-precio="82.00">Comprar producto</button>
+                </article>
 
-    <!-- ==================== CHILES ==================== -->
+                <!-- CHILE CHILACA -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Chilaca2.jpg|Imagenes/Img productos/Chilaca3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Chilaca1.jpg" alt="Chile Chilaca">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Chilaca</h2>
+                        <p>Chile fresco ideal para asar, rellenar y preparar rajas.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Chilaca" data-precio="48.00">Comprar producto</button>
+                </article>
 
-    <!-- CHILE POBLANO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/poblano-pepper?lock=161|https://loremflickr.com/900/900/poblano-pepper?lock=162">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/poblano-pepper?lock=161" alt="Chile Poblano">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Poblano</h2>
-            <p>Ideal para rellenar, preparar rajas y salsas tradicionales.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Poblano" data-precio="45.00">Comprar producto</button>
-    </article>
+                <!-- CHILE DE ÁRBOL -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Arbol2.jpg|Imagenes/Img productos/Arbol3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Arbol1.jpg" alt="Chile de Árbol">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile de Árbol</h2>
+                        <p>Chile seco y picante para preparar salsas y aderezos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile de Árbol" data-precio="90.00">Comprar producto</button>
+                </article>
 
-    <!-- JALAPEÑO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/jalapeno?lock=163|https://loremflickr.com/900/900/jalapeno?lock=164">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/jalapeno?lock=163" alt="Chile Jalapeño">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Jalapeño</h2>
-            <p>Chile fresco para darle sabor y un toque picante a tus platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Jalapeño" data-precio="32.00">Comprar producto</button>
-    </article>
+                <!-- CHILE PASILLA -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Pasilla2.jpg|Imagenes/Img productos/Pasilla3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Pasilla1.jpg" alt="Chile Pasilla">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Pasilla</h2>
+                        <p>Chile seco tradicional para salsas, moles y guisos.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Pasilla" data-precio="88.00">Comprar producto</button>
+                </article>
 
-    <!-- SERRANO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/serrano-pepper?lock=165|https://loremflickr.com/900/900/serrano-pepper?lock=166">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/serrano-pepper?lock=165" alt="Chile Serrano">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Serrano</h2>
-            <p>Chile fresco con sabor intenso para tus comidas.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Serrano" data-precio="36.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE HABANERO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/habanero?lock=167|https://loremflickr.com/900/900/habanero?lock=168">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/habanero?lock=167" alt="Chile Habanero">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Habanero</h2>
-            <p>Chile de sabor intenso y picante para salsas y preparaciones.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Habanero" data-precio="80.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE DE ÁRBOL -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/red-chili?lock=169|https://loremflickr.com/900/900/red-chili?lock=170">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/red-chili?lock=169" alt="Chile de Árbol">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile de Árbol</h2>
-            <p>Chile seco y picante para preparar salsas y aderezos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile de Árbol" data-precio="90.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE GÜERO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/yellow-chili?lock=171|https://loremflickr.com/900/900/yellow-chili?lock=172">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/yellow-chili?lock=171" alt="Chile Güero">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Güero</h2>
-            <p>Chile fresco de sabor característico para diferentes platillos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Güero" data-precio="48.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE CHIPOTLE -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/chipotle?lock=173|https://loremflickr.com/900/900/chipotle?lock=174">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/chipotle?lock=173" alt="Chile Chipotle">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Chipotle</h2>
-            <p>Chile con sabor ahumado para salsas, guisos y adobos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Chipotle" data-precio="85.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE MORITA -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/morita-chili?lock=175|https://loremflickr.com/900/900/morita-chili?lock=176">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/morita-chili?lock=175" alt="Chile Morita">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Morita</h2>
-            <p>Chile seco de sabor ahumado y ligeramente dulce.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Morita" data-precio="95.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE MANZANO -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/manzano-pepper?lock=177|https://loremflickr.com/900/900/manzano-pepper?lock=178">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/manzano-pepper?lock=177" alt="Chile Manzano">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Manzano</h2>
-            <p>Chile fresco de sabor intenso para salsas y platillos mexicanos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Manzano" data-precio="70.00">Comprar producto</button>
-    </article>
-
-    <!-- CHILE PASILLA -->
-    <article class="catalogo-card" data-category="chiles"
-        data-imagenes="https://loremflickr.com/900/900/pasilla-chili?lock=179|https://loremflickr.com/900/900/pasilla-chili?lock=180">
-        <div class="card-imagen-wrapper">
-            <img src="https://loremflickr.com/600/600/pasilla-chili?lock=179" alt="Chile Pasilla">
-        </div>
-        <div class="catalogo-info">
-            <span class="producto-categoria">CHILE</span>
-            <h2>Chile Pasilla</h2>
-            <p>Chile seco tradicional para salsas, moles y guisos.</p>
-        </div>
-        <button class="btn-accion-comprar" data-nombre="Chile Pasilla" data-precio="88.00">Comprar producto</button>
-    </article>
-
-</div>
-        </div>
-    </section>
-
-    <!-- =====================================================
+                <!-- CHILE MORITA -->
+                <article class="catalogo-card" data-category="chiles" data-imagenes="Imagenes/Img productos/Morita2.jpg|Imagenes/Img productos/Morita3.jpg">
+                    <div class="card-imagen-wrapper">
+                        <img src="Imagenes/Img productos/Morita1.jpg" alt="Chile Morita">
+                    </div>
+                    <div class="catalogo-info">
+                        <span class="producto-categoria">CHILE</span>
+                        <h2>Chile Morita</h2>
+                        <p>Chile seco de sabor ahumado y ligeramente dulce.</p>
+                    </div>
+                    <button class="btn-accion-comprar" data-nombre="Chile Morita" data-precio="95.00">Comprar producto</button>
+                </article>
+            </div>
+            <div id="sin-resultados" class="catalogo-sin-resultados" hidden>
+                <div class="sin-resultados-icono">⌕</div>
+                <h3>No encontramos ese producto</h3>
+                <p>Prueba con otro nombre o cambia la categoría.</p>
+            </div>
+<!-- =====================================================
          MODAL DE COMPRA
     ====================================================== -->
     <div id="modal-compra" class="modal-compra-overlay">
@@ -1163,6 +1123,7 @@
         'log-out': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H8"></path></svg>',
         'log-in': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"></path><path d="M10 16l4-4-4-4"></path><path d="M14 12H4"></path></svg>',
         'shopping-cart': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.5 12h11l2-8H7"></path></svg>',
+        search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 5 5"></path></svg>',
         'arrow-left': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path><path d="M9 12h11"></path></svg>',
         grid: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>',
         apple: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7c-2-3 1-5 1-5"></path><path d="M9.5 8C5 6.5 3 10 4.5 15c1.2 4 3.2 6 5.3 6 1.1 0 1.5-.8 2.2-.8s1.1.8 2.2.8c2.1 0 4.1-2 5.3-6 1-3.2.2-5.9-2-7.1-1.7-.9-3.3.1-4.5.1-1.2 0-2-.8-3.5 0Z"></path></svg>',
@@ -1283,19 +1244,49 @@
             });
         }
 
-        // FILTROS
+        // FILTROS + BÚSQUEDA
         const botonesFiltro = document.querySelectorAll('.filtro-btn');
         const tarjetasProductos = document.querySelectorAll('.catalogo-card');
+        const campoBusqueda = document.getElementById('busqueda-productos');
+        const limpiarBusqueda = document.getElementById('limpiar-busqueda');
+        const sinResultados = document.getElementById('sin-resultados');
+        let categoriaActual = 'todos';
+
+        function normalizarTexto(texto) {
+            return texto.toLocaleLowerCase('es-MX').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function aplicarFiltros() {
+            const termino = normalizarTexto(campoBusqueda?.value.trim() || '');
+            let visibles = 0;
+            tarjetasProductos.forEach(tarjeta => {
+                const categoriaCoincide = categoriaActual === 'todos' || tarjeta.dataset.category === categoriaActual;
+                const contenido = normalizarTexto([
+                    tarjeta.querySelector('h2')?.textContent || '',
+                    tarjeta.querySelector('.producto-categoria')?.textContent || '',
+                    tarjeta.querySelector('p')?.textContent || ''
+                ].join(' '));
+                const mostrar = categoriaCoincide && (!termino || contenido.includes(termino));
+                tarjeta.classList.toggle('oculto', !mostrar);
+                if (mostrar) visibles++;
+            });
+            if (sinResultados) sinResultados.hidden = visibles !== 0;
+            if (limpiarBusqueda) limpiarBusqueda.classList.toggle('visible', termino.length > 0);
+        }
 
         botonesFiltro.forEach(boton => {
             boton.addEventListener('click', () => {
                 botonesFiltro.forEach(btn => btn.classList.remove('activo'));
                 boton.classList.add('activo');
-                const categoria = boton.getAttribute('data-filter');
-                tarjetasProductos.forEach(tarjeta => {
-                    tarjeta.classList.toggle('oculto', categoria !== 'todos' && tarjeta.getAttribute('data-category') !== categoria);
-                });
+                categoriaActual = boton.getAttribute('data-filter') || 'todos';
+                aplicarFiltros();
             });
+        });
+        if (campoBusqueda) campoBusqueda.addEventListener('input', aplicarFiltros);
+        if (limpiarBusqueda) limpiarBusqueda.addEventListener('click', () => {
+            campoBusqueda.value = '';
+            campoBusqueda.focus();
+            aplicarFiltros();
         });
 
         // MODAL DE COMPRA
@@ -1690,6 +1681,7 @@
         }
 
         actualizarContadorCarrito();
+        aplicarFiltros();
 
         btnMenos.addEventListener('click', () => {
             let val = parseFloat(cantidadInput.value) || 0;
