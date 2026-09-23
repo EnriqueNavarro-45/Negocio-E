@@ -13,19 +13,6 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
-    <style>
-        .catalogo-herramientas{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 30px;flex-wrap:wrap}
-        .catalogo-busqueda{display:flex;align-items:center;width:min(100%,360px);min-height:52px;background:#fff;border:1px solid #e3ebe5;border-radius:16px;box-shadow:0 8px 25px rgba(25,62,42,.07);padding:0 14px}
-        .catalogo-busqueda svg{width:20px;height:20px;flex:0 0 auto;stroke:currentColor;fill:none}
-        .catalogo-busqueda input{width:100%;border:0;outline:0;background:transparent;padding:12px 10px;font:inherit;color:#243329}
-        .catalogo-busqueda input::placeholder{color:#8a968e}
-        .catalogo-busqueda:focus-within{border-color:#4f9b68;box-shadow:0 0 0 4px rgba(79,155,104,.12)}
-        #limpiar-busqueda{display:none;border:0;background:transparent;color:#6b786f;font-size:24px;line-height:1;cursor:pointer;padding:4px 2px}
-        #limpiar-busqueda.visible{display:block}
-        .catalogo-sin-resultados{text-align:center;background:#fff;border:1px solid #e3ebe5;border-radius:20px;padding:45px 20px;margin:10px 0 40px;color:#6b786f}
-        .catalogo-sin-resultados h3{margin:10px 0 6px;color:#173f2a}.catalogo-sin-resultados p{margin:0}.sin-resultados-icono{font-size:36px;color:#287348}
-        @media(max-width:700px){.catalogo-herramientas{align-items:stretch}.catalogo-busqueda{width:100%}}
-    </style>
 </head>
 
 <body class="productos-body">
@@ -1113,6 +1100,93 @@
         </div>
     </div>
 </div>
+
+    <!-- =====================================================
+         TÉRMINOS Y CONDICIONES ANTES DE FINALIZAR LA COMPRA
+    ====================================================== -->
+    <div id="terminos-overlay" class="terminos-overlay" role="dialog" aria-modal="true" aria-labelledby="terminos-titulo">
+        <div class="terminos-modal">
+            <div class="terminos-cabecera">
+                <div>
+                    <span class="section-tag">Antes de finalizar</span>
+                    <h2 id="terminos-titulo">Términos y condiciones de compra</h2>
+                    <p>Revisa la información de tu pedido antes de confirmar.</p>
+                </div>
+                <button type="button" class="terminos-cerrar" id="cerrar-terminos" aria-label="Cerrar términos y condiciones">&times;</button>
+            </div>
+
+            <div class="terminos-contenido">
+                <div class="terminos-resumen-compra">
+                    <div class="terminos-resumen-item">
+                        <span>Productos diferentes</span>
+                        <strong id="terminos-cantidad">0</strong>
+                    </div>
+                    <div class="terminos-resumen-item">
+                        <span>Cantidades seleccionadas</span>
+                        <strong id="terminos-articulos">0</strong>
+                    </div>
+                    <div class="terminos-resumen-item">
+                        <span>Total del pedido</span>
+                        <strong id="terminos-total">$0.00 MXN</strong>
+                    </div>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>1. Productos y cantidades</h3>
+                    <p>Los productos se venden de acuerdo con la unidad seleccionada en el carrito. En productos frescos puede existir una variación natural de tamaño, peso, color o apariencia.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>2. Precios y disponibilidad</h3>
+                    <p>Los precios mostrados en el catálogo corresponden al precio indicado por kilogramo. La disponibilidad está sujeta a existencia. El total mostrado en el carrito corresponde a las cantidades seleccionadas.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>3. Confirmación del pedido</h3>
+                    <p>Al aceptar estos términos y finalizar, el pedido se registrará como compra realizada en el historial de la cuenta. Esta versión del sitio es una demostración y no procesa pagos reales.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>4. Entrega y atención</h3>
+                    <p>Los detalles de entrega, horario, disponibilidad final y cualquier costo adicional deberán confirmarse directamente con San Gerardo Mayela antes de una entrega real.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>5. Productos frescos</h3>
+                    <p>Por tratarse de alimentos frescos, las características visuales pueden variar respecto a las imágenes utilizadas en el catálogo. Las imágenes sirven como referencia del producto.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>6. Cambios o aclaraciones</h3>
+                    <p>Para solicitar una aclaración sobre un pedido, producto o cantidad, puedes comunicarte con el establecimiento mediante los datos de contacto publicados en el sitio.</p>
+                </div>
+
+                <div class="terminos-seccion">
+                    <h3>7. Información de la cuenta</h3>
+                    <p>El pedido se relaciona con la cuenta activa en el sitio. Es responsabilidad del usuario revisar los datos de su cuenta antes de finalizar la compra.</p>
+                </div>
+
+                <div class="terminos-aceptacion">
+                    <label class="terminos-checkbox" for="aceptar-terminos">
+                        <input type="checkbox" id="aceptar-terminos">
+                        <span>Acepto los términos y condiciones de compra y confirmo que revisé los productos, cantidades y total de mi pedido.</span>
+                    </label>
+                    <div class="terminos-error" id="terminos-error">
+                        Debes aceptar los términos y condiciones para finalizar la compra.
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminos-footer">
+                <button type="button" class="btn-terminos-cancelar" id="cancelar-terminos">
+                    Volver al carrito
+                </button>
+                <button type="button" class="btn-terminos-aceptar" id="aceptar-y-finalizar" disabled>
+                    Aceptar y finalizar compra
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- =====================================================
          ICONOS LOCALES + FUNCIONES DE LA PÁGINA
     ====================================================== -->
@@ -1233,14 +1307,8 @@
                 sessionStorage.removeItem('sesionActiva');
                 sessionStorage.removeItem('usuario');
                 sessionStorage.removeItem('datosPerfil');
-                mostrarNotificacion(
-                    'Sesión cerrada',
-                    'Tu sesión se ha cerrado correctamente.'
-                );
 
-                setTimeout(() => {
-                    window.location.href = 'Productos.html';
-                }, 1200);
+                window.location.href = 'login.html';
             });
         }
 
@@ -1338,12 +1406,28 @@
             sessionStorage.setItem(obtenerClaveCarrito(), JSON.stringify(carrito));
         }
 
+        function contarProductosDistintos(carrito) {
+            const productos = new Set();
+
+            carrito.forEach(item => {
+                const nombre = String(item.producto || '').trim().toLocaleLowerCase('es-MX');
+                if (nombre) productos.add(nombre);
+            });
+
+            return productos.size;
+        }
+
         function actualizarContadorCarrito() {
             if (!carritoContador) return;
+
             const carrito = obtenerCarrito();
-            const cantidad = carrito.reduce((total, item) => total + Number(item.cantidad), 0);
-            carritoContador.textContent = cantidad > 99 ? '99+' : cantidad;
-            carritoContador.classList.toggle('visible', cantidad > 0);
+            const productosDistintos = contarProductosDistintos(carrito);
+
+            carritoContador.textContent = productosDistintos > 99
+                ? '99+'
+                : String(productosDistintos);
+
+            carritoContador.classList.toggle('visible', productosDistintos > 0);
         }
 
         function calcularTotalItem(item) {
@@ -1495,19 +1579,73 @@
             mostrarNotificacion('Carrito vacío', 'Se eliminaron todos los productos del carrito.');
         }
 
-        function finalizarCompraCarrito() {
+        const terminosOverlay = document.getElementById('terminos-overlay');
+        const cerrarTerminosBtn = document.getElementById('cerrar-terminos');
+        const cancelarTerminosBtn = document.getElementById('cancelar-terminos');
+        const aceptarTerminosCheck = document.getElementById('aceptar-terminos');
+        const aceptarYFinalizarBtn = document.getElementById('aceptar-y-finalizar');
+        const terminosError = document.getElementById('terminos-error');
+        const terminosCantidad = document.getElementById('terminos-cantidad');
+        const terminosArticulos = document.getElementById('terminos-articulos');
+        const terminosTotal = document.getElementById('terminos-total');
+
+        function abrirTerminos() {
+            const carrito = obtenerCarrito();
+            if (!carrito.length) {
+                mostrarNotificacion('Carrito vacío', 'Agrega productos antes de finalizar la compra.', 'error');
+                return;
+            }
+
+            const cantidadTotal = carrito.reduce((total, item) => total + Number(item.cantidad), 0);
+            const totalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+
+            terminosCantidad.textContent = carrito.length === 1
+                ? '1 producto'
+                : `${carrito.length} productos`;
+
+            terminosArticulos.textContent = cantidadTotal % 1 === 0
+                ? cantidadTotal
+                : cantidadTotal.toFixed(1);
+
+            terminosTotal.textContent = `$${totalCompra.toFixed(2)} MXN`;
+
+            aceptarTerminosCheck.checked = false;
+            aceptarYFinalizarBtn.disabled = true;
+            terminosError.classList.remove('visible');
+
+            terminosOverlay.classList.add('activo');
+            document.body.classList.add('modal-abierto');
+        }
+
+        function cerrarTerminos() {
+            terminosOverlay.classList.remove('activo');
+            document.body.classList.remove('modal-abierto');
+        }
+
+        function registrarCompraDelCarrito() {
             const carrito = obtenerCarrito();
             if (!carrito.length) return;
+
+            if (!aceptarTerminosCheck.checked) {
+                terminosError.classList.add('visible');
+                return;
+            }
 
             const usuarioActual = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
             const claveHistorial = `historialCompras_${usuarioActual}`;
             const historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
 
+            const fechaCompra = new Date().toLocaleString('es-MX', {
+                dateStyle: 'medium',
+                timeStyle: 'short'
+            });
+
             carrito.forEach(item => {
                 const total = calcularTotalItem(item);
+
                 historial.unshift({
                     id: Date.now() + Math.random(),
-                    fecha: new Date().toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }),
+                    fecha: fechaCompra,
                     producto: item.producto,
                     cantidad: item.cantidad,
                     unidad: item.unidad,
@@ -1515,20 +1653,29 @@
                     precioKg: item.precioKg,
                     total: `$${total.toFixed(2)}`,
                     imagen: item.imagen,
-                    estado: 'Compra realizada'
+                    estado: 'Compra realizada',
+                    terminosAceptados: true
                 });
             });
 
             sessionStorage.setItem(claveHistorial, JSON.stringify(historial));
+
             const totalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
             const cantidadItems = carrito.length;
+
             guardarCarrito([]);
+            cerrarTerminos();
             cerrarCarrito();
             renderizarCarrito();
+
             mostrarNotificacion(
                 'Compra realizada',
-                `Se procesaron <strong>${cantidadItems} ${cantidadItems === 1 ? 'producto' : 'productos'}</strong>.<br>Total: <strong>$${totalCompra.toFixed(2)} MXN</strong><br><br>La compra también quedó registrada en tu historial.`
+                `Se procesaron <strong>${cantidadItems} ${cantidadItems === 1 ? 'producto' : 'productos'}</strong>.<br>Total: <strong>$${totalCompra.toFixed(2)} MXN</strong><br><br>La compra quedó registrada en tu historial.`
             );
+        }
+
+        function finalizarCompraCarrito() {
+            abrirTerminos();
         }
 
         function obtenerImagenes(card) {
@@ -1638,6 +1785,7 @@
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') {
                 cerrarModal();
+                cerrarTerminos();
                 cerrarCarrito();
                 cerrarNotificacion();
             }
@@ -1658,6 +1806,27 @@
         }
         if (vaciarCarritoBtn) vaciarCarritoBtn.addEventListener('click', vaciarCarrito);
         if (finalizarCarritoBtn) finalizarCarritoBtn.addEventListener('click', finalizarCompraCarrito);
+
+        if (cerrarTerminosBtn) cerrarTerminosBtn.addEventListener('click', cerrarTerminos);
+        if (cancelarTerminosBtn) cancelarTerminosBtn.addEventListener('click', cerrarTerminos);
+
+        if (terminosOverlay) {
+            terminosOverlay.addEventListener('click', e => {
+                if (e.target === terminosOverlay) cerrarTerminos();
+            });
+        }
+
+        if (aceptarTerminosCheck) {
+            aceptarTerminosCheck.addEventListener('change', () => {
+                const aceptado = aceptarTerminosCheck.checked;
+                aceptarYFinalizarBtn.disabled = !aceptado;
+                terminosError.classList.toggle('visible', !aceptado && terminosError.classList.contains('visible'));
+            });
+        }
+
+        if (aceptarYFinalizarBtn) {
+            aceptarYFinalizarBtn.addEventListener('click', registrarCompraDelCarrito);
+        }
 
         if (carritoLista) {
             carritoLista.addEventListener('click', e => {
