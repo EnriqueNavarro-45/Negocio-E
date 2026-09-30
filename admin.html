@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador | San Gerardo Mayela</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        [hidden] { display: none !important; }
+
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 0 0 16px;
+        }
+
+        .admin-tab {
+            padding: 10px 18px;
+            border: 1px solid #d5d9d3;
+            border-radius: 999px;
+            background: #fff;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .admin-tab.activo {
+            background: #2e7d32;
+            border-color: #2e7d32;
+            color: #fff;
+        }
+
+        .admin-input {
+            padding: 10px 12px;
+            border: 1px solid #d5d9d3;
+            border-radius: 10px;
+            font: inherit;
+        }
+
+        .admin-actions-cell {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .estado-bajo,
+        .estado-pendiente,
+        .estado-pausada {
+            background: #fff3cd;
+            color: #7a5b00;
+        }
+
+        .estado-vigente,
+        .estado-entregado {
+            background: #d9f2dc;
+            color: #1b5e20;
+        }
+
+        .estado-en-camino {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .estado-vencida,
+        .estado-cancelado {
+            background: #fde2e2;
+            color: #9b1c1c;
+        }
+
+        /* ===== OFERTAS: diseño mejorado ===== */
+        .ofertas-form-card {
+            background: linear-gradient(145deg, #f7fbf7 0%, #eef6ee 100%);
+            border: 1px solid #d4e8d4;
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-bottom: 22px;
+        }
+
+        .ofertas-form-card h3 {
+            margin: 0 0 6px;
+            font-size: 1.05rem;
+            color: #1b5e20;
+        }
+
+        .ofertas-form-card > p {
+            margin: 0 0 16px;
+            font-size: 0.875rem;
+            color: #5a6b5a;
+        }
+
+        .ofertas-form-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 0.7fr 0.9fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media (max-width: 900px) {
+            .ofertas-form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .ofertas-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ofertas-form-grid label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #3d4f3d;
+        }
+
+        .ofertas-form-grid .admin-select,
+        .ofertas-form-grid .admin-input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .ofertas-form-grid .admin-primary-btn {
+            height: 42px;
+            white-space: nowrap;
+        }
+
+        .ofertas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .oferta-card {
+            background: #fff;
+            border: 1px solid #e2ebe2;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .oferta-card:hover {
+            box-shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .oferta-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #fafcfa;
+            border-bottom: 1px solid #eef3ee;
+        }
+
+        .oferta-card-header img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #e8f0e8;
+        }
+
+        .oferta-card-header strong {
+            display: block;
+            font-size: 0.95rem;
+            color: #1a2e1a;
+        }
+
+        .oferta-card-header span {
+            font-size: 0.78rem;
+            color: #6b7c6b;
+        }
+
+        .oferta-badge {
+            margin-left: auto;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .oferta-card-body {
+            padding: 14px 16px;
+            flex: 1;
+        }
+
+        .oferta-precios {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .oferta-precio-oferta {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+
+        .oferta-precio-normal {
+            font-size: 0.9rem;
+            color: #9aa89a;
+            text-decoration: line-through;
+        }
+
+        .oferta-descuento-tag {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .oferta-meta {
+            font-size: 0.8rem;
+            color: #6b7c6b;
+            margin: 0;
+        }
+
+        .oferta-card-footer {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px 14px;
+            border-top: 1px solid #eef3ee;
+        }
+
+        .oferta-card-footer button {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #d5d9d3;
+            background: #fff;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .oferta-card-footer button:hover {
+            background: #f5faf5;
+            border-color: #2e7d32;
+            color: #2e7d32;
+        }
+
+        .oferta-card-footer .btn-eliminar-oferta:hover {
+            background: #fdecea;
+            border-color: #c62828;
+            color: #c62828;
+        }
+
+        .ofertas-vacio {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7c6b;
+            background: #fafcfa;
+            border: 1px dashed #d4e8d4;
+            border-radius: 16px;
+        }
+
+        .ofertas-vacio strong {
+            display: block;
+            font-size: 1.05rem;
+            color: #3d4f3d;
+            margin-bottom: 6px;
+        }
+
+        /* ===== AGREGAR PRODUCTO ===== */
+        .agregar-form-card {
+            background: linear-gradient(145deg, #f7fbf7 0%, #eef6ee 100%);
+            border: 1px solid #d4e8d4;
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+        }
+
+        .agregar-form-card h3 {
+            margin: 0 0 6px;
+            font-size: 1.05rem;
+            color: #1b5e20;
+        }
+
+        .agregar-form-card > p {
+            margin: 0 0 16px;
+            font-size: 0.875rem;
+            color: #5a6b5a;
+        }
+
+        .agregar-form-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr 0.7fr 0.7fr 1.4fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media (max-width: 1100px) {
+            .agregar-form-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .agregar-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .agregar-form-grid label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #3d4f3d;
+        }
+
+        .agregar-form-grid .admin-select,
+        .agregar-form-grid .admin-input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .agregar-form-grid .admin-primary-btn {
+            height: 42px;
+            white-space: nowrap;
+        }
+
+        .admin-panel-header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-eliminar-producto {
+            background: #fff;
+            border: 1px solid #e0b4b4;
+            color: #9b1c1c;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .btn-eliminar-producto:hover {
+            background: #fdecea;
+        }
+    </style>
+    <script>
+        if (sessionStorage.getItem('sesionActiva') !== 'true' ||
+            sessionStorage.getItem('rol') !== 'administrador') {
+            location.replace('login.html');
+        }
+    </script>
+</head>
+<body class="admin-body">
+
+    <header class="admin-navbar">
+        <a href="Productos.html" class="admin-brand">
+            <span class="admin-brand-icon">⌂</span>
+            <span><strong>San Gerardo Mayela</strong><small>Panel administrativo</small></span>
+        </a>
+        <div class="admin-navbar-actions">
+            <span class="admin-role">Administrador</span>
+            <button type="button" id="cerrar-sesion-admin" class="admin-logout">Cerrar sesión</button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <section class="admin-welcome">
+            <div>
+                <span class="admin-tag">Administración</span>
+                <h1>Panel de control</h1>
+                <p>Administra el inventario de productos de San Gerardo Mayela.</p>
+            </div>
+        </section>
+
+        <section class="admin-stats" aria-label="Resumen del inventario">
+            <article class="admin-stat-card"><span class="admin-stat-icon">▦</span><div><small>Productos</small><strong id="stat-productos">0</strong></div></article>
+            <article class="admin-stat-card"><span class="admin-stat-icon">✓</span><div><small>Disponibles</small><strong id="stat-disponibles">0</strong></div></article>
+            <article class="admin-stat-card"><span class="admin-stat-icon">!</span><div><small>Stock bajo</small><strong id="stat-stock-bajo">0</strong></div></article>
+            <article class="admin-stat-card"><span class="admin-stat-icon">×</span><div><small>Agotados</small><strong id="stat-agotados">0</strong></div></article>
+        </section>
+
+        <nav class="admin-tabs" aria-label="Secciones del panel">
+            <button type="button" class="admin-tab activo" data-tab="inventario">Inventario</button>
+            <button type="button" class="admin-tab" data-tab="ofertas">Ofertas</button>
+            <button type="button" class="admin-tab" data-tab="pedidos" id="tab-btn-pedidos">Pedidos</button>
+        </nav>
+
+        <section class="admin-panel" id="tab-inventario">
+            <div class="admin-panel-header">
+                <div>
+                    <span class="admin-tag">Inventario</span>
+                    <h2>Gestión de productos</h2>
+                    <p>Agrega, edita o elimina productos del catálogo.</p>
+                </div>
+                <div class="admin-panel-header-actions">
+                    <button type="button" id="restaurar-inventario" class="admin-secondary-btn">Restaurar inventario inicial</button>
+                </div>
+            </div>
+
+            <div class="agregar-form-card">
+                <h3>Agregar producto</h3>
+                <p>Completa los datos. La imagen debe existir en <code>Imagenes/Img productos/</code> (no se renombran archivos).</p>
+                <form id="form-agregar-producto" class="agregar-form-grid" novalidate>
+                    <label>
+                        Nombre
+                        <input type="text" id="nuevo-nombre" class="admin-input" placeholder="Ej. Kiwi" required autocomplete="off">
+                    </label>
+                    <label>
+                        Categoría
+                        <select id="nuevo-categoria" class="admin-select" required>
+                            <option value="frutas">Frutas</option>
+                            <option value="verduras">Verduras</option>
+                            <option value="cereales">Cereales</option>
+                            <option value="chiles">Chiles</option>
+                        </select>
+                    </label>
+                    <label>
+                        Precio / kg
+                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" required>
+                    </label>
+                    <label>
+                        Stock (kg)
+                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" required>
+                    </label>
+                    <label>
+                        Archivo de imagen
+                        <input type="text" id="nuevo-imagen" class="admin-input" placeholder="Ej. Kiwi1.jpg" autocomplete="off">
+                    </label>
+                    <button type="submit" class="admin-primary-btn">Agregar</button>
+                </form>
+            </div>
+
+            <div class="admin-tools">
+                <div class="admin-search">
+                    <span>⌕</span>
+                    <input type="search" id="buscar-admin" placeholder="Buscar producto..." autocomplete="off">
+                </div>
+                <select id="filtro-admin" class="admin-select">
+                    <option value="todos">Todas las categorías</option>
+                    <option value="frutas">Frutas</option>
+                    <option value="verduras">Verduras</option>
+                    <option value="cereales">Cereales</option>
+                    <option value="chiles">Chiles</option>
+                </select>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Producto</th><th>Categoría</th><th>Precio / kg</th><th>Stock</th><th>Estado</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody id="inventario-tabla"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- OFERTAS -->
+        <section class="admin-panel" id="tab-ofertas" hidden>
+            <div class="admin-panel-header">
+                <div>
+                    <span class="admin-tag">Promociones</span>
+                    <h2>Ofertas</h2>
+                    <p>Aplica un descuento a un producto, con fecha de vencimiento opcional.</p>
+                </div>
+            </div>
+
+            <div class="ofertas-form-card">
+                <h3>Nueva oferta</h3>
+                <p>Elige el producto, el porcentaje de descuento y, si quieres, una fecha de fin.</p>
+                <form id="form-oferta" class="ofertas-form-grid" novalidate>
+                    <label>
+                        Producto
+                        <select id="oferta-producto" class="admin-select" aria-label="Producto"></select>
+                    </label>
+                    <label>
+                        Descuento (%)
+                        <input type="number" id="oferta-descuento" class="admin-input" min="1" max="90" step="1" placeholder="Ej. 15" aria-label="Porcentaje de descuento">
+                    </label>
+                    <label>
+                        Válida hasta
+                        <input type="date" id="oferta-fin" class="admin-input" aria-label="Válida hasta">
+                    </label>
+                    <button type="submit" class="admin-primary-btn">Guardar oferta</button>
+                </form>
+            </div>
+
+            <div class="ofertas-grid" id="ofertas-grid">
+                <!-- Tarjetas de ofertas -->
+            </div>
+        </section>
+
+        <!-- PEDIDOS -->
+        <section class="admin-panel" id="tab-pedidos" hidden>
+            <div class="admin-panel-header">
+                <div>
+                    <span class="admin-tag">Entregas</span>
+                    <h2>Pedidos</h2>
+                    <p>Revisa los pedidos de los clientes y actualiza su estado.</p>
+                </div>
+                <button type="button" id="cargar-ejemplos" class="admin-secondary-btn">Cargar pedidos de ejemplo</button>
+            </div>
+
+            <div class="admin-tools">
+                <select id="filtro-pedidos" class="admin-select" aria-label="Filtrar por estado">
+                    <option value="todos">Todos los estados</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en camino">En camino</option>
+                    <option value="entregado">Entregado</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Pedido</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Fecha</th><th>Estado</th></tr>
+                    </thead>
+                    <tbody id="pedidos-tabla"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="admin-overlay" id="modal-inventario" aria-hidden="true">
+        <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="modal-inventario-titulo">
+            <div class="admin-modal-header">
+                <div>
+                    <span class="admin-tag">Editar inventario</span>
+                    <h2 id="modal-inventario-titulo">Producto</h2>
+                </div>
+                <button type="button" class="admin-modal-close" id="cerrar-modal-admin" aria-label="Cerrar">×</button>
+            </div>
+
+            <div class="admin-product-preview">
+                <img id="modal-producto-imagen" src="" alt="">
+                <div><strong id="modal-producto-nombre"></strong><span id="modal-producto-categoria"></span></div>
+            </div>
+
+            <form id="form-inventario" class="admin-form" novalidate>
+                <input type="hidden" id="producto-indice">
+
+                <label>
+                    Precio por kilogramo
+                    <div class="admin-input-prefix"><span>$</span><input type="number" id="producto-precio" min="0" step="0.01" required></div>
+                </label>
+
+                <label>
+                    Existencia disponible
+                    <div class="admin-input-suffix"><input type="number" id="producto-stock" min="0" step="0.1" required><span>kg</span></div>
+                </label>
+
+                <label class="admin-switch-row">
+                    <span>
+                        <strong>Producto disponible</strong>
+                        <small>Permite que el producto aparezca como disponible para compra.</small>
+                    </span>
+                    <input type="checkbox" id="producto-activo">
+                    <span class="admin-switch"></span>
+                </label>
+
+                <div class="admin-modal-actions">
+                    <button type="button" class="admin-secondary-btn" id="cancelar-edicion">Cancelar</button>
+                    <button type="submit" class="admin-primary-btn">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-toast" id="admin-toast" role="status">
+        <strong id="toast-titulo">Listo</strong>
+        <span id="toast-mensaje"></span>
+    </div>
+
+<script>
+/* Nombres de imagen sin cambiar (coinciden con Productos.html) */
+const BASE = [
+  ['Mango','frutas',45,'Mango1'],['Manzana','frutas',40,'Manzana1'],['Plátano','frutas',22,'Platano1'],
+  ['Fresa','frutas',65,'Fresa1'],['Papaya','frutas',28,'Papaya1'],['Limón','frutas',30,'limon'],
+  ['Naranja','frutas',18,'Naranja1'],['Piña','frutas',32,'Piña1'],['Sandía','frutas',20,'Sandia1'],
+  ['Melón','frutas',25,'Melon1'],
+  ['Jitomate','verduras',28,'Jitomate1'],['Cebolla','verduras',20,'cebolla'],['Papa','verduras',25,'Papa1'],
+  ['Aguacate','verduras',75,'Aguacate1'],['Brócoli','verduras',34,'Brocoli1'],['Calabacita','verduras',26,'calabacita'],
+  ['Zanahoria','verduras',16,'zanahoria'],['Pepino','verduras',22,'Pepino1'],['Espinaca','verduras',30,'Espinaca1'],
+  ['Elote','verduras',24,'Elote1'],
+  ['Arroz','cereales',24,'Arroz1'],['Avena','cereales',30,'avena'],['Frijol Negro','cereales',38,'frijol negro'],
+  ['Almendras','cereales',180,'almendra'],['Maíz','cereales',26,'Maiz1'],['Trigo','cereales',28,'Trigo1'],
+  ['Quinoa','cereales',95,'Quinoa1'],['Lenteja','cereales',36,'Lenteja1'],['Garbanzo','cereales',42,'Garbanzo1'],
+  ['Amaranto','cereales',70,'Amaranto1'],
+  ['Chile Poblano','chiles',45,'poblano'],['Chile Jalapeño','chiles',32,'Jalapeno1'],['Chile Serrano','chiles',36,'serrano'],
+  ['Chile Habanero','chiles',80,'Habanero1'],['Chile Ancho','chiles',88,'Ancho1'],['Chile Guajillo','chiles',82,'Guajillo1'],
+  ['Chile Chilaca','chiles',48,'Chilaca1'],['Chile de Árbol','chiles',90,'Arbol1'],['Chile Pasilla','chiles',88,'Pasilla1'],
+  ['Chile Morita','chiles',95,'Morita1']
+];
+
+const INVENTARIO_INICIAL = BASE.map(([name, category, price, img]) => ({
+    name, category, price, stock: 10, unit: 'kg',
+    image: `Imagenes/Img productos/${img}.jpg`, active: true
+}));
+
+const CLAVE_INVENTARIO = 'inventarioSanGerardo';
+const CATEGORIAS = { frutas: 'Frutas', verduras: 'Verduras', cereales: 'Cereales', chiles: 'Chiles' };
+let inventario = cargarInventario();
+
+const $ = id => document.getElementById(id);
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normalizar = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-MX');
+
+function inventarioValido(d) {
+    return Array.isArray(d) && d.length > 0 && d.every(p =>
+        p && typeof p.name === 'string' && Number.isFinite(Number(p.price)) && Number.isFinite(Number(p.stock)));
+}
+
+function cargarInventario() {
+    let datos = null;
+    try { datos = JSON.parse(localStorage.getItem(CLAVE_INVENTARIO)); } catch {}
+    if (!inventarioValido(datos)) {
+        datos = structuredClone(INVENTARIO_INICIAL);
+        localStorage.setItem(CLAVE_INVENTARIO, JSON.stringify(datos));
+    }
+    return datos;
+}
+
+function guardarInventario() {
+    localStorage.setItem(CLAVE_INVENTARIO, JSON.stringify(inventario));
+}
+
+function estado(p) {
+    if (p.stock <= 0) return ['agotado', 'Agotado'];
+    if (!p.active) return ['oculto', 'No disponible'];
+    if (p.stock <= 3) return ['bajo', 'Stock bajo'];
+    return ['disponible', 'Disponible'];
+}
+
+function renderizar() {
+    const termino = normalizar($('buscar-admin').value.trim());
+    const categoria = $('filtro-admin').value;
+
+    const filas = inventario
+        .map((p, i) => ({ p, i }))
+        .filter(({ p }) => (!termino || normalizar(p.name).includes(termino)) &&
+                           (categoria === 'todos' || p.category === categoria));
+
+    $('inventario-tabla').innerHTML = filas.length ? filas.map(({ p, i }) => {
+        const [clase, texto] = estado(p);
+        return `<tr>
+            <td><div class="admin-product-cell"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"><strong>${esc(p.name)}</strong></div></td>
+            <td>${esc(CATEGORIAS[p.category] || p.category)}</td>
+            <td>$${Number(p.price).toFixed(2)} MXN</td>
+            <td>${Number(p.stock)} kg</td>
+            <td><span class="estado estado-${clase}">${texto}</span></td>
+            <td class="admin-actions-cell">
+                <button type="button" class="admin-edit-btn" data-indice="${i}">Editar</button>
+                <button type="button" class="btn-eliminar-producto" data-eliminar="${i}">Eliminar</button>
+            </td>
+        </tr>`;
+    }).join('') : `<tr><td colspan="6" class="admin-empty">No encontramos productos con esos criterios.</td></tr>`;
+
+    $('stat-productos').textContent = inventario.length;
+    $('stat-disponibles').textContent = inventario.filter(p => p.active && p.stock > 0).length;
+    $('stat-stock-bajo').textContent = inventario.filter(p => p.stock > 0 && p.stock <= 3).length;
+    $('stat-agotados').textContent = inventario.filter(p => p.stock <= 0).length;
+}
+
+function abrirEditor(indice) {
+    const p = inventario[indice];
+    if (!p) return;
+    $('producto-indice').value = indice;
+    $('modal-inventario-titulo').textContent = p.name;
+    $('modal-producto-nombre').textContent = p.name;
+    $('modal-producto-categoria').textContent = CATEGORIAS[p.category] || p.category;
+    $('modal-producto-imagen').src = p.image;
+    $('modal-producto-imagen').alt = p.name;
+    $('producto-precio').value = p.price;
+    $('producto-stock').value = p.stock;
+    $('producto-activo').checked = p.active;
+    $('modal-inventario').classList.add('activo');
+    $('modal-inventario').setAttribute('aria-hidden', 'false');
+    $('producto-precio').focus();
+}
+
+function cerrarEditor() {
+    $('modal-inventario').classList.remove('activo');
+    $('modal-inventario').setAttribute('aria-hidden', 'true');
+}
+
+let toastTimer;
+function toast(titulo, mensaje) {
+    $('toast-titulo').textContent = titulo;
+    $('toast-mensaje').textContent = mensaje;
+    $('admin-toast').classList.add('activo');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $('admin-toast').classList.remove('activo'), 2800);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('sesionActiva') !== 'true' ||
+        sessionStorage.getItem('rol') !== 'administrador') return;
+
+    renderizar();
+
+    $('buscar-admin').addEventListener('input', renderizar);
+    $('filtro-admin').addEventListener('change', renderizar);
+
+    $('inventario-tabla').addEventListener('click', e => {
+        const btnEdit = e.target.closest('.admin-edit-btn');
+        if (btnEdit) {
+            abrirEditor(Number(btnEdit.dataset.indice));
+            return;
+        }
+
+        const btnEliminar = e.target.closest('[data-eliminar]');
+        if (btnEliminar) {
+            const i = Number(btnEliminar.dataset.eliminar);
+            const p = inventario[i];
+            if (!p) return;
+            if (!confirm(`¿Eliminar "${p.name}" del inventario?`)) return;
+
+            const nombreEliminado = p.name;
+            inventario.splice(i, 1);
+            guardarInventario();
+
+            /* Quitar ofertas asociadas */
+            try {
+                const claveOfertas = 'ofertasSanGerardo';
+                const ofertasActuales = JSON.parse(localStorage.getItem(claveOfertas) || '[]');
+                if (Array.isArray(ofertasActuales)) {
+                    const filtradas = ofertasActuales.filter(o =>
+                        String(o.producto || '').trim().toLocaleLowerCase('es-MX') !==
+                        String(nombreEliminado).trim().toLocaleLowerCase('es-MX')
+                    );
+                    localStorage.setItem(claveOfertas, JSON.stringify(filtradas));
+                }
+            } catch (_) { /* ignore */ }
+
+            renderizar();
+            toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
+        }
+    });
+
+    $('form-agregar-producto').addEventListener('submit', e => {
+        e.preventDefault();
+
+        const nombre = $('nuevo-nombre').value.trim();
+        const category = $('nuevo-categoria').value;
+        const precio = Number($('nuevo-precio').value);
+        const stock = Number($('nuevo-stock').value);
+        let imagenArchivo = $('nuevo-imagen').value.trim();
+
+        if (!nombre) {
+            toast('Datos incompletos', 'Escribe el nombre del producto.');
+            return;
+        }
+        if (!Number.isFinite(precio) || precio < 0) {
+            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
+            return;
+        }
+        if (!Number.isFinite(stock) || stock < 0) {
+            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
+            return;
+        }
+
+        const yaExiste = inventario.some(p =>
+            normalizar(p.name) === normalizar(nombre)
+        );
+        if (yaExiste) {
+            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
+            return;
+        }
+
+        if (!imagenArchivo) {
+            imagenArchivo = nombre.replace(/\s+/g, '') + '1.jpg';
+        }
+        if (!imagenArchivo.toLowerCase().endsWith('.jpg') &&
+            !imagenArchivo.toLowerCase().endsWith('.jpeg') &&
+            !imagenArchivo.toLowerCase().endsWith('.png') &&
+            !imagenArchivo.toLowerCase().endsWith('.webp') &&
+            !imagenArchivo.toLowerCase().endsWith('.avif')) {
+            imagenArchivo += '.jpg';
+        }
+
+        /* Si el usuario pegó una ruta completa, respetarla; si no, carpeta estándar */
+        const imagePath = imagenArchivo.includes('/')
+            ? imagenArchivo
+            : `Imagenes/Img productos/${imagenArchivo}`;
+
+        inventario.push({
+            name: nombre,
+            category,
+            price: precio,
+            stock,
+            unit: 'kg',
+            image: imagePath,
+            active: true
+        });
+
+        guardarInventario();
+        $('form-agregar-producto').reset();
+        $('nuevo-stock').value = '10';
+        $('nuevo-categoria').value = 'frutas';
+        renderizar();
+        toast('Producto agregado', `${nombre} se agregó al inventario.`);
+    });
+
+    $('inventario-tabla').addEventListener('error', e => {
+        if (e.target.tagName === 'IMG') e.target.style.visibility = 'hidden';
+    }, true);
+
+    $('form-inventario').addEventListener('submit', e => {
+        e.preventDefault();
+        const i = Number($('producto-indice').value);
+        const textoPrecio = $('producto-precio').value.trim();
+        const textoStock = $('producto-stock').value.trim();
+        const precio = Number(textoPrecio);
+        const stock = Number(textoStock);
+
+        if (!textoPrecio || !textoStock || !Number.isFinite(precio) || !Number.isFinite(stock) || precio < 0 || stock < 0) {
+            toast('Datos no válidos', 'Completa el precio y la existencia con números mayores o iguales a 0.');
+            return;
+        }
+
+        inventario[i].price = precio;
+        inventario[i].stock = stock;
+        inventario[i].active = $('producto-activo').checked;
+        guardarInventario();
+        cerrarEditor();
+        renderizar();
+        toast('Inventario actualizado', `${inventario[i].name} se actualizó correctamente.`);
+    });
+
+    $('cerrar-modal-admin').addEventListener('click', cerrarEditor);
+    $('cancelar-edicion').addEventListener('click', cerrarEditor);
+    $('modal-inventario').addEventListener('click', e => { if (e.target.id === 'modal-inventario') cerrarEditor(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarEditor(); });
+
+    $('restaurar-inventario').addEventListener('click', () => {
+        if (!confirm('¿Restaurar los precios, existencias y disponibilidad iniciales?')) return;
+        inventario = structuredClone(INVENTARIO_INICIAL);
+        guardarInventario();
+        renderizar();
+        toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
+    });
+
+    $('cerrar-sesion-admin').addEventListener('click', () => {
+        ['sesionActiva', 'usuario', 'rol', 'nombre', 'datosPerfil'].forEach(k => sessionStorage.removeItem(k));
+        window.location.href = 'login.html';
+    });
+});
+</script>
+<script>
+const CLAVE_OFERTAS = 'ofertasSanGerardo';
+const CLAVE_PEDIDOS = 'pedidosSanGerardo';
+
+const leer = clave => {
+    try { const d = JSON.parse(localStorage.getItem(clave)); return Array.isArray(d) ? d : []; }
+    catch { return []; }
+};
+const escribir = (clave, datos) => localStorage.setItem(clave, JSON.stringify(datos));
+const dinero = n => '$' + Number(n).toFixed(2);
+const hoy = () => new Date().toISOString().slice(0, 10);
+const fechaCorta = iso => new Date(iso).toLocaleDateString('es-MX');
+
+let ofertas = leer(CLAVE_OFERTAS);
+let pedidos = leer(CLAVE_PEDIDOS);
+
+function estadoOferta(o) {
+    if (!o.activa) return ['pausada', 'Pausada'];
+    if (o.fin && o.fin < hoy()) return ['vencida', 'Vencida'];
+    return ['vigente', 'Vigente'];
+}
+
+function renderOfertas() {
+    $('oferta-producto').innerHTML = '<option value="">Selecciona un producto</option>' +
+        inventario.map(p => `<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
+
+    const grid = $('ofertas-grid');
+    if (!ofertas.length) {
+        grid.innerHTML = `
+            <div class="ofertas-vacio">
+                <strong>Aún no hay ofertas</strong>
+                Crea la primera con el formulario de arriba.
+            </div>`;
+        return;
+    }
+
+    grid.innerHTML = ofertas.map(o => {
+        const p = inventario.find(x => x.name === o.producto);
+        const base = p ? Number(p.price) : 0;
+        const precioOferta = base * (1 - o.descuento / 100);
+        const [clase, texto] = estadoOferta(o);
+        const img = p ? p.image : '';
+        const categoria = p ? (CATEGORIAS[p.category] || p.category) : '';
+
+        return `
+        <article class="oferta-card">
+            <div class="oferta-card-header">
+                <img src="${esc(img)}" alt="${esc(o.producto)}" loading="lazy" onerror="this.style.visibility='hidden'">
+                <div>
+                    <strong>${esc(o.producto)}</strong>
+                    <span>${esc(categoria)}</span>
+                </div>
+                <span class="oferta-badge estado estado-${clase}">${texto}</span>
+            </div>
+            <div class="oferta-card-body">
+                <span class="oferta-descuento-tag">−${Number(o.descuento)}% OFF</span>
+                <div class="oferta-precios">
+                    <span class="oferta-precio-oferta">${dinero(precioOferta)}</span>
+                    <span class="oferta-precio-normal">${dinero(base)}</span>
+                </div>
+                <p class="oferta-meta">${o.fin ? 'Válida hasta ' + fechaCorta(o.fin + 'T00:00') : 'Sin fecha de vencimiento'}</p>
+            </div>
+            <div class="oferta-card-footer">
+                <button type="button" data-accion="pausar" data-id="${esc(o.id)}">${o.activa ? 'Pausar' : 'Activar'}</button>
+                <button type="button" class="btn-eliminar-oferta" data-accion="eliminar" data-id="${esc(o.id)}">Eliminar</button>
+            </div>
+        </article>`;
+    }).join('');
+}
+
+function renderPedidos() {
+    const filtro = $('filtro-pedidos').value;
+    const lista = pedidos.filter(p => filtro === 'todos' || p.estado === filtro);
+    const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
+    $('tab-btn-pedidos').textContent = 'Pedidos' + (pendientes ? ` (${pendientes})` : '');
+
+    $('pedidos-tabla').innerHTML = lista.length ? lista.map(p => `<tr>
+        <td><strong>${esc(p.id)}</strong></td>
+        <td>${esc(p.cliente)}</td>
+        <td>${p.items.map(i => `${esc(i.name)} (${Number(i.kg)} kg)`).join(', ')}</td>
+        <td>${dinero(p.total)}</td>
+        <td>${fechaCorta(p.fecha)}</td>
+        <td>
+            <select class="admin-select cambiar-estado" data-id="${esc(p.id)}" aria-label="Estado del pedido ${esc(p.id)}">
+                ${['pendiente', 'en camino', 'entregado', 'cancelado'].map(e =>
+                    `<option value="${e}"${e === p.estado ? ' selected' : ''}>${e.charAt(0).toUpperCase() + e.slice(1)}</option>`).join('')}
+            </select>
+        </td>
+    </tr>`).join('') : '<tr><td colspan="6" class="admin-empty">No hay pedidos para mostrar.</td></tr>';
+}
+
+const EJEMPLOS = [
+    { cliente: 'María López', estado: 'pendiente', items: [{ name: 'Mango', kg: 2, price: 45 }, { name: 'Aguacate', kg: 1, price: 75 }] },
+    { cliente: 'Juan Pérez', estado: 'en camino', items: [{ name: 'Jitomate', kg: 3, price: 28 }] },
+    { cliente: 'Ana Ruiz', estado: 'entregado', items: [{ name: 'Chile Habanero', kg: 0.5, price: 80 }, { name: 'Limón', kg: 2, price: 30 }] }
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('sesionActiva') !== 'true' ||
+        sessionStorage.getItem('rol') !== 'administrador') return;
+
+    renderOfertas();
+    renderPedidos();
+
+    document.querySelector('.admin-tabs').addEventListener('click', e => {
+        const btn = e.target.closest('.admin-tab');
+        if (!btn) return;
+        document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
+        ['inventario', 'ofertas', 'pedidos'].forEach(t => { $('tab-' + t).hidden = t !== btn.dataset.tab; });
+        if (btn.dataset.tab === 'ofertas') renderOfertas();
+    });
+
+    $('form-oferta').addEventListener('submit', e => {
+        e.preventDefault();
+        const producto = $('oferta-producto').value;
+        const descuento = Number($('oferta-descuento').value);
+        const fin = $('oferta-fin').value;
+
+        if (!producto || !Number.isFinite(descuento) || descuento < 1 || descuento > 90) {
+            toast('Datos no válidos', 'Elige un producto y un descuento entre 1% y 90%.');
+            return;
+        }
+        if (fin && fin < hoy()) {
+            toast('Fecha no válida', 'La fecha de vencimiento no puede estar en el pasado.');
+            return;
+        }
+
+        const existente = ofertas.find(o => o.producto === producto);
+        if (existente) Object.assign(existente, { descuento, fin, activa: true });
+        else ofertas.push({ id: 'O-' + Date.now(), producto, descuento, fin, activa: true });
+
+        escribir(CLAVE_OFERTAS, ofertas);
+        $('form-oferta').reset();
+        renderOfertas();
+        toast('Oferta guardada', `${producto} con ${descuento}% de descuento.`);
+    });
+
+    $('ofertas-grid').addEventListener('click', e => {
+        const btn = e.target.closest('[data-accion]');
+        if (!btn) return;
+        const o = ofertas.find(x => x.id === btn.dataset.id);
+        if (!o) return;
+        if (btn.dataset.accion === 'pausar') o.activa = !o.activa;
+        else ofertas = ofertas.filter(x => x !== o);
+        escribir(CLAVE_OFERTAS, ofertas);
+        renderOfertas();
+    });
+
+    $('filtro-pedidos').addEventListener('change', renderPedidos);
+
+    $('pedidos-tabla').addEventListener('change', e => {
+        if (!e.target.classList.contains('cambiar-estado')) return;
+        const p = pedidos.find(x => x.id === e.target.dataset.id);
+        if (!p) return;
+        p.estado = e.target.value;
+        escribir(CLAVE_PEDIDOS, pedidos);
+        renderPedidos();
+        toast('Pedido actualizado', `${p.id} ahora está "${p.estado}".`);
+    });
+
+    $('cargar-ejemplos').addEventListener('click', () => {
+        EJEMPLOS.forEach((ej, i) => pedidos.push({
+            id: 'P-' + (1001 + pedidos.length),
+            cliente: ej.cliente,
+            items: ej.items,
+            total: ej.items.reduce((s, it) => s + it.kg * it.price, 0),
+            fecha: new Date(Date.now() - i * 86400000).toISOString(),
+            estado: ej.estado
+        }));
+        escribir(CLAVE_PEDIDOS, pedidos);
+        renderPedidos();
+        toast('Pedidos de ejemplo', 'Se agregaron 3 pedidos de prueba.');
+    });
+});
+</script>
+</body>
+</html>
