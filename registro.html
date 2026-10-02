@@ -230,7 +230,34 @@
                     </span>
 
                 </label>
+<div class="registro-tipo-cuenta">
 
+    <p class="registro-tipo-titulo">Tipo de cuenta</p>
+
+    <label class="registro-opcion">
+        <input
+            type="radio"
+            name="tipoCuenta"
+            value="cliente"
+            checked
+        >
+        <span>
+            Cuenta de cliente
+        </span>
+    </label>
+
+    <label class="registro-opcion">
+        <input
+            type="radio"
+            name="tipoCuenta"
+            value="administrador"
+        >
+        <span>
+            Cuenta de administrador
+        </span>
+    </label>
+
+</div>
 
                 <!-- Mensaje -->
 
@@ -287,59 +314,149 @@
     </main>
 
 
-    <script>
+   <script>
 
-        const registroForm = document.getElementById("registroForm");
+    const registroForm = document.getElementById("registroForm");
 
-        const password = document.getElementById("registroPassword");
+    const password = document.getElementById("registroPassword");
+    const confirmarPassword = document.getElementById("confirmarPassword");
 
-        const confirmarPassword = document.getElementById("confirmarPassword");
+    const message = document.getElementById("registroMessage");
 
-        const message = document.getElementById("registroMessage");
-
-        const showPassword = document.getElementById("showRegistroPassword");
-
-
-        /* Mostrar / ocultar contraseña */
-
-        showPassword.addEventListener("click", function () {
-
-            if (password.type === "password") {
-
-                password.type = "text";
-                confirmarPassword.type = "text";
-
-            } else {
-
-                password.type = "password";
-                confirmarPassword.type = "password";
-
-            }
-
-        });
+    const showPassword = document.getElementById("showRegistroPassword");
 
 
-        /* Registro simulado, sin validaciones obligatorias */
+    /* ============================================
+       MOSTRAR / OCULTAR CONTRASEÑA
+    ============================================ */
 
-        registroForm.addEventListener("submit", function(event) {
+    showPassword.addEventListener("click", function () {
 
-            event.preventDefault();
+        if (password.type === "password") {
+
+            password.type = "text";
+            confirmarPassword.type = "text";
+
+        } else {
+
+            password.type = "password";
+            confirmarPassword.type = "password";
+
+        }
+
+    });
+
+
+    /* ============================================
+       REGISTRO SIMULADO
+    ============================================ */
+
+    registroForm.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        /* Obtener los datos */
+
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+
+        const correo = document.getElementById("registroEmail").value;
+
+        const telefono = document.getElementById("telefono").value;
+
+        const tipoCuenta = document.querySelector(
+            'input[name="tipoCuenta"]:checked'
+        ).value;
+
+
+        /* Guardar datos del usuario */
+
+        sessionStorage.setItem(
+            "nombre",
+            nombre + " " + apellido
+        );
+
+        sessionStorage.setItem(
+            "usuario",
+            correo
+        );
+
+        sessionStorage.setItem(
+            "telefono",
+            telefono
+        );
+
+        sessionStorage.setItem(
+            "rol",
+            tipoCuenta
+        );
+
+        sessionStorage.setItem(
+            "sesionActiva",
+            "true"
+        );
+
+
+        /* Datos adicionales del perfil */
+
+        const datosPerfil = {
+
+            nombre: nombre,
+
+            apellido: apellido,
+
+            correo: correo,
+
+            telefono: telefono,
+
+            rol: tipoCuenta
+
+        };
+
+
+        sessionStorage.setItem(
+            "datosPerfil",
+            JSON.stringify(datosPerfil)
+        );
+
+
+        /* Mensaje */
+
+        if (tipoCuenta === "administrador") {
+
+            message.textContent =
+                "Cuenta de administrador creada correctamente. Redirigiendo al panel...";
+
+        } else {
 
             message.textContent =
                 "Cuenta creada correctamente. Redirigiendo...";
 
-            message.className = "registro-message success";
+        }
 
 
-            setTimeout(function() {
+        message.className = "registro-message success";
 
-                window.location.href = "login.html";
 
-            }, 1500);
+        /* Redirección */
 
-        });
+        setTimeout(function() {
 
-    </script>
+            if (tipoCuenta === "administrador") {
 
+                window.location.href = "admin.html";
+
+            } else {
+
+                window.location.href = "Productos.html";
+
+            }
+
+        }, 1500);
+
+    });
+
+</script>
 </body>
 </html>

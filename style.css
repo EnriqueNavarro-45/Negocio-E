@@ -6327,3 +6327,44 @@ body {
         height: 78px;
     }
 }
+/* ============================================
+   TIPO DE CUENTA - REGISTRO
+============================================ */
+
+.registro-tipo-cuenta {
+    margin: 20px 0;
+    padding: 16px;
+    border: 1px solid #e1e9e2;
+    border-radius: 13px;
+    background: #f8faf8;
+    text-align: left;
+}
+
+.registro-tipo-titulo {
+    margin: 0 0 12px;
+    color: #344638;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+.registro-opcion {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 9px;
+    color: #59675d;
+    font-size: .84rem;
+    cursor: pointer;
+}
+
+.registro-opcion input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #2e7d32;
+    cursor: pointer;
+}
+
+.registro-opcion span {
+    cursor: pointer;
+}
