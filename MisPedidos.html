@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Mis pedidos | San Gerardo Mayela</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        .pedidos-page {
+            min-height: 100vh;
+            background: #f7faf7;
+            padding-bottom: 60px;
+        }
+
+        .pedidos-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5ece6;
+            padding: 24px 0;
+        }
+
+        .pedidos-header-inner {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .pedidos-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #23432a;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .pedidos-logo img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .pedidos-volver {
+            color: #2e7d32;
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 600;
+        }
+
+        .pedidos-main {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+            padding-top: 45px;
+        }
+
+        .pedidos-titulo {
+            margin-bottom: 28px;
+        }
+
+        .pedidos-titulo span {
+            display: inline-block;
+            margin-bottom: 8px;
+            color: #2e7d32;
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .pedidos-titulo h1 {
+            margin: 0;
+            color: #1f3423;
+            font-size: 2rem;
+        }
+
+        .pedido-card {
+            background: #fff;
+            border: 1px solid #e4ebe5;
+            border-radius: 18px;
+            margin-bottom: 18px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(46,125,50,.06);
+        }
+
+        .pedido-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #edf1ed;
+        }
+
+        .pedido-card-header h2 {
+            margin: 0 0 5px;
+            color: #23432a;
+            font-size: 1.1rem;
+        }
+
+        .pedido-card-header p {
+            margin: 0;
+            color: #7b897e;
+            font-size: .82rem;
+        }
+
+        .pedido-estado {
+            display: inline-flex;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: #eef7ef;
+            color: #2e7d32;
+            font-size: .76rem;
+            font-weight: 700;
+        }
+
+        .pedido-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            padding: 20px 0;
+        }
+
+        .pedido-info-item span {
+            display: block;
+            margin-bottom: 5px;
+            color: #8a958d;
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+        }
+
+        .pedido-info-item strong {
+            color: #39483d;
+            font-size: .86rem;
+        }
+
+        .pedido-direccion {
+            grid-column: 1 / -1;
+        }
+
+        .pedido-productos {
+            border-top: 1px solid #edf1ed;
+            padding-top: 18px;
+        }
+
+        .pedido-producto {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 9px 0;
+            color: #526057;
+            font-size: .85rem;
+        }
+
+        .pedido-producto strong {
+            color: #263b2b;
+        }
+
+        .pedido-total {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #edf1ed;
+        }
+
+        .pedido-total span {
+            color: #68766c;
+            font-size: .85rem;
+        }
+
+        .pedido-total strong {
+            color: #1f6d29;
+            font-size: 1.15rem;
+        }
+
+        .pedido-vacio {
+            background: #fff;
+            border: 1px dashed #cfdacf;
+            border-radius: 18px;
+            padding: 60px 30px;
+            text-align: center;
+        }
+
+        .pedido-vacio h2 {
+            margin: 0 0 8px;
+            color: #304534;
+        }
+
+        .pedido-vacio p {
+            margin: 0 0 22px;
+            color: #78847b;
+        }
+
+        .pedido-vacio a {
+            display: inline-flex;
+            padding: 11px 18px;
+            border-radius: 10px;
+            background: #2e7d32;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 700px) {
+
+            .pedido-card-header {
+                flex-direction: column;
+            }
+
+            .pedido-info {
+                grid-template-columns: 1fr;
+            }
+
+            .pedido-direccion {
+                grid-column: auto;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="pedidos-page">
+
+    <header class="pedidos-header">
+
+        <div class="pedidos-header-inner">
+
+            <a href="Productos.html" class="pedidos-logo">
+
+                <img
+                    src="Imagenes/LogoFrut.jpg"
+                    alt="San Gerardo Mayela"
+                >
+
+                <span>
+                    San Gerardo Mayela
+                </span>
+
+            </a>
+
+            <a
+                href="Productos.html"
+                class="pedidos-volver"
+            >
+                Volver a productos
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main class="pedidos-main">
+
+        <div class="pedidos-titulo">
+
+            <span>Mi cuenta</span>
+
+            <h1>Mis pedidos</h1>
+
+        </div>
+
+
+        <div id="lista-pedidos"></div>
+
+    </main>
+
+
+<script>
+
+    const listaPedidos =
+        document.getElementById("lista-pedidos");
+
+
+    function obtenerPedidos() {
+
+        let pedidos = [];
+
+        try {
+
+            pedidos =
+                JSON.parse(
+                    localStorage.getItem(
+                        "pedidosSanGerardo"
+                    ) || "[]"
+                );
+
+        } catch (error) {
+
+            pedidos = [];
+
+        }
+
+        const usuario =
+            sessionStorage.getItem("usuario");
+
+
+        return pedidos.filter(
+            pedido =>
+                pedido.usuario === usuario
+        );
+
+    }
+
+
+    function renderizarPedidos() {
+
+        const pedidos =
+            obtenerPedidos();
+
+
+        if (!pedidos.length) {
+
+            listaPedidos.innerHTML = `
+
+                <div class="pedido-vacio">
+
+                    <h2>
+                        Aún no tienes pedidos
+                    </h2>
+
+                    <p>
+                        Cuando realices una compra,
+                        aparecerá aquí.
+                    </p>
+
+                    <a href="Productos.html">
+                        Ver productos
+                    </a>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        listaPedidos.innerHTML =
+            pedidos.map(pedido => `
+
+                <article class="pedido-card">
+
+                    <div class="pedido-card-header">
+
+                        <div>
+
+                            <h2>
+                                Pedido #${pedido.id}
+                            </h2>
+
+                            <p>
+                                ${pedido.fecha}
+                                ·
+                                ${pedido.hora}
+                            </p>
+
+                        </div>
+
+                        <span class="pedido-estado">
+                            ${pedido.estado}
+                        </span>
+
+                    </div>
+
+
+                    <div class="pedido-info">
+
+                        <div class="pedido-info-item">
+
+                            <span>
+                                Cliente
+                            </span>
+
+                            <strong>
+                                ${pedido.nombreCliente}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="pedido-info-item">
+
+                            <span>
+                                Teléfono
+                            </span>
+
+                            <strong>
+                                ${pedido.telefono}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="pedido-info-item">
+
+                            <span>
+                                Productos
+                            </span>
+
+                            <strong>
+                                ${pedido.cantidadProductos}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="pedido-info-item pedido-direccion">
+
+                            <span>
+                                Dirección de entrega
+                            </span>
+
+                            <strong>
+                                ${pedido.direccionEntrega}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="pedido-productos">
+
+                        ${pedido.productos.map(producto => `
+
+                            <div class="pedido-producto">
+
+                                <span>
+                                    ${producto.producto}
+                                    ·
+                                    ${producto.cantidadTexto}
+                                </span>
+
+                                <strong>
+                                    $${Number(producto.subtotal).toFixed(2)}
+                                </strong>
+
+                            </div>
+
+                        `).join("")}
+
+
+                        <div class="pedido-total">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong>
+                                $${Number(pedido.total).toFixed(2)} MXN
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            `).join("");
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            if (
+                sessionStorage.getItem("sesionActiva")
+                !== "true"
+            ) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            renderizarPedidos();
+
+        }
+    );
+
+</script>
+
+</body>
+</html>

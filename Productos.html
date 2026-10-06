@@ -41,7 +41,14 @@
                 <i data-lucide="log-in"></i>
                 Iniciar sesión
             </a>
-
+<a
+    href="MisPedidos.html"
+    class="navbar-pedidos solo-sesion"
+    id="navbar-pedidos"
+>
+    <i data-lucide="package"></i>
+    Mis pedidos
+</a>
             <a href="perfil.html" class="navbar-perfil solo-sesion" id="navbar-perfil">
                 <i data-lucide="user"></i>
                 Perfil
@@ -1724,68 +1731,401 @@
             document.body.classList.remove('modal-abierto');
         }
 
-        function registrarCompraDelCarrito() {
-            const carrito = obtenerCarrito();
-            if (!carrito.length) return;
+       function registrarCompraDelCarrito() {
 
-            if (!aceptarTerminosCheck.checked) {
-                terminosError.classList.add('visible');
-                return;
-            }
+    const carrito = obtenerCarrito();
 
-            if (!descontarInventario(carrito)) {
-                mostrarNotificacion(
-                    'No se pudo completar la compra',
-                    'La existencia de uno de los productos cambió. Revisa nuevamente tu carrito.',
-                    'error'
-                );
-                renderizarCarrito();
-                return;
-            }
+    if (!carrito.length) {
+        return;
+    }
 
-            const usuarioActual = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
-            const claveHistorial = `historialCompras_${usuarioActual}`;
-            const historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
 
-            const fechaCompra = new Date().toLocaleString('es-MX', {
-                dateStyle: 'medium',
-                timeStyle: 'short'
-            });
+    /* ============================================
+       COMPROBAR TÉRMINOS
+    ============================================ */
 
-            carrito.forEach(item => {
-                const total = calcularTotalItem(item);
+    if (!aceptarTerminosCheck.checked) {
 
-                historial.unshift({
-                    id: Date.now() + Math.random(),
-                    fecha: fechaCompra,
-                    producto: item.producto,
-                    cantidad: item.cantidad,
-                    unidad: item.unidad,
-                    cantidadTexto: item.unidad === 'kg' ? `${item.cantidad} kg` : `${item.cantidad} g`,
-                    precioKg: item.precioKg,
-                    total: `$${total.toFixed(2)}`,
-                    imagen: item.imagen,
-                    estado: 'Compra realizada',
-                    terminosAceptados: true
-                });
-            });
+        terminosError.classList.add('visible');
 
-            sessionStorage.setItem(claveHistorial, JSON.stringify(historial));
+        return;
+    }
 
-            const totalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
-            const cantidadItems = carrito.length;
 
-            guardarCarrito([]);
-            cerrarTerminos();
-            cerrarCarrito();
-            renderizarCarrito();
+    /* ============================================
+       COMPROBAR INVENTARIO
+    ============================================ */
 
-            mostrarNotificacion(
-                'Compra realizada',
-                `Se procesaron <strong>${cantidadItems} ${cantidadItems === 1 ? 'producto' : 'productos'}</strong>.<br>Total: <strong>$${totalCompra.toFixed(2)} MXN</strong><br><br>La compra quedó registrada en tu historial.`
+    const cantidadInvalida = carrito.find(item =>
+        !validarCantidadContraStock(
+            item.producto,
+            Number(item.cantidad),
+            item.unidad
+        )
+    );
+
+
+    if (cantidadInvalida) {
+
+        const stock =
+            obtenerStockDisponible(
+                cantidadInvalida.producto
             );
-        }
 
+
+        mostrarNotificacion(
+            'Inventario actualizado',
+            `La existencia de <strong>${cantidadInvalida.producto}</strong> cambió.<br>
+             Disponible actualmente: <strong>${stock.toFixed(2)} kg</strong>.`,
+            'error'
+        );
+
+
+        renderizarCarrito();
+
+        return;
+    }
+
+
+    /* ============================================
+       DESCONTAR INVENTARIO
+    ============================================ */
+
+    if (!descontarInventario(carrito)) {
+
+        mostrarNotificacion(
+            'No se pudo completar el pedido',
+            'La existencia de uno de los productos cambió. Revisa nuevamente tu carrito.',
+            'error'
+        );
+
+        renderizarCarrito();
+
+        return;
+    }
+
+
+    /* ============================================
+       OBTENER DATOS DEL CLIENTE
+    ============================================ */
+
+    const usuarioActual =
+        sessionStorage.getItem('usuario') ||
+        'usuario_sin_correo';
+
+
+    const nombreCliente =
+        sessionStorage.getItem('nombre') ||
+        'Cliente';
+
+
+    let datosPerfil = {};
+
+    try {
+
+        datosPerfil = JSON.parse(
+            sessionStorage.getItem('datosPerfil') || '{}'
+        );
+
+    } catch (error) {
+
+        datosPerfil = {};
+
+    }
+
+
+    const telefono =
+        datosPerfil.telefono ||
+        sessionStorage.getItem('telefono') ||
+        'No registrado';
+
+
+    const direccion =
+        datosPerfil.direccion ||
+        'No registrada';
+
+
+    /* ============================================
+       GENERAR NÚMERO DE PEDIDO
+    ============================================ */
+
+    const clavePedidos =
+        'pedidosSanGerardo';
+
+
+    let pedidos = [];
+
+    try {
+
+        pedidos = JSON.parse(
+            localStorage.getItem(clavePedidos) || '[]'
+        );
+
+    } catch (error) {
+
+        pedidos = [];
+
+    }
+
+
+    const numeroPedido =
+        pedidos.length + 1;
+
+
+    const numeroPedidoFormateado =
+        String(numeroPedido).padStart(6, '0');
+
+
+    /* ============================================
+       FECHA
+    ============================================ */
+
+    const fecha = new Date();
+
+    const fechaTexto =
+        fecha.toLocaleDateString(
+            'es-MX',
+            {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }
+        );
+
+
+    const horaTexto =
+        fecha.toLocaleTimeString(
+            'es-MX',
+            {
+                hour: '2-digit',
+                minute: '2-digit'
+            }
+        );
+
+
+    /* ============================================
+       PRODUCTOS DEL PEDIDO
+    ============================================ */
+
+    const productosPedido =
+        carrito.map(item => {
+
+            const subtotal =
+                calcularTotalItem(item);
+
+
+            return {
+
+                producto: item.producto,
+
+                cantidad: Number(item.cantidad),
+
+                unidad: item.unidad,
+
+                cantidadTexto:
+                    item.unidad === 'kg'
+                        ? `${item.cantidad} kg`
+                        : `${item.cantidad} g`,
+
+                precioKg:
+                    Number(item.precioKg),
+
+                subtotal:
+                    Number(subtotal.toFixed(2)),
+
+                imagen:
+                    item.imagen
+
+            };
+
+        });
+
+
+    /* ============================================
+       TOTAL
+    ============================================ */
+
+    const totalCompra =
+        productosPedido.reduce(
+            (total, item) =>
+                total + item.subtotal,
+            0
+        );
+
+
+    /* ============================================
+       CREAR PEDIDO
+    ============================================ */
+
+    const pedido = {
+
+        id: numeroPedidoFormateado,
+
+        usuario:
+            usuarioActual,
+
+        nombreCliente:
+            nombreCliente,
+
+        telefono:
+            telefono,
+
+        direccionEntrega:
+            direccion,
+
+        fecha:
+            fechaTexto,
+
+        hora:
+            horaTexto,
+
+        fechaISO:
+            fecha.toISOString(),
+
+        productos:
+            productosPedido,
+
+        cantidadProductos:
+            productosPedido.length,
+
+        cantidadArticulos:
+            carrito.reduce(
+                (total, item) =>
+                    total + Number(item.cantidad),
+                0
+            ),
+
+        total:
+            Number(totalCompra.toFixed(2)),
+
+        estado:
+            'Pendiente',
+
+        terminosAceptados:
+            true
+
+    };
+
+
+    /* ============================================
+       GUARDAR PEDIDO
+    ============================================ */
+
+    pedidos.unshift(pedido);
+
+    localStorage.setItem(
+        clavePedidos,
+        JSON.stringify(pedidos)
+    );
+
+
+    /* ============================================
+       HISTORIAL ANTERIOR
+       Se mantiene para no romper tu sistema actual
+    ============================================ */
+
+    const claveHistorial =
+        `historialCompras_${usuarioActual}`;
+
+
+    let historial = [];
+
+    try {
+
+        historial = JSON.parse(
+            sessionStorage.getItem(claveHistorial) || '[]'
+        );
+
+    } catch (error) {
+
+        historial = [];
+
+    }
+
+
+    productosPedido.forEach(item => {
+
+        historial.unshift({
+
+            id:
+                Date.now() +
+                Math.random(),
+
+            pedidoId:
+                numeroPedidoFormateado,
+
+            fecha:
+                `${fechaTexto} ${horaTexto}`,
+
+            producto:
+                item.producto,
+
+            cantidad:
+                item.cantidad,
+
+            unidad:
+                item.unidad,
+
+            cantidadTexto:
+                item.cantidadTexto,
+
+            precioKg:
+                item.precioKg,
+
+            total:
+                `$${item.subtotal.toFixed(2)}`,
+
+            imagen:
+                item.imagen,
+
+            estado:
+                'Pendiente',
+
+            terminosAceptados:
+                true
+
+        });
+
+    });
+
+
+    sessionStorage.setItem(
+        claveHistorial,
+        JSON.stringify(historial)
+    );
+
+
+    /* ============================================
+       LIMPIAR CARRITO
+    ============================================ */
+
+    guardarCarrito([]);
+
+    cerrarTerminos();
+
+    cerrarCarrito();
+
+    renderizarCarrito();
+
+
+    /* ============================================
+       MENSAJE FINAL
+    ============================================ */
+
+    mostrarNotificacion(
+
+        'Pedido realizado',
+
+        `Tu pedido <strong>#${numeroPedidoFormateado}</strong>
+         fue registrado correctamente.<br><br>
+         Total:
+         <strong>$${totalCompra.toFixed(2)} MXN</strong><br><br>
+         Dirección de entrega:<br>
+         <strong>${direccion}</strong>`
+
+    );
+
+}
         function finalizarCompraCarrito() {
             abrirTerminos();
         }

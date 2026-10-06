@@ -148,6 +148,29 @@
 
                 </div>
 
+<!-- Dirección -->
+
+<div class="registro-input-group">
+
+    <label for="direccion">
+        Dirección de entrega
+    </label>
+
+    <div class="registro-input-wrapper">
+
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+
+        <input
+            type="text"
+            id="direccion"
+            placeholder="Calle, número, colonia y ciudad"
+        >
+
+    </div>
+
+</div>
 
                 <!-- Contraseña -->
 
@@ -348,7 +371,7 @@
 
 
     /* ============================================
-       REGISTRO SIMULADO
+       REGISTRO
     ============================================ */
 
     registroForm.addEventListener("submit", function(event) {
@@ -356,25 +379,37 @@
         event.preventDefault();
 
 
-        /* Obtener los datos */
+        const nombre =
+            document.getElementById("nombre").value.trim();
 
-        const nombre = document.getElementById("nombre").value;
-        const apellido = document.getElementById("apellido").value;
+        const apellido =
+            document.getElementById("apellido").value.trim();
 
-        const correo = document.getElementById("registroEmail").value;
+        const correo =
+            document.getElementById("registroEmail").value.trim();
 
-        const telefono = document.getElementById("telefono").value;
+        const telefono =
+            document.getElementById("telefono").value.trim();
 
-        const tipoCuenta = document.querySelector(
-            'input[name="tipoCuenta"]:checked'
-        ).value;
+        const direccion =
+            document.getElementById("direccion").value.trim();
 
 
-        /* Guardar datos del usuario */
+        /* Tipo de cuenta */
+
+        const tipoCuenta =
+            document.querySelector(
+                'input[name="tipoCuenta"]:checked'
+            )?.value || "cliente";
+
+
+        /* ============================================
+           GUARDAR DATOS DE SESIÓN
+        ============================================ */
 
         sessionStorage.setItem(
-            "nombre",
-            nombre + " " + apellido
+            "sesionActiva",
+            "true"
         );
 
         sessionStorage.setItem(
@@ -383,8 +418,8 @@
         );
 
         sessionStorage.setItem(
-            "telefono",
-            telefono
+            "nombre",
+            `${nombre} ${apellido}`.trim()
         );
 
         sessionStorage.setItem(
@@ -392,13 +427,10 @@
             tipoCuenta
         );
 
-        sessionStorage.setItem(
-            "sesionActiva",
-            "true"
-        );
 
-
-        /* Datos adicionales del perfil */
+        /* ============================================
+           GUARDAR PERFIL COMPLETO
+        ============================================ */
 
         const datosPerfil = {
 
@@ -409,6 +441,8 @@
             correo: correo,
 
             telefono: telefono,
+
+            direccion: direccion,
 
             rol: tipoCuenta
 
@@ -421,7 +455,9 @@
         );
 
 
-        /* Mensaje */
+        /* ============================================
+           MENSAJE
+        ============================================ */
 
         if (tipoCuenta === "administrador") {
 
@@ -431,15 +467,18 @@
         } else {
 
             message.textContent =
-                "Cuenta creada correctamente. Redirigiendo...";
+                "Cuenta creada correctamente. Redirigiendo a la tienda...";
 
         }
 
 
-        message.className = "registro-message success";
+        message.className =
+            "registro-message success";
 
 
-        /* Redirección */
+        /* ============================================
+           REDIRECCIÓN
+        ============================================ */
 
         setTimeout(function() {
 
@@ -453,7 +492,7 @@
 
             }
 
-        }, 1500);
+        }, 1200);
 
     });
 

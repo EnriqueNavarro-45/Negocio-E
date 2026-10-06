@@ -402,6 +402,7 @@
             <button type="button" class="admin-tab" data-tab="pedidos" id="tab-btn-pedidos">Pedidos</button>
         </nav>
 
+        <!-- INVENTARIO -->
         <section class="admin-panel" id="tab-inventario">
             <div class="admin-panel-header">
                 <div>
@@ -464,7 +465,14 @@
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
-                        <tr><th>Producto</th><th>Categoría</th><th>Precio / kg</th><th>Stock</th><th>Estado</th><th>Acción</th></tr>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio / kg</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
                     </thead>
                     <tbody id="inventario-tabla"></tbody>
                 </table>
@@ -501,9 +509,7 @@
                 </form>
             </div>
 
-            <div class="ofertas-grid" id="ofertas-grid">
-                <!-- Tarjetas de ofertas -->
-            </div>
+            <div class="ofertas-grid" id="ofertas-grid"></div>
         </section>
 
         <!-- PEDIDOS -->
@@ -530,7 +536,14 @@
             <div class="admin-table-wrap">
                 <table class="admin-table">
                     <thead>
-                        <tr><th>Pedido</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Fecha</th><th>Estado</th></tr>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Cliente</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
                     </thead>
                     <tbody id="pedidos-tabla"></tbody>
                 </table>
@@ -538,6 +551,7 @@
         </section>
     </main>
 
+    <!-- MODAL EDITAR PRODUCTO -->
     <div class="admin-overlay" id="modal-inventario" aria-hidden="true">
         <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="modal-inventario-titulo">
             <div class="admin-modal-header">
@@ -550,7 +564,10 @@
 
             <div class="admin-product-preview">
                 <img id="modal-producto-imagen" src="" alt="">
-                <div><strong id="modal-producto-nombre"></strong><span id="modal-producto-categoria"></span></div>
+                <div>
+                    <strong id="modal-producto-nombre"></strong>
+                    <span id="modal-producto-categoria"></span>
+                </div>
             </div>
 
             <form id="form-inventario" class="admin-form" novalidate>
@@ -589,7 +606,7 @@
     </div>
 
 <script>
-/* Nombres de imagen sin cambiar (coinciden con Productos.html) */
+/* ========== DATOS BASE ========== */
 const BASE = [
   ['Mango','frutas',45,'Mango1'],['Manzana','frutas',40,'Manzana1'],['Plátano','frutas',22,'Platano1'],
   ['Fresa','frutas',65,'Fresa1'],['Papaya','frutas',28,'Papaya1'],['Limón','frutas',30,'limon'],
@@ -615,16 +632,44 @@ const INVENTARIO_INICIAL = BASE.map(([name, category, price, img]) => ({
 }));
 
 const CLAVE_INVENTARIO = 'inventarioSanGerardo';
-const CATEGORIAS = { frutas: 'Frutas', verduras: 'Verduras', cereales: 'Cereales', chiles: 'Chiles' };
-let inventario = cargarInventario();
+const CLAVE_OFERTAS   = 'ofertasSanGerardo';
+const CLAVE_PEDIDOS   = 'pedidosSanGerardo';
 
+const CATEGORIAS = {
+    frutas: 'Frutas',
+    verduras: 'Verduras',
+    cereales: 'Cereales',
+    chiles: 'Chiles'
+};
+
+/* ========== UTILIDADES ========== */
 const $ = id => document.getElementById(id);
-const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const normalizar = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-MX');
+const esc = t => String(t).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const normalizar = t => String(t || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('es-MX');
+const dinero = n => '$' + Number(n).toFixed(2);
+const hoy = () => new Date().toISOString().slice(0, 10);
+const fechaCorta = iso => new Date(iso).toLocaleDateString('es-MX');
 
+const leer = clave => {
+    try {
+        const d = JSON.parse(localStorage.getItem(clave));
+        return Array.isArray(d) ? d : [];
+    } catch {
+        return [];
+    }
+};
+const escribir = (clave, datos) => localStorage.setItem(clave, JSON.stringify(datos));
+
+/* ========== INVENTARIO ========== */
 function inventarioValido(d) {
     return Array.isArray(d) && d.length > 0 && d.every(p =>
-        p && typeof p.name === 'string' && Number.isFinite(Number(p.price)) && Number.isFinite(Number(p.stock)));
+        p && typeof p.name === 'string' &&
+        Number.isFinite(Number(p.price)) &&
+        Number.isFinite(Number(p.stock))
+    );
 }
 
 function cargarInventario() {
@@ -637,6 +682,8 @@ function cargarInventario() {
     return datos;
 }
 
+let inventario = cargarInventario();
+
 function guardarInventario() {
     localStorage.setItem(CLAVE_INVENTARIO, JSON.stringify(inventario));
 }
@@ -648,34 +695,43 @@ function estado(p) {
     return ['disponible', 'Disponible'];
 }
 
-function renderizar() {
+function renderizarInventario() {
     const termino = normalizar($('buscar-admin').value.trim());
     const categoria = $('filtro-admin').value;
 
     const filas = inventario
         .map((p, i) => ({ p, i }))
-        .filter(({ p }) => (!termino || normalizar(p.name).includes(termino)) &&
-                           (categoria === 'todos' || p.category === categoria));
+        .filter(({ p }) =>
+            (!termino || normalizar(p.name).includes(termino)) &&
+            (categoria === 'todos' || p.category === categoria)
+        );
 
-    $('inventario-tabla').innerHTML = filas.length ? filas.map(({ p, i }) => {
-        const [clase, texto] = estado(p);
-        return `<tr>
-            <td><div class="admin-product-cell"><img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"><strong>${esc(p.name)}</strong></div></td>
-            <td>${esc(CATEGORIAS[p.category] || p.category)}</td>
-            <td>$${Number(p.price).toFixed(2)} MXN</td>
-            <td>${Number(p.stock)} kg</td>
-            <td><span class="estado estado-${clase}">${texto}</span></td>
-            <td class="admin-actions-cell">
-                <button type="button" class="admin-edit-btn" data-indice="${i}">Editar</button>
-                <button type="button" class="btn-eliminar-producto" data-eliminar="${i}">Eliminar</button>
-            </td>
-        </tr>`;
-    }).join('') : `<tr><td colspan="6" class="admin-empty">No encontramos productos con esos criterios.</td></tr>`;
+    $('inventario-tabla').innerHTML = filas.length
+        ? filas.map(({ p, i }) => {
+            const [clase, texto] = estado(p);
+            return `<tr>
+                <td>
+                    <div class="admin-product-cell">
+                        <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">
+                        <strong>${esc(p.name)}</strong>
+                    </div>
+                </td>
+                <td>${esc(CATEGORIAS[p.category] || p.category)}</td>
+                <td>$${Number(p.price).toFixed(2)} MXN</td>
+                <td>${Number(p.stock)} kg</td>
+                <td><span class="estado estado-${clase}">${texto}</span></td>
+                <td class="admin-actions-cell">
+                    <button type="button" class="admin-edit-btn" data-indice="${i}">Editar</button>
+                    <button type="button" class="btn-eliminar-producto" data-eliminar="${i}">Eliminar</button>
+                </td>
+            </tr>`;
+        }).join('')
+        : `<tr><td colspan="6" class="admin-empty">No encontramos productos con esos criterios.</td></tr>`;
 
-    $('stat-productos').textContent = inventario.length;
+    $('stat-productos').textContent   = inventario.length;
     $('stat-disponibles').textContent = inventario.filter(p => p.active && p.stock > 0).length;
-    $('stat-stock-bajo').textContent = inventario.filter(p => p.stock > 0 && p.stock <= 3).length;
-    $('stat-agotados').textContent = inventario.filter(p => p.stock <= 0).length;
+    $('stat-stock-bajo').textContent  = inventario.filter(p => p.stock > 0 && p.stock <= 3).length;
+    $('stat-agotados').textContent    = inventario.filter(p => p.stock <= 0).length;
 }
 
 function abrirEditor(indice) {
@@ -700,6 +756,7 @@ function cerrarEditor() {
     $('modal-inventario').setAttribute('aria-hidden', 'true');
 }
 
+/* ========== TOAST ========== */
 let toastTimer;
 function toast(titulo, mensaje) {
     $('toast-titulo').textContent = titulo;
@@ -709,175 +766,8 @@ function toast(titulo, mensaje) {
     toastTimer = setTimeout(() => $('admin-toast').classList.remove('activo'), 2800);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('sesionActiva') !== 'true' ||
-        sessionStorage.getItem('rol') !== 'administrador') return;
-
-    renderizar();
-
-    $('buscar-admin').addEventListener('input', renderizar);
-    $('filtro-admin').addEventListener('change', renderizar);
-
-    $('inventario-tabla').addEventListener('click', e => {
-        const btnEdit = e.target.closest('.admin-edit-btn');
-        if (btnEdit) {
-            abrirEditor(Number(btnEdit.dataset.indice));
-            return;
-        }
-
-        const btnEliminar = e.target.closest('[data-eliminar]');
-        if (btnEliminar) {
-            const i = Number(btnEliminar.dataset.eliminar);
-            const p = inventario[i];
-            if (!p) return;
-            if (!confirm(`¿Eliminar "${p.name}" del inventario?`)) return;
-
-            const nombreEliminado = p.name;
-            inventario.splice(i, 1);
-            guardarInventario();
-
-            /* Quitar ofertas asociadas */
-            try {
-                const claveOfertas = 'ofertasSanGerardo';
-                const ofertasActuales = JSON.parse(localStorage.getItem(claveOfertas) || '[]');
-                if (Array.isArray(ofertasActuales)) {
-                    const filtradas = ofertasActuales.filter(o =>
-                        String(o.producto || '').trim().toLocaleLowerCase('es-MX') !==
-                        String(nombreEliminado).trim().toLocaleLowerCase('es-MX')
-                    );
-                    localStorage.setItem(claveOfertas, JSON.stringify(filtradas));
-                }
-            } catch (_) { /* ignore */ }
-
-            renderizar();
-            toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
-        }
-    });
-
-    $('form-agregar-producto').addEventListener('submit', e => {
-        e.preventDefault();
-
-        const nombre = $('nuevo-nombre').value.trim();
-        const category = $('nuevo-categoria').value;
-        const precio = Number($('nuevo-precio').value);
-        const stock = Number($('nuevo-stock').value);
-        let imagenArchivo = $('nuevo-imagen').value.trim();
-
-        if (!nombre) {
-            toast('Datos incompletos', 'Escribe el nombre del producto.');
-            return;
-        }
-        if (!Number.isFinite(precio) || precio < 0) {
-            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
-            return;
-        }
-        if (!Number.isFinite(stock) || stock < 0) {
-            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
-            return;
-        }
-
-        const yaExiste = inventario.some(p =>
-            normalizar(p.name) === normalizar(nombre)
-        );
-        if (yaExiste) {
-            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
-            return;
-        }
-
-        if (!imagenArchivo) {
-            imagenArchivo = nombre.replace(/\s+/g, '') + '1.jpg';
-        }
-        if (!imagenArchivo.toLowerCase().endsWith('.jpg') &&
-            !imagenArchivo.toLowerCase().endsWith('.jpeg') &&
-            !imagenArchivo.toLowerCase().endsWith('.png') &&
-            !imagenArchivo.toLowerCase().endsWith('.webp') &&
-            !imagenArchivo.toLowerCase().endsWith('.avif')) {
-            imagenArchivo += '.jpg';
-        }
-
-        /* Si el usuario pegó una ruta completa, respetarla; si no, carpeta estándar */
-        const imagePath = imagenArchivo.includes('/')
-            ? imagenArchivo
-            : `Imagenes/Img productos/${imagenArchivo}`;
-
-        inventario.push({
-            name: nombre,
-            category,
-            price: precio,
-            stock,
-            unit: 'kg',
-            image: imagePath,
-            active: true
-        });
-
-        guardarInventario();
-        $('form-agregar-producto').reset();
-        $('nuevo-stock').value = '10';
-        $('nuevo-categoria').value = 'frutas';
-        renderizar();
-        toast('Producto agregado', `${nombre} se agregó al inventario.`);
-    });
-
-    $('inventario-tabla').addEventListener('error', e => {
-        if (e.target.tagName === 'IMG') e.target.style.visibility = 'hidden';
-    }, true);
-
-    $('form-inventario').addEventListener('submit', e => {
-        e.preventDefault();
-        const i = Number($('producto-indice').value);
-        const textoPrecio = $('producto-precio').value.trim();
-        const textoStock = $('producto-stock').value.trim();
-        const precio = Number(textoPrecio);
-        const stock = Number(textoStock);
-
-        if (!textoPrecio || !textoStock || !Number.isFinite(precio) || !Number.isFinite(stock) || precio < 0 || stock < 0) {
-            toast('Datos no válidos', 'Completa el precio y la existencia con números mayores o iguales a 0.');
-            return;
-        }
-
-        inventario[i].price = precio;
-        inventario[i].stock = stock;
-        inventario[i].active = $('producto-activo').checked;
-        guardarInventario();
-        cerrarEditor();
-        renderizar();
-        toast('Inventario actualizado', `${inventario[i].name} se actualizó correctamente.`);
-    });
-
-    $('cerrar-modal-admin').addEventListener('click', cerrarEditor);
-    $('cancelar-edicion').addEventListener('click', cerrarEditor);
-    $('modal-inventario').addEventListener('click', e => { if (e.target.id === 'modal-inventario') cerrarEditor(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarEditor(); });
-
-    $('restaurar-inventario').addEventListener('click', () => {
-        if (!confirm('¿Restaurar los precios, existencias y disponibilidad iniciales?')) return;
-        inventario = structuredClone(INVENTARIO_INICIAL);
-        guardarInventario();
-        renderizar();
-        toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
-    });
-
-    $('cerrar-sesion-admin').addEventListener('click', () => {
-        ['sesionActiva', 'usuario', 'rol', 'nombre', 'datosPerfil'].forEach(k => sessionStorage.removeItem(k));
-        window.location.href = 'login.html';
-    });
-});
-</script>
-<script>
-const CLAVE_OFERTAS = 'ofertasSanGerardo';
-const CLAVE_PEDIDOS = 'pedidosSanGerardo';
-
-const leer = clave => {
-    try { const d = JSON.parse(localStorage.getItem(clave)); return Array.isArray(d) ? d : []; }
-    catch { return []; }
-};
-const escribir = (clave, datos) => localStorage.setItem(clave, JSON.stringify(datos));
-const dinero = n => '$' + Number(n).toFixed(2);
-const hoy = () => new Date().toISOString().slice(0, 10);
-const fechaCorta = iso => new Date(iso).toLocaleDateString('es-MX');
-
+/* ========== OFERTAS ========== */
 let ofertas = leer(CLAVE_OFERTAS);
-let pedidos = leer(CLAVE_PEDIDOS);
 
 function estadoOferta(o) {
     if (!o.activa) return ['pausada', 'Pausada'];
@@ -886,7 +776,8 @@ function estadoOferta(o) {
 }
 
 function renderOfertas() {
-    $('oferta-producto').innerHTML = '<option value="">Selecciona un producto</option>' +
+    $('oferta-producto').innerHTML =
+        '<option value="">Selecciona un producto</option>' +
         inventario.map(p => `<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
 
     const grid = $('ofertas-grid');
@@ -933,25 +824,31 @@ function renderOfertas() {
     }).join('');
 }
 
+/* ========== PEDIDOS ========== */
+let pedidos = leer(CLAVE_PEDIDOS);
+
 function renderPedidos() {
     const filtro = $('filtro-pedidos').value;
     const lista = pedidos.filter(p => filtro === 'todos' || p.estado === filtro);
     const pendientes = pedidos.filter(p => p.estado === 'pendiente').length;
     $('tab-btn-pedidos').textContent = 'Pedidos' + (pendientes ? ` (${pendientes})` : '');
 
-    $('pedidos-tabla').innerHTML = lista.length ? lista.map(p => `<tr>
-        <td><strong>${esc(p.id)}</strong></td>
-        <td>${esc(p.cliente)}</td>
-        <td>${p.items.map(i => `${esc(i.name)} (${Number(i.kg)} kg)`).join(', ')}</td>
-        <td>${dinero(p.total)}</td>
-        <td>${fechaCorta(p.fecha)}</td>
-        <td>
-            <select class="admin-select cambiar-estado" data-id="${esc(p.id)}" aria-label="Estado del pedido ${esc(p.id)}">
-                ${['pendiente', 'en camino', 'entregado', 'cancelado'].map(e =>
-                    `<option value="${e}"${e === p.estado ? ' selected' : ''}>${e.charAt(0).toUpperCase() + e.slice(1)}</option>`).join('')}
-            </select>
-        </td>
-    </tr>`).join('') : '<tr><td colspan="6" class="admin-empty">No hay pedidos para mostrar.</td></tr>';
+    $('pedidos-tabla').innerHTML = lista.length
+        ? lista.map(p => `<tr>
+            <td><strong>${esc(p.id)}</strong></td>
+            <td>${esc(p.cliente)}</td>
+            <td>${p.items.map(i => `${esc(i.name)} (${Number(i.kg)} kg)`).join(', ')}</td>
+            <td>${dinero(p.total)}</td>
+            <td>${fechaCorta(p.fecha)}</td>
+            <td>
+                <select class="admin-select cambiar-estado" data-id="${esc(p.id)}" aria-label="Estado del pedido ${esc(p.id)}">
+                    ${['pendiente', 'en camino', 'entregado', 'cancelado'].map(e =>
+                        `<option value="${e}"${e === p.estado ? ' selected' : ''}>${e.charAt(0).toUpperCase() + e.slice(1)}</option>`
+                    ).join('')}
+                </select>
+            </td>
+        </tr>`).join('')
+        : '<tr><td colspan="6" class="admin-empty">No hay pedidos para mostrar.</td></tr>';
 }
 
 const EJEMPLOS = [
@@ -960,20 +857,167 @@ const EJEMPLOS = [
     { cliente: 'Ana Ruiz', estado: 'entregado', items: [{ name: 'Chile Habanero', kg: 0.5, price: 80 }, { name: 'Limón', kg: 2, price: 30 }] }
 ];
 
+/* ========== INICIALIZACIÓN ========== */
 document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('sesionActiva') !== 'true' ||
         sessionStorage.getItem('rol') !== 'administrador') return;
 
-    renderOfertas();
-    renderPedidos();
+    /* ----- Inventario ----- */
+    renderizarInventario();
 
+    $('buscar-admin').addEventListener('input', renderizarInventario);
+    $('filtro-admin').addEventListener('change', renderizarInventario);
+
+    $('inventario-tabla').addEventListener('click', e => {
+        const btnEdit = e.target.closest('.admin-edit-btn');
+        if (btnEdit) {
+            abrirEditor(Number(btnEdit.dataset.indice));
+            return;
+        }
+
+        const btnEliminar = e.target.closest('[data-eliminar]');
+        if (btnEliminar) {
+            const i = Number(btnEliminar.dataset.eliminar);
+            const p = inventario[i];
+            if (!p) return;
+            if (!confirm(`¿Eliminar "${p.name}" del inventario?`)) return;
+
+            const nombreEliminado = p.name;
+            inventario.splice(i, 1);
+            guardarInventario();
+
+            // Quitar ofertas asociadas
+            ofertas = ofertas.filter(o =>
+                normalizar(o.producto) !== normalizar(nombreEliminado)
+            );
+            escribir(CLAVE_OFERTAS, ofertas);
+
+            renderizarInventario();
+            renderOfertas();
+            toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
+        }
+    });
+
+    $('form-agregar-producto').addEventListener('submit', e => {
+        e.preventDefault();
+
+        const nombre = $('nuevo-nombre').value.trim();
+        const category = $('nuevo-categoria').value;
+        const precio = Number($('nuevo-precio').value);
+        const stock = Number($('nuevo-stock').value);
+        let imagenArchivo = $('nuevo-imagen').value.trim();
+
+        if (!nombre) {
+            toast('Datos incompletos', 'Escribe el nombre del producto.');
+            return;
+        }
+        if (!Number.isFinite(precio) || precio < 0) {
+            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
+            return;
+        }
+        if (!Number.isFinite(stock) || stock < 0) {
+            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
+            return;
+        }
+
+        if (inventario.some(p => normalizar(p.name) === normalizar(nombre))) {
+            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
+            return;
+        }
+
+        if (!imagenArchivo) {
+            imagenArchivo = nombre.replace(/\s+/g, '') + '1.jpg';
+        }
+        if (!/\.(jpe?g|png|webp|avif)$/i.test(imagenArchivo)) {
+            imagenArchivo += '.jpg';
+        }
+
+        const imagePath = imagenArchivo.includes('/')
+            ? imagenArchivo
+            : `Imagenes/Img productos/${imagenArchivo}`;
+
+        inventario.push({
+            name: nombre,
+            category,
+            price: precio,
+            stock,
+            unit: 'kg',
+            image: imagePath,
+            active: true
+        });
+
+        guardarInventario();
+        $('form-agregar-producto').reset();
+        $('nuevo-stock').value = '10';
+        $('nuevo-categoria').value = 'frutas';
+        renderizarInventario();
+        renderOfertas();
+        toast('Producto agregado', `${nombre} se agregó al inventario.`);
+    });
+
+    $('inventario-tabla').addEventListener('error', e => {
+        if (e.target.tagName === 'IMG') e.target.style.visibility = 'hidden';
+    }, true);
+
+    $('form-inventario').addEventListener('submit', e => {
+        e.preventDefault();
+        const i = Number($('producto-indice').value);
+        const textoPrecio = $('producto-precio').value.trim();
+        const textoStock = $('producto-stock').value.trim();
+        const precio = Number(textoPrecio);
+        const stock = Number(textoStock);
+
+        if (!textoPrecio || !textoStock || !Number.isFinite(precio) || !Number.isFinite(stock) || precio < 0 || stock < 0) {
+            toast('Datos no válidos', 'Completa el precio y la existencia con números mayores o iguales a 0.');
+            return;
+        }
+
+        inventario[i].price = precio;
+        inventario[i].stock = stock;
+        inventario[i].active = $('producto-activo').checked;
+        guardarInventario();
+        cerrarEditor();
+        renderizarInventario();
+        toast('Inventario actualizado', `${inventario[i].name} se actualizó correctamente.`);
+    });
+
+    $('cerrar-modal-admin').addEventListener('click', cerrarEditor);
+    $('cancelar-edicion').addEventListener('click', cerrarEditor);
+    $('modal-inventario').addEventListener('click', e => {
+        if (e.target.id === 'modal-inventario') cerrarEditor();
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') cerrarEditor();
+    });
+
+    $('restaurar-inventario').addEventListener('click', () => {
+        if (!confirm('¿Restaurar los precios, existencias y disponibilidad iniciales?')) return;
+        inventario = structuredClone(INVENTARIO_INICIAL);
+        guardarInventario();
+        renderizarInventario();
+        renderOfertas();
+        toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
+    });
+
+    $('cerrar-sesion-admin').addEventListener('click', () => {
+        ['sesionActiva', 'usuario', 'rol', 'nombre', 'datosPerfil'].forEach(k => sessionStorage.removeItem(k));
+        window.location.href = 'login.html';
+    });
+
+    /* ----- Tabs ----- */
     document.querySelector('.admin-tabs').addEventListener('click', e => {
         const btn = e.target.closest('.admin-tab');
         if (!btn) return;
         document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
-        ['inventario', 'ofertas', 'pedidos'].forEach(t => { $('tab-' + t).hidden = t !== btn.dataset.tab; });
+        ['inventario', 'ofertas', 'pedidos'].forEach(t => {
+            $('tab-' + t).hidden = t !== btn.dataset.tab;
+        });
         if (btn.dataset.tab === 'ofertas') renderOfertas();
+        if (btn.dataset.tab === 'pedidos') renderPedidos();
     });
+
+    /* ----- Ofertas ----- */
+    renderOfertas();
 
     $('form-oferta').addEventListener('submit', e => {
         e.preventDefault();
@@ -991,8 +1035,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const existente = ofertas.find(o => o.producto === producto);
-        if (existente) Object.assign(existente, { descuento, fin, activa: true });
-        else ofertas.push({ id: 'O-' + Date.now(), producto, descuento, fin, activa: true });
+        if (existente) {
+            Object.assign(existente, { descuento, fin, activa: true });
+        } else {
+            ofertas.push({
+                id: 'O-' + Date.now(),
+                producto,
+                descuento,
+                fin,
+                activa: true
+            });
+        }
 
         escribir(CLAVE_OFERTAS, ofertas);
         $('form-oferta').reset();
@@ -1005,11 +1058,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!btn) return;
         const o = ofertas.find(x => x.id === btn.dataset.id);
         if (!o) return;
-        if (btn.dataset.accion === 'pausar') o.activa = !o.activa;
-        else ofertas = ofertas.filter(x => x !== o);
+
+        if (btn.dataset.accion === 'pausar') {
+            o.activa = !o.activa;
+        } else {
+            ofertas = ofertas.filter(x => x !== o);
+        }
         escribir(CLAVE_OFERTAS, ofertas);
         renderOfertas();
     });
+
+    /* ----- Pedidos ----- */
+    renderPedidos();
 
     $('filtro-pedidos').addEventListener('change', renderPedidos);
 
@@ -1024,14 +1084,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     $('cargar-ejemplos').addEventListener('click', () => {
-        EJEMPLOS.forEach((ej, i) => pedidos.push({
-            id: 'P-' + (1001 + pedidos.length),
-            cliente: ej.cliente,
-            items: ej.items,
-            total: ej.items.reduce((s, it) => s + it.kg * it.price, 0),
-            fecha: new Date(Date.now() - i * 86400000).toISOString(),
-            estado: ej.estado
-        }));
+        EJEMPLOS.forEach((ej, i) => {
+            pedidos.push({
+                id: 'P-' + (1001 + pedidos.length),
+                cliente: ej.cliente,
+                items: ej.items,
+                total: ej.items.reduce((s, it) => s + it.kg * it.price, 0),
+                fecha: new Date(Date.now() - i * 86400000).toISOString(),
+                estado: ej.estado
+            });
+        });
         escribir(CLAVE_PEDIDOS, pedidos);
         renderPedidos();
         toast('Pedidos de ejemplo', 'Se agregaron 3 pedidos de prueba.');
