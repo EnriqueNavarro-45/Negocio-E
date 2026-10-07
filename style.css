@@ -6368,3 +6368,145 @@ body {
 .registro-opcion span {
     cursor: pointer;
 }
+/* =====================================================
+   ETIQUETAS DEL CATÁLOGO
+====================================================== */
+
+.card-imagen-wrapper {
+    position: relative;
+}
+
+
+.producto-badges {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+
+    z-index: 5;
+}
+
+
+.producto-badge {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 26px;
+    padding: 4px 10px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.10);
+}
+
+
+.producto-badge-nuevo {
+    background: #2e7d32;
+    color: #fff;
+}
+
+
+.producto-badge-oferta {
+    background: #f28c28;
+    color: #fff;
+}
+/* =====================================================
+   PRODUCTOS RELACIONADOS
+====================================================== */
+
+.productos-relacionados {
+    margin-top: 26px;
+    padding-top: 22px;
+
+    border-top: 1px solid #e5ebe5;
+}
+
+
+.productos-relacionados h4 {
+    margin: 0 0 14px;
+
+    color: #24452a;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+
+.productos-relacionados-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+
+.producto-relacionado {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 8px;
+
+    border: 1px solid #e2e9e2;
+    border-radius: 11px;
+
+    background: #fff;
+
+    color: #344638;
+
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+
+.producto-relacionado:hover {
+    transform: translateY(-2px);
+
+    border-color: #86b58e;
+
+    box-shadow:
+        0 5px 14px rgba(46, 125, 50, .10);
+}
+
+
+.producto-relacionado img {
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+
+@media (max-width: 600px) {
+
+    .productos-relacionados-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

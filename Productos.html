@@ -1731,7 +1731,7 @@
             document.body.classList.remove('modal-abierto');
         }
 
-       function registrarCompraDelCarrito() {
+      function registrarCompraDelCarrito() {
 
     const carrito = obtenerCarrito();
 
@@ -1739,302 +1739,213 @@
         return;
     }
 
-
-    /* ============================================
-       COMPROBAR TÉRMINOS
-    ============================================ */
-
     if (!aceptarTerminosCheck.checked) {
-
         terminosError.classList.add('visible');
-
         return;
     }
 
-
-    /* ============================================
-       COMPROBAR INVENTARIO
-    ============================================ */
-
-    const cantidadInvalida = carrito.find(item =>
-        !validarCantidadContraStock(
-            item.producto,
-            Number(item.cantidad),
-            item.unidad
-        )
-    );
-
-
-    if (cantidadInvalida) {
-
-        const stock =
-            obtenerStockDisponible(
-                cantidadInvalida.producto
-            );
-
-
-        mostrarNotificacion(
-            'Inventario actualizado',
-            `La existencia de <strong>${cantidadInvalida.producto}</strong> cambió.<br>
-             Disponible actualmente: <strong>${stock.toFixed(2)} kg</strong>.`,
-            'error'
-        );
-
-
-        renderizarCarrito();
-
-        return;
-    }
-
-
-    /* ============================================
-       DESCONTAR INVENTARIO
-    ============================================ */
-
-    if (!descontarInventario(carrito)) {
-
-        mostrarNotificacion(
-            'No se pudo completar el pedido',
-            'La existencia de uno de los productos cambió. Revisa nuevamente tu carrito.',
-            'error'
-        );
-
-        renderizarCarrito();
-
-        return;
-    }
-
-
-    /* ============================================
-       OBTENER DATOS DEL CLIENTE
-    ============================================ */
+    /* ==========================================
+       DATOS DEL CLIENTE
+    ========================================== */
 
     const usuarioActual =
         sessionStorage.getItem('usuario') ||
         'usuario_sin_correo';
 
-
-    const nombreCliente =
-        sessionStorage.getItem('nombre') ||
-        'Cliente';
-
-
-    let datosPerfil = {};
-
-    try {
-
-        datosPerfil = JSON.parse(
+    const datosPerfil =
+        JSON.parse(
             sessionStorage.getItem('datosPerfil') || '{}'
         );
 
-    } catch (error) {
+    const nombreCliente =
+        datosPerfil.nombre ||
+        sessionStorage.getItem('nombre') ||
+        'Cliente';
 
-        datosPerfil = {};
+    const correoCliente =
+        datosPerfil.correo ||
+        usuarioActual;
 
-    }
-
-
-    const telefono =
+    const telefonoCliente =
         datosPerfil.telefono ||
-        sessionStorage.getItem('telefono') ||
-        'No registrado';
+        '';
 
-
-    const direccion =
+    const direccionCliente =
         datosPerfil.direccion ||
-        'No registrada';
+        'No especificada';
 
 
-    /* ============================================
-       GENERAR NÚMERO DE PEDIDO
-    ============================================ */
+    /* ==========================================
+       FECHA Y HORA
+    ========================================== */
 
-    const clavePedidos =
-        'pedidosSanGerardo';
+    const ahora = new Date();
+
+    const fecha =
+        ahora.toLocaleDateString('es-MX');
+
+    const hora =
+        ahora.toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
 
-    let pedidos = [];
+    /* ==========================================
+       TOTAL DEL PEDIDO
+    ========================================== */
+
+    const totalCompra =
+        carrito.reduce(
+            (suma, item) =>
+                suma + calcularTotalItem(item),
+            0
+        );
+
+
+    const cantidadArticulos =
+        carrito.reduce(
+            (suma, item) =>
+                suma + Number(item.cantidad),
+            0
+        );
+
+
+    /* ==========================================
+       GENERAR ID DEL PEDIDO
+    ========================================== */
+
+    let pedidosExistentes = [];
 
     try {
 
-        pedidos = JSON.parse(
-            localStorage.getItem(clavePedidos) || '[]'
-        );
+        pedidosExistentes =
+            JSON.parse(
+                localStorage.getItem(
+                    'pedidosSanGerardo'
+                ) || '[]'
+            );
+
+        if (!Array.isArray(pedidosExistentes)) {
+            pedidosExistentes = [];
+        }
 
     } catch (error) {
 
-        pedidos = [];
+        pedidosExistentes = [];
 
     }
 
 
     const numeroPedido =
-        pedidos.length + 1;
+        1001 + pedidosExistentes.length;
+
+    const idPedido =
+        'P-' + numeroPedido;
 
 
-    const numeroPedidoFormateado =
-        String(numeroPedido).padStart(6, '0');
-
-
-    /* ============================================
-       FECHA
-    ============================================ */
-
-    const fecha = new Date();
-
-    const fechaTexto =
-        fecha.toLocaleDateString(
-            'es-MX',
-            {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            }
-        );
-
-
-    const horaTexto =
-        fecha.toLocaleTimeString(
-            'es-MX',
-            {
-                hour: '2-digit',
-                minute: '2-digit'
-            }
-        );
-
-
-    /* ============================================
+    /* ==========================================
        PRODUCTOS DEL PEDIDO
-    ============================================ */
+    ========================================== */
 
     const productosPedido =
-        carrito.map(item => {
+        carrito.map(item => ({
 
-            const subtotal =
-                calcularTotalItem(item);
+            producto: item.producto,
 
+            cantidad: Number(item.cantidad),
 
-            return {
+            unidad: item.unidad,
 
-                producto: item.producto,
+            precioKg: Number(item.precioKg),
 
-                cantidad: Number(item.cantidad),
+            total:
+                Number(
+                    calcularTotalItem(item)
+                ),
 
-                unidad: item.unidad,
+            imagen: item.imagen
 
-                cantidadTexto:
-                    item.unidad === 'kg'
-                        ? `${item.cantidad} kg`
-                        : `${item.cantidad} g`,
-
-                precioKg:
-                    Number(item.precioKg),
-
-                subtotal:
-                    Number(subtotal.toFixed(2)),
-
-                imagen:
-                    item.imagen
-
-            };
-
-        });
+        }));
 
 
-    /* ============================================
-       TOTAL
-    ============================================ */
-
-    const totalCompra =
-        productosPedido.reduce(
-            (total, item) =>
-                total + item.subtotal,
-            0
-        );
-
-
-    /* ============================================
+    /* ==========================================
        CREAR PEDIDO
-    ============================================ */
+    ========================================== */
 
-    const pedido = {
+    const nuevoPedido = {
 
-        id: numeroPedidoFormateado,
+        id: idPedido,
 
-        usuario:
-            usuarioActual,
+        cliente: nombreCliente,
 
-        nombreCliente:
-            nombreCliente,
+        nombreCliente: nombreCliente,
 
-        telefono:
-            telefono,
+        usuario: correoCliente,
 
-        direccionEntrega:
-            direccion,
+        correo: correoCliente,
 
-        fecha:
-            fechaTexto,
+        telefono: telefonoCliente,
 
-        hora:
-            horaTexto,
+        direccion: direccionCliente,
 
-        fechaISO:
-            fecha.toISOString(),
+        items: productosPedido,
 
-        productos:
-            productosPedido,
+        productos: productosPedido,
 
         cantidadProductos:
-            productosPedido.length,
+            carrito.length,
 
         cantidadArticulos:
-            carrito.reduce(
-                (total, item) =>
-                    total + Number(item.cantidad),
-                0
-            ),
+            cantidadArticulos,
 
         total:
             Number(totalCompra.toFixed(2)),
 
-        estado:
-            'Pendiente',
+        fecha: fecha,
 
-        terminosAceptados:
-            true
+        hora: hora,
+
+        estado: 'Pendiente',
+
+        terminosAceptados: true
 
     };
 
 
-    /* ============================================
-       GUARDAR PEDIDO
-    ============================================ */
+    /* ==========================================
+       GUARDAR PEDIDO PARA ADMIN
+    ========================================== */
 
-    pedidos.unshift(pedido);
+    pedidosExistentes.unshift(nuevoPedido);
 
     localStorage.setItem(
-        clavePedidos,
-        JSON.stringify(pedidos)
+        'pedidosSanGerardo',
+        JSON.stringify(pedidosExistentes)
     );
 
 
-    /* ============================================
-       HISTORIAL ANTERIOR
-       Se mantiene para no romper tu sistema actual
-    ============================================ */
+    /* ==========================================
+       GUARDAR HISTORIAL DEL CLIENTE
+    ========================================== */
 
     const claveHistorial =
         `historialCompras_${usuarioActual}`;
-
 
     let historial = [];
 
     try {
 
-        historial = JSON.parse(
-            sessionStorage.getItem(claveHistorial) || '[]'
-        );
+        historial =
+            JSON.parse(
+                sessionStorage.getItem(
+                    claveHistorial
+                ) || '[]'
+            );
+
+        if (!Array.isArray(historial)) {
+            historial = [];
+        }
 
     } catch (error) {
 
@@ -2043,46 +1954,40 @@
     }
 
 
-    productosPedido.forEach(item => {
+    carrito.forEach(item => {
+
+        const totalItem =
+            calcularTotalItem(item);
 
         historial.unshift({
 
-            id:
-                Date.now() +
-                Math.random(),
+            id: Date.now() + Math.random(),
 
-            pedidoId:
-                numeroPedidoFormateado,
+            pedidoId: idPedido,
 
-            fecha:
-                `${fechaTexto} ${horaTexto}`,
+            fecha: `${fecha} ${hora}`,
 
-            producto:
-                item.producto,
+            producto: item.producto,
 
-            cantidad:
-                item.cantidad,
+            cantidad: item.cantidad,
 
-            unidad:
-                item.unidad,
+            unidad: item.unidad,
 
             cantidadTexto:
-                item.cantidadTexto,
+                item.unidad === 'kg'
+                    ? `${item.cantidad} kg`
+                    : `${item.cantidad} g`,
 
-            precioKg:
-                item.precioKg,
+            precioKg: item.precioKg,
 
             total:
-                `$${item.subtotal.toFixed(2)}`,
+                `$${totalItem.toFixed(2)}`,
 
-            imagen:
-                item.imagen,
+            imagen: item.imagen,
 
-            estado:
-                'Pendiente',
+            estado: 'Compra realizada',
 
-            terminosAceptados:
-                true
+            terminosAceptados: true
 
         });
 
@@ -2095,9 +2000,18 @@
     );
 
 
-    /* ============================================
+    /* ==========================================
+       DESCONTAR INVENTARIO
+    ========================================== */
+
+    if (typeof descontarInventario === 'function') {
+        descontarInventario(carrito);
+    }
+
+
+    /* ==========================================
        LIMPIAR CARRITO
-    ============================================ */
+    ========================================== */
 
     guardarCarrito([]);
 
@@ -2108,20 +2022,38 @@
     renderizarCarrito();
 
 
-    /* ============================================
-       MENSAJE FINAL
-    ============================================ */
+    /* ==========================================
+       MENSAJE
+    ========================================== */
 
     mostrarNotificacion(
 
         'Pedido realizado',
 
-        `Tu pedido <strong>#${numeroPedidoFormateado}</strong>
-         fue registrado correctamente.<br><br>
-         Total:
-         <strong>$${totalCompra.toFixed(2)} MXN</strong><br><br>
-         Dirección de entrega:<br>
-         <strong>${direccion}</strong>`
+        `
+
+        <strong>Pedido ${idPedido}</strong><br><br>
+
+        Se procesaron
+        <strong>
+            ${carrito.length}
+            ${carrito.length === 1
+                ? 'producto'
+                : 'productos'}
+        </strong>.
+
+        <br>
+
+        Total:
+        <strong>
+            $${totalCompra.toFixed(2)} MXN
+        </strong>
+
+        <br><br>
+
+        El pedido fue registrado correctamente.
+
+        `
 
     );
 
@@ -2591,11 +2523,433 @@
             guardarInventarioAdministrador(inventario);
             return true;
         }
+/* =====================================================
+   ETIQUETAS DE PRODUCTOS
+====================================================== */
 
+function aplicarEtiquetasCatalogo() {
+
+    const tarjetas =
+        document.querySelectorAll(
+            '.catalogo-card'
+        );
+
+
+    /* Productos que mostraremos como NUEVOS
+       solamente para la simulación */
+
+    const productosNuevos = [
+        'Mango',
+        'Fresa',
+        'Aguacate',
+        'Quinoa',
+        'Chile Habanero'
+    ];
+
+
+    let ofertas = [];
+
+
+    try {
+
+        ofertas =
+            JSON.parse(
+                localStorage.getItem(
+                    'ofertasSanGerardo'
+                ) || '[]'
+            );
+
+        if (!Array.isArray(ofertas)) {
+            ofertas = [];
+        }
+
+    } catch (error) {
+
+        ofertas = [];
+
+    }
+
+
+    tarjetas.forEach(tarjeta => {
+
+        const nombre =
+            tarjeta
+                .querySelector('h2')
+                ?.textContent
+                .trim();
+
+
+        if (!nombre) {
+            return;
+        }
+
+
+        const contenedor =
+            tarjeta.querySelector(
+                '.card-imagen-wrapper'
+            );
+
+
+        if (!contenedor) {
+            return;
+        }
+
+
+        /* Eliminar etiquetas anteriores */
+
+        contenedor
+            .querySelectorAll(
+                '.producto-badges'
+            )
+            .forEach(elemento =>
+                elemento.remove()
+            );
+
+
+        const badges =
+            document.createElement(
+                'div'
+            );
+
+
+        badges.className =
+            'producto-badges';
+
+
+        /* NUEVO */
+
+        if (
+            productosNuevos.some(
+                producto =>
+                    producto.toLocaleLowerCase('es-MX') ===
+                    nombre.toLocaleLowerCase('es-MX')
+            )
+        ) {
+
+            const nuevo =
+                document.createElement(
+                    'span'
+                );
+
+            nuevo.className =
+                'producto-badge producto-badge-nuevo';
+
+            nuevo.textContent =
+                'Nuevo';
+
+            badges.appendChild(
+                nuevo
+            );
+
+        }
+
+
+        /* OFERTA */
+
+        const oferta =
+            ofertas.find(
+                item =>
+
+                    String(item.producto)
+                        .trim()
+                        .toLocaleLowerCase('es-MX') ===
+                    nombre
+                        .trim()
+                        .toLocaleLowerCase('es-MX')
+                    && item.activa !== false
+            );
+
+
+        if (oferta) {
+
+            const ofertaBadge =
+                document.createElement(
+                    'span'
+                );
+
+            ofertaBadge.className =
+                'producto-badge producto-badge-oferta';
+
+
+            ofertaBadge.textContent =
+                `Oferta -${Number(oferta.descuento)}%`;
+
+
+            badges.appendChild(
+                ofertaBadge
+            );
+
+        }
+
+
+        if (badges.children.length) {
+
+            contenedor.appendChild(
+                badges
+            );
+
+        }
+
+    });
+
+}
+/* =====================================================
+   PRODUCTOS RELACIONADOS
+====================================================== */
+
+function mostrarProductosRelacionados(
+    productoActual
+) {
+
+    const modalContenido =
+        document.querySelector(
+            '.modal-producto-contenido'
+        );
+
+
+    if (!modalContenido) {
+        return;
+    }
+
+
+    let relacionados =
+        document.getElementById(
+            'productos-relacionados'
+        );
+
+
+    if (!relacionados) {
+
+        relacionados =
+            document.createElement(
+                'section'
+            );
+
+        relacionados.id =
+            'productos-relacionados';
+
+        relacionados.className =
+            'productos-relacionados';
+
+
+        const footer =
+            modalContenido.querySelector(
+                '.modal-footer'
+            );
+
+
+        if (footer) {
+
+            modalContenido.insertBefore(
+                relacionados,
+                footer
+            );
+
+        } else {
+
+            modalContenido.appendChild(
+                relacionados
+            );
+
+        }
+
+    }
+
+
+    const tarjetaActual =
+        Array.from(
+            document.querySelectorAll(
+                '.catalogo-card'
+            )
+        ).find(card => {
+
+            const nombre =
+                card
+                    .querySelector('h2')
+                    ?.textContent
+                    .trim();
+
+            return (
+                nombre &&
+                nombre.toLocaleLowerCase('es-MX') ===
+                productoActual.toLocaleLowerCase('es-MX')
+            );
+
+        });
+
+
+    if (!tarjetaActual) {
+        return;
+    }
+
+
+    const categoria =
+        tarjetaActual.dataset.category;
+
+
+    const relacionadas =
+        Array.from(
+            document.querySelectorAll(
+                `.catalogo-card[data-category="${categoria}"]`
+            )
+        )
+        .filter(card => {
+
+            const nombre =
+                card
+                    .querySelector('h2')
+                    ?.textContent
+                    .trim();
+
+            return (
+                nombre &&
+                nombre.toLocaleLowerCase('es-MX') !==
+                productoActual.toLocaleLowerCase('es-MX')
+            );
+
+        })
+        .slice(0, 3);
+
+
+    relacionados.innerHTML = '';
+
+
+    if (!relacionadas.length) {
+
+        relacionados.hidden =
+            true;
+
+        return;
+
+    }
+
+
+    relacionados.hidden =
+        false;
+
+
+    const titulo =
+        document.createElement(
+            'h4'
+        );
+
+    titulo.textContent =
+        'También te puede interesar';
+
+
+    relacionados.appendChild(
+        titulo
+    );
+
+
+    const grid =
+        document.createElement(
+            'div'
+        );
+
+    grid.className =
+        'productos-relacionados-grid';
+
+
+    relacionadas.forEach(card => {
+
+        const nombre =
+            card
+                .querySelector('h2')
+                ?.textContent
+                .trim();
+
+
+        const imagen =
+            card
+                .querySelector(
+                    '.card-imagen-wrapper img'
+                )
+                ?.getAttribute('src');
+
+
+        const boton =
+            card.querySelector(
+                '.btn-accion-comprar'
+            );
+
+
+        const item =
+            document.createElement(
+                'button'
+            );
+
+
+        item.type =
+            'button';
+
+        item.className =
+            'producto-relacionado';
+
+
+        item.innerHTML = `
+
+            <img
+                src="${imagen || ''}"
+                alt="${nombre}"
+            >
+
+            <span>
+                ${nombre}
+            </span>
+
+        `;
+
+
+        item.addEventListener(
+            'click',
+            () => {
+
+                if (boton) {
+                    boton.click();
+                }
+
+            }
+        );
+
+
+        grid.appendChild(
+            item
+        );
+
+    });
+
+
+    relacionados.appendChild(
+        grid
+    );
+
+}
         aplicarInventarioAdministrador();
         actualizarContadorCarrito();
         aplicarFiltros();
+        aplicarEtiquetasCatalogo();
+window.addEventListener(
+    'focus',
+    aplicarEtiquetasCatalogo
+);
 
+
+window.addEventListener(
+    'storage',
+    event => {
+
+        if (
+            event.key ===
+            'ofertasSanGerardo'
+        ) {
+
+            aplicarEtiquetasCatalogo();
+
+        }
+
+    }
+);
         window.addEventListener('focus', () => {
             aplicarInventarioAdministrador();
         });
