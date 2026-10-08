@@ -69,7 +69,7 @@
             color: #9b1c1c;
         }
 
-        /* ===== OFERTAS: diseño mejorado ===== */
+        /* ===== OFERTAS ===== */
         .ofertas-form-card {
             background: linear-gradient(145deg, #f7fbf7 0%, #eef6ee 100%);
             border: 1px solid #d4e8d4;
@@ -359,6 +359,75 @@
         .btn-eliminar-producto:hover {
             background: #fdecea;
         }
+
+        /* ===== MODAL DE CONFIRMACIÓN ===== */
+        .admin-confirm-overlay {
+            z-index: 10000;
+        }
+
+        .admin-confirm-modal {
+            width: min(460px, calc(100vw - 32px));
+            padding: 32px;
+            text-align: center;
+            border-radius: 24px;
+        }
+
+        .admin-confirm-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #fff4e5;
+            color: #b66a00;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .admin-confirm-modal h2 {
+            margin: 0 0 10px;
+            color: #073b2d;
+        }
+
+        .admin-confirm-modal p {
+            margin: 0 auto;
+            max-width: 380px;
+            color: #68776f;
+            line-height: 1.55;
+        }
+
+        .admin-confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .admin-danger-btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 20px;
+            background: #c93636;
+            color: #fff;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .admin-danger-btn:hover {
+            background: #aa2929;
+        }
+
+        @media (max-width: 600px) {
+            .admin-confirm-actions {
+                flex-direction: column-reverse;
+            }
+            .admin-confirm-actions button {
+                width: 100%;
+            }
+        }
     </style>
     <script>
         if (sessionStorage.getItem('sesionActiva') !== 'true' ||
@@ -600,6 +669,19 @@
         </div>
     </div>
 
+    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
+    <div class="admin-overlay admin-confirm-overlay" id="admin-confirmacion" aria-hidden="true">
+        <div class="admin-modal admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-titulo">
+            <div class="admin-confirm-icon">!</div>
+            <h2 id="admin-confirm-titulo">Confirmar acción</h2>
+            <p id="admin-confirm-mensaje">¿Deseas continuar?</p>
+            <div class="admin-confirm-actions">
+                <button type="button" class="admin-secondary-btn" id="admin-confirm-cancelar">Cancelar</button>
+                <button type="button" class="admin-danger-btn" id="admin-confirm-aceptar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <div class="admin-toast" id="admin-toast" role="status">
         <strong id="toast-titulo">Listo</strong>
         <span id="toast-mensaje"></span>
@@ -756,7 +838,7 @@ function cerrarEditor() {
     $('modal-inventario').setAttribute('aria-hidden', 'true');
 }
 
-/* ========== TOAST ========== */
+/* ========== TOAST (alertas personalizadas) ========== */
 let toastTimer;
 function toast(titulo, mensaje) {
     $('toast-titulo').textContent = titulo;
@@ -764,6 +846,24 @@ function toast(titulo, mensaje) {
     $('admin-toast').classList.add('activo');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => $('admin-toast').classList.remove('activo'), 2800);
+}
+
+/* ========== CONFIRMACIÓN PERSONALIZADA ========== */
+let accionConfirmacion = null;
+
+function mostrarConfirmacion(titulo, mensaje, textoAceptar, callback) {
+    $('admin-confirm-titulo').textContent = titulo;
+    $('admin-confirm-mensaje').textContent = mensaje;
+    $('admin-confirm-aceptar').textContent = textoAceptar || 'Confirmar';
+    accionConfirmacion = callback;
+    $('admin-confirmacion').classList.add('activo');
+    $('admin-confirmacion').setAttribute('aria-hidden', 'false');
+}
+
+function cerrarConfirmacion() {
+    $('admin-confirmacion').classList.remove('activo');
+    $('admin-confirmacion').setAttribute('aria-hidden', 'true');
+    accionConfirmacion = null;
 }
 
 /* ========== OFERTAS ========== */
@@ -825,754 +925,180 @@ function renderOfertas() {
 }
 
 /* ========== PEDIDOS ========== */
-
 let pedidos = leer(CLAVE_PEDIDOS);
 
-
-/* ==========================================
-   NORMALIZAR ESTADO DEL PEDIDO
-========================================== */
-
 function normalizarEstadoPedido(estado) {
-
     const valor = normalizar(estado);
-
-    if (valor === 'pendiente') {
-        return 'pendiente';
-    }
-
-    if (
-        valor === 'en camino' ||
-        valor === 'encamino'
-    ) {
-        return 'en camino';
-    }
-
-    if (valor === 'entregado') {
-        return 'entregado';
-    }
-
-    if (valor === 'cancelado') {
-        return 'cancelado';
-    }
-
-    if (valor === 'confirmado') {
-        return 'confirmado';
-    }
-
-    if (valor === 'preparando') {
-        return 'preparando';
-    }
-
-    if (
-        valor === 'listo para entregar' ||
-        valor === 'listoparaentregar'
-    ) {
-        return 'listo para entregar';
-    }
-
+    if (valor === 'pendiente') return 'pendiente';
+    if (valor === 'en camino' || valor === 'encamino') return 'en camino';
+    if (valor === 'entregado') return 'entregado';
+    if (valor === 'cancelado') return 'cancelado';
+    if (valor === 'confirmado') return 'confirmado';
+    if (valor === 'preparando') return 'preparando';
+    if (valor === 'listo para entregar' || valor === 'listoparaentregar') return 'listo para entregar';
     return 'pendiente';
 }
 
-
-/* ==========================================
-   TEXTO DEL ESTADO
-========================================== */
-
 function textoEstadoPedido(estado) {
-
     const estados = {
-
         'pendiente': 'Pendiente',
-
         'confirmado': 'Confirmado',
-
         'preparando': 'Preparando',
-
         'listo para entregar': 'Listo para entregar',
-
         'en camino': 'En camino',
-
         'entregado': 'Entregado',
-
         'cancelado': 'Cancelado'
-
     };
-
-    const estadoNormalizado =
-        normalizarEstadoPedido(estado);
-
-    return estados[estadoNormalizado]
-        || 'Pendiente';
+    return estados[normalizarEstadoPedido(estado)] || 'Pendiente';
 }
-
-
-/* ==========================================
-   PRODUCTOS DEL PEDIDO
-========================================== */
 
 function obtenerItemsPedido(pedido) {
-
-    if (
-        Array.isArray(pedido.items) &&
-        pedido.items.length
-    ) {
-
+    if (Array.isArray(pedido.items) && pedido.items.length) {
         return pedido.items.map(item => {
-
-            /*
-             * Formato nuevo
-             */
             if (item.producto) {
-
                 return {
-
-                    nombre:
-                        item.producto,
-
-                    cantidad:
-                        Number(item.cantidad) || 0,
-
-                    unidad:
-                        item.unidad || 'kg',
-
-                    precio:
-                        Number(item.precioKg) || 0,
-
-                    total:
-                        Number(item.total) ||
-                        (
-                            (Number(item.cantidad) || 0) *
-                            (Number(item.precioKg) || 0)
-                        )
-
+                    nombre: item.producto,
+                    cantidad: Number(item.cantidad) || 0,
+                    unidad: item.unidad || 'kg',
+                    precio: Number(item.precioKg) || 0,
+                    total: Number(item.total) || ((Number(item.cantidad) || 0) * (Number(item.precioKg) || 0))
                 };
-
             }
-
-
-            /*
-             * Formato anterior
-             */
             return {
-
-                nombre:
-                    item.name || item.producto || 'Producto',
-
-                cantidad:
-                    Number(item.kg) ||
-                    Number(item.cantidad) ||
-                    0,
-
-                unidad:
-                    item.unidad || 'kg',
-
-                precio:
-                    Number(item.price) ||
-                    Number(item.precioKg) ||
-                    0,
-
-                total:
-                    Number(item.total) ||
-                    (
-                        (Number(item.kg) ||
-                        Number(item.cantidad) ||
-                        0) *
-                        (Number(item.price) ||
-                        Number(item.precioKg) ||
-                        0)
-                    )
-
+                nombre: item.name || item.producto || 'Producto',
+                cantidad: Number(item.kg) || Number(item.cantidad) || 0,
+                unidad: item.unidad || 'kg',
+                precio: Number(item.price) || Number(item.precioKg) || 0,
+                total: Number(item.total) || ((Number(item.kg) || Number(item.cantidad) || 0) * (Number(item.price) || Number(item.precioKg) || 0))
             };
-
         });
-
     }
 
-
-    /*
-     * Si por alguna razón el pedido
-     * utiliza "productos" en lugar de "items"
-     */
-
-    if (
-        Array.isArray(pedido.productos) &&
-        pedido.productos.length
-    ) {
-
+    if (Array.isArray(pedido.productos) && pedido.productos.length) {
         return pedido.productos.map(item => ({
-
-            nombre:
-                item.producto ||
-                item.name ||
-                'Producto',
-
-            cantidad:
-                Number(item.cantidad) ||
-                Number(item.kg) ||
-                0,
-
-            unidad:
-                item.unidad || 'kg',
-
-            precio:
-                Number(item.precioKg) ||
-                Number(item.price) ||
-                0,
-
-            total:
-                Number(item.total) ||
-                0
-
+            nombre: item.producto || item.name || 'Producto',
+            cantidad: Number(item.cantidad) || Number(item.kg) || 0,
+            unidad: item.unidad || 'kg',
+            precio: Number(item.precioKg) || Number(item.price) || 0,
+            total: Number(item.total) || 0
         }));
-
     }
-
 
     return [];
-
 }
-
-
-/* ==========================================
-   FECHA DEL PEDIDO
-========================================== */
 
 function obtenerFechaPedido(pedido) {
-
     if (pedido.fecha) {
-
-        /*
-         * Si es una fecha ISO
-         */
-        if (
-            typeof pedido.fecha === 'string' &&
-            pedido.fecha.includes('T')
-        ) {
-
-            const fecha =
-                new Date(pedido.fecha);
-
+        if (typeof pedido.fecha === 'string' && pedido.fecha.includes('T')) {
+            const fecha = new Date(pedido.fecha);
             if (!Number.isNaN(fecha.getTime())) {
-
-                return fecha.toLocaleDateString(
-                    'es-MX'
-                );
-
+                return fecha.toLocaleDateString('es-MX');
             }
-
         }
-
-        /*
-         * Si ya es una fecha de texto
-         */
         return pedido.fecha;
-
     }
-
     return 'Sin fecha';
-
 }
-
-
-/* ==========================================
-   INFORMACIÓN DEL CLIENTE
-========================================== */
 
 function obtenerNombreCliente(pedido) {
-
-    return (
-
-        pedido.nombreCliente ||
-
-        pedido.cliente ||
-
-        pedido.nombre ||
-
-        pedido.usuario ||
-
-        'Cliente'
-
-    );
-
+    return pedido.nombreCliente || pedido.cliente || pedido.nombre || pedido.usuario || 'Cliente';
 }
-
-
-/* ==========================================
-   TOTAL DEL PEDIDO
-========================================== */
 
 function obtenerTotalPedido(pedido) {
-
-    if (
-        Number.isFinite(
-            Number(pedido.total)
-        )
-    ) {
-
+    if (Number.isFinite(Number(pedido.total))) {
         return Number(pedido.total);
-
     }
-
-    const items =
-        obtenerItemsPedido(pedido);
-
-    return items.reduce(
-        (suma, item) =>
-            suma + Number(item.total || 0),
-        0
-    );
-
+    return obtenerItemsPedido(pedido).reduce((suma, item) => suma + Number(item.total || 0), 0);
 }
-
-
-/* ==========================================
-   RENDERIZAR PEDIDOS
-========================================== */
 
 function renderPedidos() {
+    const filtro = $('filtro-pedidos').value;
+    pedidos = leer(CLAVE_PEDIDOS);
+    const filtroNormalizado = normalizar(filtro);
 
-    const filtro =
-        $('filtro-pedidos').value;
+    const lista = pedidos.filter(pedido => {
+        if (filtroNormalizado === 'todos') return true;
+        return normalizarEstadoPedido(pedido.estado) === filtroNormalizado;
+    });
 
+    const pendientes = pedidos.filter(pedido =>
+        normalizarEstadoPedido(pedido.estado) === 'pendiente'
+    ).length;
 
-    /*
-     * Volvemos a leer localStorage cada vez
-     * para asegurarnos de tener los pedidos
-     * más recientes.
-     */
-
-    pedidos =
-        leer(CLAVE_PEDIDOS);
-
-
-    /*
-     * Normalizamos el filtro.
-     */
-
-    const filtroNormalizado =
-        normalizar(filtro);
-
-
-    /*
-     * Filtrar pedidos.
-     */
-
-    const lista =
-        pedidos.filter(pedido => {
-
-            if (
-                filtroNormalizado === 'todos'
-            ) {
-
-                return true;
-
-            }
-
-            return (
-                normalizarEstadoPedido(
-                    pedido.estado
-                ) === filtroNormalizado
-            );
-
-        });
-
-
-    /*
-     * Contador de pedidos pendientes.
-     */
-
-    const pendientes =
-        pedidos.filter(pedido =>
-
-            normalizarEstadoPedido(
-                pedido.estado
-            ) === 'pendiente'
-
-        ).length;
-
-
-    /*
-     * Actualizar botón Pedidos.
-     */
-
-    $('tab-btn-pedidos').textContent =
-        'Pedidos' +
-        (
-            pendientes
-                ? ` (${pendientes})`
-                : ''
-        );
-
-
-    /*
-     * Si no hay pedidos.
-     */
+    $('tab-btn-pedidos').textContent = 'Pedidos' + (pendientes ? ` (${pendientes})` : '');
 
     if (!lista.length) {
-
         $('pedidos-tabla').innerHTML = `
-
             <tr>
-
-                <td
-                    colspan="6"
-                    class="admin-empty"
-                >
-
-                    No hay pedidos para mostrar.
-
-                </td>
-
-            </tr>
-
-        `;
-
+                <td colspan="6" class="admin-empty">No hay pedidos para mostrar.</td>
+            </tr>`;
         return;
-
     }
 
-
-    /*
-     * Crear filas.
-     */
-
-    $('pedidos-tabla').innerHTML =
-
-        lista.map(pedido => {
-
-            const items =
-                obtenerItemsPedido(pedido);
-
-
-            const total =
-                obtenerTotalPedido(pedido);
-
-
-            const estado =
-                normalizarEstadoPedido(
-                    pedido.estado
-                );
-
-
-            const nombreCliente =
-                obtenerNombreCliente(pedido);
-
-
-            const fecha =
-                obtenerFechaPedido(pedido);
-
-
-            /*
-             * Texto de productos
-             */
-
-            const productosTexto =
-                items.length
-
-                    ? items.map(item => {
-
-                        return `
-                            ${esc(item.nombre)}
-                            (${Number(item.cantidad)}
-                            ${esc(item.unidad)})
-                        `;
-
-                    }).join(', ')
-
-                    : 'Sin productos';
-
-
-            return `
-
-                <tr>
-
-                    <!-- PEDIDO -->
-
-                    <td>
-
-                        <strong>
-                            ${esc(
-                                pedido.id ||
-                                'Sin ID'
-                            )}
-                        </strong>
-
-                    </td>
-
-
-                    <!-- CLIENTE -->
-
-                    <td>
-
-                        ${esc(
-                            nombreCliente
-                        )}
-
-                        ${
-                            pedido.correo
-                                ? `<small
-                                    style="
-                                    display:block;
-                                    margin-top:3px;
-                                    color:#718071;
-                                    "
-                                >
-                                    ${esc(
-                                        pedido.correo
-                                    )}
-                                </small>`
-                                : ''
-                        }
-
-                    </td>
-
-
-                    <!-- PRODUCTOS -->
-
-                    <td>
-
-                        ${productosTexto}
-
-                    </td>
-
-
-                    <!-- TOTAL -->
-
-                    <td>
-
-                        <strong>
-                            ${dinero(total)}
-                        </strong>
-
-                    </td>
-
-
-                    <!-- FECHA -->
-
-                    <td>
-
-                        ${esc(fecha)}
-
-                        ${
-                            pedido.hora
-                                ? `<small
-                                    style="
-                                    display:block;
-                                    margin-top:3px;
-                                    color:#718071;
-                                    "
-                                >
-                                    ${esc(
-                                        pedido.hora
-                                    )}
-                                </small>`
-                                : ''
-                        }
-
-                    </td>
-
-
-                    <!-- ESTADO -->
-
-                    <td>
-
-                        <select
-
-                            class="
-                                admin-select
-                                cambiar-estado
-                            "
-
-                            data-id="
-                                ${esc(
-                                    pedido.id || ''
-                                )}
-                            "
-
-                            aria-label="
-                                Estado del pedido
-                                ${esc(
-                                    pedido.id || ''
-                                )}
-                            "
-
-                        >
-
-                            <option
-                                value="pendiente"
-                                ${
-                                    estado ===
-                                    'pendiente'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Pendiente
-                            </option>
-
-
-                            <option
-                                value="confirmado"
-                                ${
-                                    estado ===
-                                    'confirmado'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Confirmado
-                            </option>
-
-
-                            <option
-                                value="preparando"
-                                ${
-                                    estado ===
-                                    'preparando'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Preparando
-                            </option>
-
-
-                            <option
-                                value="listo para entregar"
-                                ${
-                                    estado ===
-                                    'listo para entregar'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Listo para entregar
-                            </option>
-
-
-                            <option
-                                value="en camino"
-                                ${
-                                    estado ===
-                                    'en camino'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                En camino
-                            </option>
-
-
-                            <option
-                                value="entregado"
-                                ${
-                                    estado ===
-                                    'entregado'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Entregado
-                            </option>
-
-
-                            <option
-                                value="cancelado"
-                                ${
-                                    estado ===
-                                    'cancelado'
-                                        ? 'selected'
-                                        : ''
-                                }
-                            >
-                                Cancelado
-                            </option>
-
-                        </select>
-
-                    </td>
-
-                </tr>
-
-            `;
-
-        }).join('');
-
+    $('pedidos-tabla').innerHTML = lista.map(pedido => {
+        const items = obtenerItemsPedido(pedido);
+        const total = obtenerTotalPedido(pedido);
+        const estado = normalizarEstadoPedido(pedido.estado);
+        const nombreCliente = obtenerNombreCliente(pedido);
+        const fecha = obtenerFechaPedido(pedido);
+
+        const productosTexto = items.length
+            ? items.map(item => `${esc(item.nombre)} (${Number(item.cantidad)} ${esc(item.unidad)})`).join(', ')
+            : 'Sin productos';
+
+        return `
+            <tr>
+                <td><strong>${esc(pedido.id || 'Sin ID')}</strong></td>
+                <td>
+                    ${esc(nombreCliente)}
+                    ${pedido.correo ? `<small style="display:block;margin-top:3px;color:#718071;">${esc(pedido.correo)}</small>` : ''}
+                </td>
+                <td>${productosTexto}</td>
+                <td><strong>${dinero(total)}</strong></td>
+                <td>
+                    ${esc(fecha)}
+                    ${pedido.hora ? `<small style="display:block;margin-top:3px;color:#718071;">${esc(pedido.hora)}</small>` : ''}
+                </td>
+                <td>
+                    <select class="admin-select cambiar-estado" data-id="${esc(pedido.id || '')}" aria-label="Estado del pedido ${esc(pedido.id || '')}">
+                        <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+                        <option value="confirmado" ${estado === 'confirmado' ? 'selected' : ''}>Confirmado</option>
+                        <option value="preparando" ${estado === 'preparando' ? 'selected' : ''}>Preparando</option>
+                        <option value="listo para entregar" ${estado === 'listo para entregar' ? 'selected' : ''}>Listo para entregar</option>
+                        <option value="en camino" ${estado === 'en camino' ? 'selected' : ''}>En camino</option>
+                        <option value="entregado" ${estado === 'entregado' ? 'selected' : ''}>Entregado</option>
+                        <option value="cancelado" ${estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+                    </select>
+                </td>
+            </tr>`;
+    }).join('');
 }
 
-
-/* ==========================================
-   PEDIDOS DE EJEMPLO
-========================================== */
-
+/* ========== PEDIDOS DE EJEMPLO ========== */
 const EJEMPLOS = [
-
     {
         cliente: 'María López',
-
         estado: 'pendiente',
-
         items: [
-
-            {
-                name: 'Mango',
-                kg: 2,
-                price: 45
-            },
-
-            {
-                name: 'Aguacate',
-                kg: 1,
-                price: 75
-            }
-
+            { name: 'Mango', kg: 2, price: 45 },
+            { name: 'Aguacate', kg: 1, price: 75 }
         ]
-
     },
-
-
     {
         cliente: 'Juan Pérez',
-
         estado: 'en camino',
-
         items: [
-
-            {
-                name: 'Jitomate',
-                kg: 3,
-                price: 28
-            }
-
+            { name: 'Jitomate', kg: 3, price: 28 }
         ]
-
     },
-
-
     {
         cliente: 'Ana Ruiz',
-
         estado: 'entregado',
-
         items: [
-
-            {
-                name: 'Chile Habanero',
-                kg: 0.5,
-                price: 80
-            },
-
-            {
-                name: 'Limón',
-                kg: 2,
-                price: 30
-            }
-
+            { name: 'Chile Habanero', kg: 0.5, price: 80 },
+            { name: 'Limón', kg: 2, price: 30 }
         ]
-
     }
-
 ];
 
 /* ========== INICIALIZACIÓN ========== */
@@ -1598,21 +1124,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const i = Number(btnEliminar.dataset.eliminar);
             const p = inventario[i];
             if (!p) return;
-            if (!confirm(`¿Eliminar "${p.name}" del inventario?`)) return;
 
-            const nombreEliminado = p.name;
-            inventario.splice(i, 1);
-            guardarInventario();
+            // Confirmación personalizada al eliminar producto
+            mostrarConfirmacion(
+                'Eliminar producto',
+                `¿Seguro que deseas eliminar "${p.name}" del inventario? Esta acción no se puede deshacer.`,
+                'Eliminar',
+                () => {
+                    const nombreEliminado = p.name;
+                    inventario.splice(i, 1);
+                    guardarInventario();
 
-            // Quitar ofertas asociadas
-            ofertas = ofertas.filter(o =>
-                normalizar(o.producto) !== normalizar(nombreEliminado)
+                    // Quitar ofertas asociadas
+                    ofertas = ofertas.filter(o =>
+                        normalizar(o.producto) !== normalizar(nombreEliminado)
+                    );
+                    escribir(CLAVE_OFERTAS, ofertas);
+
+                    renderizarInventario();
+                    renderOfertas();
+                    toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
+                }
             );
-            escribir(CLAVE_OFERTAS, ofertas);
-
-            renderizarInventario();
-            renderOfertas();
-            toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
         }
     });
 
@@ -1704,17 +1237,39 @@ document.addEventListener('DOMContentLoaded', () => {
     $('modal-inventario').addEventListener('click', e => {
         if (e.target.id === 'modal-inventario') cerrarEditor();
     });
+
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') cerrarEditor();
+        if (e.key === 'Escape') {
+            cerrarEditor();
+            cerrarConfirmacion();
+        }
     });
 
+    // Restaurar inventario con confirmación personalizada
     $('restaurar-inventario').addEventListener('click', () => {
-        if (!confirm('¿Restaurar los precios, existencias y disponibilidad iniciales?')) return;
-        inventario = structuredClone(INVENTARIO_INICIAL);
-        guardarInventario();
-        renderizarInventario();
-        renderOfertas();
-        toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
+        mostrarConfirmacion(
+            'Restaurar inventario',
+            '¿Restaurar los precios, existencias y disponibilidad iniciales? Se perderán los cambios actuales.',
+            'Restaurar',
+            () => {
+                inventario = structuredClone(INVENTARIO_INICIAL);
+                guardarInventario();
+                renderizarInventario();
+                renderOfertas();
+                toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
+            }
+        );
+    });
+
+    // Eventos del modal de confirmación
+    $('admin-confirm-aceptar').addEventListener('click', () => {
+        const a = accionConfirmacion;
+        cerrarConfirmacion();
+        if (typeof a === 'function') a();
+    });
+    $('admin-confirm-cancelar').addEventListener('click', cerrarConfirmacion);
+    $('admin-confirmacion').addEventListener('click', e => {
+        if (e.target.id === 'admin-confirmacion') cerrarConfirmacion();
     });
 
     $('cerrar-sesion-admin').addEventListener('click', () => {
@@ -1779,11 +1334,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (btn.dataset.accion === 'pausar') {
             o.activa = !o.activa;
+            escribir(CLAVE_OFERTAS, ofertas);
+            renderOfertas();
+            toast(o.activa ? 'Oferta activada' : 'Oferta pausada', `${o.producto} ahora está ${o.activa ? 'vigente' : 'pausada'}.`);
         } else {
-            ofertas = ofertas.filter(x => x !== o);
+            // Confirmación al eliminar oferta
+            mostrarConfirmacion(
+                'Eliminar oferta',
+                `¿Eliminar la oferta de "${o.producto}"?`,
+                'Eliminar',
+                () => {
+                    ofertas = ofertas.filter(x => x !== o);
+                    escribir(CLAVE_OFERTAS, ofertas);
+                    renderOfertas();
+                    toast('Oferta eliminada', `Se eliminó la oferta de ${o.producto}.`);
+                }
+            );
         }
-        escribir(CLAVE_OFERTAS, ofertas);
-        renderOfertas();
     });
 
     /* ----- Pedidos ----- */
@@ -1793,12 +1360,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('pedidos-tabla').addEventListener('change', e => {
         if (!e.target.classList.contains('cambiar-estado')) return;
-        const p = pedidos.find(x => x.id === e.target.dataset.id);
+        const p = pedidos.find(x => String(x.id) === String(e.target.dataset.id));
         if (!p) return;
         p.estado = e.target.value;
         escribir(CLAVE_PEDIDOS, pedidos);
         renderPedidos();
-        toast('Pedido actualizado', `${p.id} ahora está "${p.estado}".`);
+        toast('Pedido actualizado', `${p.id} ahora está "${textoEstadoPedido(p.estado)}".`);
     });
 
     $('cargar-ejemplos').addEventListener('click', () => {

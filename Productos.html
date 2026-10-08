@@ -1121,6 +1121,78 @@
         .precio-oferta-info .precio-antes {
             font-size: .8rem; color: #9aa89a; text-decoration: line-through;
         }
+
+        .productos-relacionados {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #e6ece6;
+        }
+
+        .productos-relacionados h4 {
+            margin: 0 0 12px;
+            font-size: .95rem;
+            font-weight: 600;
+            color: #304430;
+        }
+
+        .productos-relacionados-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .producto-relacionado {
+            border: 1px solid #e1e8e1;
+            background: #fff;
+            border-radius: 12px;
+            padding: 8px;
+            cursor: pointer;
+            text-align: left;
+            font: inherit;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        .producto-relacionado:hover {
+            transform: translateY(-2px);
+            border-color: #b7cdb7;
+            box-shadow: 0 8px 20px rgba(40, 70, 40, .10);
+        }
+
+        .producto-relacionado img {
+            display: block;
+            width: 100%;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 9px;
+            margin-bottom: 7px;
+        }
+
+        .producto-relacionado span {
+            display: block;
+            color: #304430;
+            font-size: .78rem;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        @media (max-width: 640px) {
+            .productos-relacionados-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 7px;
+            }
+
+            .producto-relacionado {
+                padding: 6px;
+            }
+
+            .producto-relacionado img {
+                height: 58px;
+            }
+
+            .producto-relacionado span {
+                font-size: .7rem;
+            }
+        }
     </style>
 
 <!-- =====================================================
@@ -1683,8 +1755,14 @@
         const terminosArticulos = document.getElementById('terminos-articulos');
         const terminosTotal = document.getElementById('terminos-total');
 
-        function abrirTerminos() {
-            const carrito = obtenerCarrito();
+        // Cuando se usa "Confirmar compra" desde el detalle del producto,
+        // guardamos temporalmente ese producto para que también pase por los términos.
+        let compraDirectaPendiente = null;
+
+        function abrirTerminos(compraDirecta = null) {
+            const carrito = compraDirecta
+                ? [compraDirecta]
+                : obtenerCarrito();
             if (!carrito.length) {
                 mostrarNotificacion('Carrito vacío', 'Agrega productos antes de finalizar la compra.', 'error');
                 return;
@@ -1704,6 +1782,8 @@
                 renderizarCarrito();
                 return;
             }
+
+            compraDirectaPendiente = compraDirecta || null;
 
             const cantidadTotal = carrito.reduce((total, item) => total + Number(item.cantidad), 0);
             const totalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
@@ -1733,7 +1813,9 @@
 
       function registrarCompraDelCarrito() {
 
-    const carrito = obtenerCarrito();
+    const carrito = compraDirectaPendiente
+        ? [compraDirectaPendiente]
+        : obtenerCarrito();
 
     if (!carrito.length) {
         return;
@@ -2013,13 +2095,17 @@
        LIMPIAR CARRITO
     ========================================== */
 
-    guardarCarrito([]);
-
-    cerrarTerminos();
-
-    cerrarCarrito();
-
-    renderizarCarrito();
+    if (compraDirectaPendiente) {
+        compraDirectaPendiente = null;
+        cerrarTerminos();
+        cerrarModal();
+        renderizarCarrito();
+    } else {
+        guardarCarrito([]);
+        cerrarTerminos();
+        cerrarCarrito();
+        renderizarCarrito();
+    }
 
 
     /* ==========================================
@@ -2172,6 +2258,8 @@
             if (Number.isFinite(stockParaModal)) {
                 cantidadInput.max = stockParaModal;
             }
+
+            mostrarProductosRelacionados(productoActual);
 
             modal.classList.add('activo');
             document.body.classList.add('modal-abierto');
@@ -2703,7 +2791,7 @@ function mostrarProductosRelacionados(
 
     const modalContenido =
         document.querySelector(
-            '.modal-producto-contenido'
+            '.modal-galeria'
         );
 
 
@@ -2976,6 +3064,7 @@ window.addEventListener(
 
         btnConfirmar.addEventListener('click', () => {
             const cantidad = parseFloat(cantidadInput.value);
+
             if (!cantidad || cantidad <= 0) {
                 mostrarNotificacion(
                     'Cantidad no válida',
@@ -2995,57 +3084,18 @@ window.addEventListener(
                 return;
             }
 
-            if (!descontarInventario([{
-                producto: productoActual,
-                cantidad: cantidad,
-                unidad: unidadActual
-            }])) {
-                mostrarNotificacion(
-                    'No se pudo completar la compra',
-                    'La existencia cambió. Actualiza el producto e inténtalo nuevamente.',
-                    'error'
-                );
-                aplicarInventarioAdministrador();
-                return;
-            }
-
-            const total = totalValor.textContent;
-            const unidadTexto = unidadActual === 'kg' ? `${cantidad} kg` : `${cantidad} g`;
-
-            // Guardar la compra en el historial del usuario actual.
-            const usuarioActual = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
-            const claveHistorial = `historialCompras_${usuarioActual}`;
-            const historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
-
-            historial.unshift({
-                id: Date.now(),
-                fecha: new Date().toLocaleString('es-MX', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short'
-                }),
+            const compraDirecta = {
                 producto: productoActual,
                 cantidad: cantidad,
                 unidad: unidadActual,
-                cantidadTexto: unidadTexto,
                 precioKg: precioUnitarioPorKg,
-                total: total,
                 imagen: imagenPrincipal.src,
-                estado: 'Compra realizada'
-            });
+                categoria: categoriaModal.textContent.trim() || 'PRODUCTO'
+            };
 
-            sessionStorage.setItem(claveHistorial, JSON.stringify(historial));
-
+            // La compra directa también debe aceptar los términos antes de registrarse.
             cerrarModal();
-
-            mostrarNotificacion(
-                'Compra realizada',
-                `
-                    <strong>${productoActual}</strong><br>
-                    Cantidad: ${unidadTexto}<br>
-                    Total: <strong>${total} MXN</strong><br><br>
-                    Gracias por comprar en San Gerardo Mayela.
-                `
-            );
+            abrirTerminos(compraDirecta);
         });
     });
 </script>
