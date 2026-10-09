@@ -490,11 +490,11 @@
                 <form id="form-agregar-producto" class="agregar-form-grid" novalidate>
                     <label>
                         Nombre
-                        <input type="text" id="nuevo-nombre" class="admin-input" placeholder="Ej. Kiwi" required autocomplete="off">
+                        <input type="text" id="nuevo-nombre" class="admin-input" placeholder="Ej. Kiwi"  autocomplete="off">
                     </label>
                     <label>
                         Categoría
-                        <select id="nuevo-categoria" class="admin-select" required>
+                        <select id="nuevo-categoria" class="admin-select" >
                             <option value="frutas">Frutas</option>
                             <option value="verduras">Verduras</option>
                             <option value="cereales">Cereales</option>
@@ -503,11 +503,11 @@
                     </label>
                     <label>
                         Precio / kg
-                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" required>
+                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" >
                     </label>
                     <label>
                         Stock (kg)
-                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" required>
+                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" >
                     </label>
                     <label>
                         Archivo de imagen
@@ -644,12 +644,12 @@
 
                 <label>
                     Precio por kilogramo
-                    <div class="admin-input-prefix"><span>$</span><input type="number" id="producto-precio" min="0" step="0.01" required></div>
+                    <div class="admin-input-prefix"><span>$</span><input type="number" id="producto-precio" min="0" step="0.01" ></div>
                 </label>
 
                 <label>
                     Existencia disponible
-                    <div class="admin-input-suffix"><input type="number" id="producto-stock" min="0" step="0.1" required><span>kg</span></div>
+                    <div class="admin-input-suffix"><input type="number" id="producto-stock" min="0" step="0.1" ><span>kg</span></div>
                 </label>
 
                 <label class="admin-switch-row">

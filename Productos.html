@@ -1322,6 +1322,19 @@
                 </button>
             </div>
         </div>
+        </div>
+        <!-- MODAL CONFIRMACIÓN ELIMINAR DEL CARRITO -->
+<div class="confirm-overlay" id="confirm-overlay" aria-hidden="true">
+    <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-titulo">
+        <div class="confirm-icon">!</div>
+        <h2 id="confirm-titulo">Eliminar producto</h2>
+        <p id="confirm-mensaje">¿Seguro que quieres quitar este producto del carrito?</p>
+        <div class="confirm-acciones">
+            <button type="button" class="confirm-btn-cancelar" id="confirm-cancelar">Cancelar</button>
+            <button type="button" class="confirm-btn-aceptar" id="confirm-aceptar">Eliminar</button>
+        </div>
+    </div>
+</div>
     </div>
     <!-- =====================================================
          ICONOS LOCALES + FUNCIONES DE LA PÁGINA
@@ -1388,9 +1401,44 @@
         const overlay = document.getElementById('notificacion-personalizada');
         if (overlay) overlay.classList.remove('activo');
     }
+/* ===== CONFIRMACIÓN PERSONALIZADA ===== */
+let accionConfirmacion = null;
 
+function mostrarConfirmacion(titulo, mensaje, textoAceptar, callback) {
+    const overlay = document.getElementById('confirm-overlay');
+    if (!overlay) return;
+
+    document.getElementById('confirm-titulo').textContent = titulo;
+    document.getElementById('confirm-mensaje').textContent = mensaje;
+    document.getElementById('confirm-aceptar').textContent = textoAceptar || 'Confirmar';
+
+    accionConfirmacion = callback;
+    overlay.classList.add('activo');
+    overlay.setAttribute('aria-hidden', 'false');
+}
+
+function cerrarConfirmacion() {
+    const overlay = document.getElementById('confirm-overlay');
+    if (!overlay) return;
+
+    overlay.classList.remove('activo');
+    overlay.setAttribute('aria-hidden', 'true');
+    accionConfirmacion = null;
+}
     document.addEventListener('DOMContentLoaded', () => {
         activarIconosLocales();
+        // Confirmación
+document.getElementById('confirm-aceptar')?.addEventListener('click', () => {
+    const accion = accionConfirmacion;
+    cerrarConfirmacion();
+    if (typeof accion === 'function') accion();
+});
+
+document.getElementById('confirm-cancelar')?.addEventListener('click', cerrarConfirmacion);
+
+document.getElementById('confirm-overlay')?.addEventListener('click', e => {
+    if (e.target.id === 'confirm-overlay') cerrarConfirmacion();
+});
 
         const menu = document.getElementById('productos-menu');
         const botonMenu = document.getElementById('menu-hamburguesa');
@@ -1729,21 +1777,48 @@
         }
 
         function eliminarDelCarrito(index) {
-            const carrito = obtenerCarrito();
-            if (!carrito[index]) return;
-            const nombre = carrito[index].producto;
+    const carrito = obtenerCarrito();
+    const item = carrito[index];
+    if (!item) return;
+
+    mostrarConfirmacion(
+        'Eliminar del carrito',
+        `¿Seguro que quieres quitar "${item.producto}" del carrito?`,
+        'Eliminar',
+        () => {
             carrito.splice(index, 1);
             guardarCarrito(carrito);
             renderizarCarrito();
-            mostrarNotificacion('Producto eliminado', `<strong>${nombre}</strong> se eliminó del carrito.`);
-        }
+            actualizarContadorCarrito();
 
+            if (typeof mostrarNotificacion === 'function') {
+                mostrarNotificacion(
+                    'Producto eliminado',
+                    `<strong>${item.producto}</strong> se quitó del carrito.`
+                );
+            }
+        }
+    );
+}
         function vaciarCarrito() {
-            if (!obtenerCarrito().length) return;
+    const carrito = obtenerCarrito();
+    if (!carrito.length) return;
+
+    mostrarConfirmacion(
+        'Vaciar carrito',
+        '¿Seguro que quieres quitar todos los productos del carrito?',
+        'Vaciar',
+        () => {
             guardarCarrito([]);
             renderizarCarrito();
-            mostrarNotificacion('Carrito vacío', 'Se eliminaron todos los productos del carrito.');
+            actualizarContadorCarrito();
+
+            if (typeof mostrarNotificacion === 'function') {
+                mostrarNotificacion('Carrito vacío', 'Se eliminaron todos los productos.');
+            }
         }
+    );
+}
 
         const terminosOverlay = document.getElementById('terminos-overlay');
         const cerrarTerminosBtn = document.getElementById('cerrar-terminos');
@@ -2288,7 +2363,9 @@
                 cerrarTerminos();
                 cerrarCarrito();
                 cerrarNotificacion();
+                cerrarConfirmacion();
             }
+            
         });
 
         togglesUnidad.forEach(btn => btn.addEventListener('click', () => cambiarUnidad(btn.dataset.unidad)));
