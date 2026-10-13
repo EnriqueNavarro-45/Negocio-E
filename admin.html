@@ -1157,23 +1157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const precio = Number($('nuevo-precio').value);
         const stock = Number($('nuevo-stock').value);
         let imagenArchivo = $('nuevo-imagen').value.trim();
-
-        if (!nombre) {
-            toast('Datos incompletos', 'Escribe el nombre del producto.');
-            return;
-        }
-        if (!Number.isFinite(precio) || precio < 0) {
-            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
-            return;
-        }
-        if (!Number.isFinite(stock) || stock < 0) {
-            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
-            return;
-        }
-
-        if (inventario.some(p => normalizar(p.name) === normalizar(nombre))) {
-            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
-            return;
+      {
         }
 
         if (!imagenArchivo) {
