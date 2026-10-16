@@ -5,430 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador | San Gerardo Mayela</title>
     <link rel="stylesheet" href="admin.css">
-    <style>
-        [hidden] { display: none !important; }
-
-        .admin-tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 0 0 16px;
-        }
-
-        .admin-tab {
-            padding: 10px 18px;
-            border: 1px solid #d5d9d3;
-            border-radius: 999px;
-            background: #fff;
-            color: inherit;
-            font: inherit;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s, border-color 0.15s;
-        }
-
-        .admin-tab.activo {
-            background: #2e7d32;
-            border-color: #2e7d32;
-            color: #fff;
-        }
-
-        .admin-input {
-            padding: 10px 12px;
-            border: 1px solid #d5d9d3;
-            border-radius: 10px;
-            font: inherit;
-        }
-
-        .admin-actions-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .estado-bajo,
-        .estado-pendiente,
-        .estado-pausada {
-            background: #fff3cd;
-            color: #7a5b00;
-        }
-
-        .estado-vigente,
-        .estado-entregado {
-            background: #d9f2dc;
-            color: #1b5e20;
-        }
-
-        .estado-en-camino {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .estado-vencida,
-        .estado-cancelado {
-            background: #fde2e2;
-            color: #9b1c1c;
-        }
-
-        /* ===== OFERTAS ===== */
-        .ofertas-form-card {
-            background: linear-gradient(145deg, #f7fbf7 0%, #eef6ee 100%);
-            border: 1px solid #d4e8d4;
-            border-radius: 16px;
-            padding: 20px 22px;
-            margin-bottom: 22px;
-        }
-
-        .ofertas-form-card h3 {
-            margin: 0 0 6px;
-            font-size: 1.05rem;
-            color: #1b5e20;
-        }
-
-        .ofertas-form-card > p {
-            margin: 0 0 16px;
-            font-size: 0.875rem;
-            color: #5a6b5a;
-        }
-
-        .ofertas-form-grid {
-            display: grid;
-            grid-template-columns: 1.4fr 0.7fr 0.9fr auto;
-            gap: 12px;
-            align-items: end;
-        }
-
-        @media (max-width: 900px) {
-            .ofertas-form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 520px) {
-            .ofertas-form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .ofertas-form-grid label {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #3d4f3d;
-        }
-
-        .ofertas-form-grid .admin-select,
-        .ofertas-form-grid .admin-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .ofertas-form-grid .admin-primary-btn {
-            height: 42px;
-            white-space: nowrap;
-        }
-
-        .ofertas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
-        .oferta-card {
-            background: #fff;
-            border: 1px solid #e2ebe2;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow 0.2s, transform 0.2s;
-        }
-
-        .oferta-card:hover {
-            box-shadow: 0 8px 24px rgba(46, 125, 50, 0.12);
-            transform: translateY(-2px);
-        }
-
-        .oferta-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: #fafcfa;
-            border-bottom: 1px solid #eef3ee;
-        }
-
-        .oferta-card-header img {
-            width: 52px;
-            height: 52px;
-            object-fit: cover;
-            border-radius: 12px;
-            background: #e8f0e8;
-        }
-
-        .oferta-card-header strong {
-            display: block;
-            font-size: 0.95rem;
-            color: #1a2e1a;
-        }
-
-        .oferta-card-header span {
-            font-size: 0.78rem;
-            color: #6b7c6b;
-        }
-
-        .oferta-badge {
-            margin-left: auto;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .oferta-card-body {
-            padding: 14px 16px;
-            flex: 1;
-        }
-
-        .oferta-precios {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .oferta-precio-oferta {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #2e7d32;
-        }
-
-        .oferta-precio-normal {
-            font-size: 0.9rem;
-            color: #9aa89a;
-            text-decoration: line-through;
-        }
-
-        .oferta-descuento-tag {
-            display: inline-block;
-            background: #e8f5e9;
-            color: #1b5e20;
-            font-weight: 700;
-            font-size: 0.8rem;
-            padding: 3px 8px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-        }
-
-        .oferta-meta {
-            font-size: 0.8rem;
-            color: #6b7c6b;
-            margin: 0;
-        }
-
-        .oferta-card-footer {
-            display: flex;
-            gap: 8px;
-            padding: 12px 16px 14px;
-            border-top: 1px solid #eef3ee;
-        }
-
-        .oferta-card-footer button {
-            flex: 1;
-            padding: 8px 10px;
-            border-radius: 10px;
-            border: 1px solid #d5d9d3;
-            background: #fff;
-            font: inherit;
-            font-size: 0.82rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
-        }
-
-        .oferta-card-footer button:hover {
-            background: #f5faf5;
-            border-color: #2e7d32;
-            color: #2e7d32;
-        }
-
-        .oferta-card-footer .btn-eliminar-oferta:hover {
-            background: #fdecea;
-            border-color: #c62828;
-            color: #c62828;
-        }
-
-        .ofertas-vacio {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px 20px;
-            color: #6b7c6b;
-            background: #fafcfa;
-            border: 1px dashed #d4e8d4;
-            border-radius: 16px;
-        }
-
-        .ofertas-vacio strong {
-            display: block;
-            font-size: 1.05rem;
-            color: #3d4f3d;
-            margin-bottom: 6px;
-        }
-
-        /* ===== AGREGAR PRODUCTO ===== */
-        .agregar-form-card {
-            background: linear-gradient(145deg, #f7fbf7 0%, #eef6ee 100%);
-            border: 1px solid #d4e8d4;
-            border-radius: 16px;
-            padding: 20px 22px;
-            margin-bottom: 20px;
-        }
-
-        .agregar-form-card h3 {
-            margin: 0 0 6px;
-            font-size: 1.05rem;
-            color: #1b5e20;
-        }
-
-        .agregar-form-card > p {
-            margin: 0 0 16px;
-            font-size: 0.875rem;
-            color: #5a6b5a;
-        }
-
-        .agregar-form-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 0.9fr 0.7fr 0.7fr 1.4fr auto;
-            gap: 12px;
-            align-items: end;
-        }
-
-        @media (max-width: 1100px) {
-            .agregar-form-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .agregar-form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .agregar-form-grid label {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #3d4f3d;
-        }
-
-        .agregar-form-grid .admin-select,
-        .agregar-form-grid .admin-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .agregar-form-grid .admin-primary-btn {
-            height: 42px;
-            white-space: nowrap;
-        }
-
-        .admin-panel-header-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn-eliminar-producto {
-            background: #fff;
-            border: 1px solid #e0b4b4;
-            color: #9b1c1c;
-            border-radius: 8px;
-            padding: 6px 10px;
-            font: inherit;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .btn-eliminar-producto:hover {
-            background: #fdecea;
-        }
-
-        /* ===== MODAL DE CONFIRMACIÓN ===== */
-        .admin-confirm-overlay {
-            z-index: 10000;
-        }
-
-        .admin-confirm-modal {
-            width: min(460px, calc(100vw - 32px));
-            padding: 32px;
-            text-align: center;
-            border-radius: 24px;
-        }
-
-        .admin-confirm-icon {
-            width: 58px;
-            height: 58px;
-            margin: 0 auto 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: #fff4e5;
-            color: #b66a00;
-            font-size: 26px;
-            font-weight: 700;
-        }
-
-        .admin-confirm-modal h2 {
-            margin: 0 0 10px;
-            color: #073b2d;
-        }
-
-        .admin-confirm-modal p {
-            margin: 0 auto;
-            max-width: 380px;
-            color: #68776f;
-            line-height: 1.55;
-        }
-
-        .admin-confirm-actions {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 26px;
-        }
-
-        .admin-danger-btn {
-            border: 0;
-            border-radius: 12px;
-            padding: 12px 20px;
-            background: #c93636;
-            color: #fff;
-            font-family: inherit;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .admin-danger-btn:hover {
-            background: #aa2929;
-        }
-
-        @media (max-width: 600px) {
-            .admin-confirm-actions {
-                flex-direction: column-reverse;
-            }
-            .admin-confirm-actions button {
-                width: 100%;
-            }
-        }
-    </style>
+    
     <script>
         if (sessionStorage.getItem('sesionActiva') !== 'true' ||
             sessionStorage.getItem('rol') !== 'administrador') {
@@ -441,7 +18,10 @@
     <header class="admin-navbar">
         <a href="Productos.html" class="admin-brand">
             <span class="admin-brand-icon">⌂</span>
-            <span><strong>San Gerardo Mayela</strong><small>Panel administrativo</small></span>
+            <span>
+                <strong>San Gerardo Mayela</strong>
+                <small>Panel administrativo</small>
+            </span>
         </a>
         <div class="admin-navbar-actions">
             <span class="admin-role">Administrador</span>
@@ -459,15 +39,40 @@
         </section>
 
         <section class="admin-stats" aria-label="Resumen del inventario">
-            <article class="admin-stat-card"><span class="admin-stat-icon">▦</span><div><small>Productos</small><strong id="stat-productos">0</strong></div></article>
-            <article class="admin-stat-card"><span class="admin-stat-icon">✓</span><div><small>Disponibles</small><strong id="stat-disponibles">0</strong></div></article>
-            <article class="admin-stat-card"><span class="admin-stat-icon">!</span><div><small>Stock bajo</small><strong id="stat-stock-bajo">0</strong></div></article>
-            <article class="admin-stat-card"><span class="admin-stat-icon">×</span><div><small>Agotados</small><strong id="stat-agotados">0</strong></div></article>
+            <article class="admin-stat-card">
+                <span class="admin-stat-icon">▦</span>
+                <div>
+                    <small>Productos</small>
+                    <strong id="stat-productos">0</strong>
+                </div>
+            </article>
+            <article class="admin-stat-card">
+                <span class="admin-stat-icon">✓</span>
+                <div>
+                    <small>Disponibles</small>
+                    <strong id="stat-disponibles">0</strong>
+                </div>
+            </article>
+            <article class="admin-stat-card">
+                <span class="admin-stat-icon">!</span>
+                <div>
+                    <small>Stock bajo</small>
+                    <strong id="stat-stock-bajo">0</strong>
+                </div>
+            </article>
+            <article class="admin-stat-card">
+                <span class="admin-stat-icon">×</span>
+                <div>
+                    <small>Agotados</small>
+                    <strong id="stat-agotados">0</strong>
+                </div>
+            </article>
         </section>
 
         <nav class="admin-tabs" aria-label="Secciones del panel">
             <button type="button" class="admin-tab activo" data-tab="inventario">Inventario</button>
             <button type="button" class="admin-tab" data-tab="ofertas">Ofertas</button>
+            <button type="button" class="admin-tab" data-tab="promociones">Promociones</button>
             <button type="button" class="admin-tab" data-tab="pedidos" id="tab-btn-pedidos">Pedidos</button>
         </nav>
 
@@ -490,11 +95,11 @@
                 <form id="form-agregar-producto" class="agregar-form-grid" novalidate>
                     <label>
                         Nombre
-                        <input type="text" id="nuevo-nombre" class="admin-input" placeholder="Ej. Kiwi"  autocomplete="off">
+                        <input type="text" id="nuevo-nombre" class="admin-input" placeholder="Ej. Kiwi" required autocomplete="off">
                     </label>
                     <label>
                         Categoría
-                        <select id="nuevo-categoria" class="admin-select" >
+                        <select id="nuevo-categoria" class="admin-select" required>
                             <option value="frutas">Frutas</option>
                             <option value="verduras">Verduras</option>
                             <option value="cereales">Cereales</option>
@@ -503,11 +108,11 @@
                     </label>
                     <label>
                         Precio / kg
-                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" >
+                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" required>
                     </label>
                     <label>
                         Stock (kg)
-                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" >
+                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" required>
                     </label>
                     <label>
                         Archivo de imagen
@@ -581,6 +186,77 @@
             <div class="ofertas-grid" id="ofertas-grid"></div>
         </section>
 
+        <!-- PROMOCIONES / CUPONES -->
+        <section class="admin-panel" id="tab-promociones" hidden>
+            <div class="admin-panel-header">
+                <div>
+                    <span class="admin-tag">Marketing</span>
+                    <h2>Promociones y cupones</h2>
+                    <p>Crea y administra los códigos que aparecen en la página de marketing.</p>
+                </div>
+            </div>
+
+            <div class="ofertas-form-card">
+                <h3 id="titulo-form-promocion">Crear promoción</h3>
+                <p>Todos los campos son opcionales. Puedes guardar la promoción aunque estén vacíos.</p>
+                <form id="form-promocion" class="promocion-form-grid" novalidate>
+                    <input type="hidden" id="promocion-id-edicion" value="">
+                    <label>
+                        Nombre de la promoción
+                        <input type="text" id="promocion-nombre" class="admin-input" placeholder="Ej. 10% en verduras">
+                    </label>
+                    <label>
+                        Código del cupón
+                        <input type="text" id="promocion-codigo" class="admin-input" placeholder="Ej. VERDE10">
+                    </label>
+                    <label>
+                        Tipo de beneficio
+                        <select id="promocion-tipo" class="admin-select">
+                            <option value="porcentaje">Porcentaje de descuento</option>
+                            <option value="monto">Descuento en pesos</option>
+                            <option value="2x1">Promoción 2x1</option>
+                            <option value="texto">Beneficio informativo</option>
+                        </select>
+                    </label>
+                    <label>
+                        Valor del descuento
+                        <input type="text" inputmode="decimal" id="promocion-valor" class="admin-input" placeholder="Ej. 10">
+                    </label>
+                    <label class="promocion-descripcion-label">
+                        Descripción
+                        <textarea id="promocion-descripcion" class="admin-input" rows="2" placeholder="Descripción breve de la promoción"></textarea>
+                    </label>
+                    <div class="promocion-form-actions">
+                        <button type="submit" class="admin-primary-btn" id="guardar-promocion">Guardar promoción</button>
+                        <button type="button" class="admin-secondary-btn" id="cancelar-edicion-promocion" hidden>Cancelar edición</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-tools promocion-tools">
+                <div>
+                    <strong>Promociones registradas</strong>
+                    <p>Los cambios se reflejan en marketing.html al recargar la página.</p>
+                </div>
+                <span id="contador-promociones" class="admin-tag">0 promociones</span>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Promoción</th>
+                            <th>Código</th>
+                            <th>Beneficio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promociones-tabla"></tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- PEDIDOS -->
         <section class="admin-panel" id="tab-pedidos" hidden>
             <div class="admin-panel-header">
@@ -594,8 +270,11 @@
 
             <div class="admin-tools">
                 <select id="filtro-pedidos" class="admin-select" aria-label="Filtrar por estado">
-                    <option value="todos">Todos los estados</option>
+                    <option value="todos" selected>Todos los estados</option>
                     <option value="pendiente">Pendiente</option>
+                    <option value="confirmado">Confirmado</option>
+                    <option value="preparando">Preparando</option>
+                    <option value="listo para entregar">Listo para entregar</option>
                     <option value="en camino">En camino</option>
                     <option value="entregado">Entregado</option>
                     <option value="cancelado">Cancelado</option>
@@ -612,6 +291,7 @@
                             <th>Total</th>
                             <th>Fecha</th>
                             <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="pedidos-tabla"></tbody>
@@ -644,12 +324,18 @@
 
                 <label>
                     Precio por kilogramo
-                    <div class="admin-input-prefix"><span>$</span><input type="number" id="producto-precio" min="0" step="0.01" ></div>
+                    <div class="admin-input-prefix">
+                        <span>$</span>
+                        <input type="number" id="producto-precio" min="0" step="0.01" required>
+                    </div>
                 </label>
 
                 <label>
                     Existencia disponible
-                    <div class="admin-input-suffix"><input type="number" id="producto-stock" min="0" step="0.1" ><span>kg</span></div>
+                    <div class="admin-input-suffix">
+                        <input type="number" id="producto-stock" min="0" step="0.1" required>
+                        <span>kg</span>
+                    </div>
                 </label>
 
                 <label class="admin-switch-row">
@@ -669,7 +355,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIRMACIÓN PERSONALIZADO -->
+    <!-- CONFIRMACIÓN -->
     <div class="admin-overlay admin-confirm-overlay" id="admin-confirmacion" aria-hidden="true">
         <div class="admin-modal admin-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="admin-confirm-titulo">
             <div class="admin-confirm-icon">!</div>
@@ -678,6 +364,24 @@
             <div class="admin-confirm-actions">
                 <button type="button" class="admin-secondary-btn" id="admin-confirm-cancelar">Cancelar</button>
                 <button type="button" class="admin-danger-btn" id="admin-confirm-aceptar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETALLE PEDIDO -->
+    <div class="admin-overlay" id="modal-pedido" aria-hidden="true">
+        <div class="admin-modal admin-order-modal" role="dialog" aria-modal="true" aria-labelledby="pedido-detalle-titulo">
+            <div class="admin-modal-header">
+                <div>
+                    <span class="admin-tag">Detalle del pedido</span>
+                    <h2 id="pedido-detalle-titulo">Pedido</h2>
+                </div>
+                <button type="button" class="admin-modal-close" id="cerrar-detalle-pedido" aria-label="Cerrar">×</button>
+            </div>
+            <div id="pedido-detalle-contenido"></div>
+            <div class="admin-modal-actions">
+                <button type="button" class="admin-secondary-btn" id="cerrar-detalle-pedido-2">Cerrar</button>
+                <button type="button" class="admin-primary-btn" id="imprimir-pedido">Imprimir nota</button>
             </div>
         </div>
     </div>
@@ -715,6 +419,7 @@ const INVENTARIO_INICIAL = BASE.map(([name, category, price, img]) => ({
 
 const CLAVE_INVENTARIO = 'inventarioSanGerardo';
 const CLAVE_OFERTAS   = 'ofertasSanGerardo';
+const CLAVE_PROMOCIONES = 'promocionesSanGerardo';
 const CLAVE_PEDIDOS   = 'pedidosSanGerardo';
 
 const CATEGORIAS = {
@@ -794,7 +499,7 @@ function renderizarInventario() {
             return `<tr>
                 <td>
                     <div class="admin-product-cell">
-                        <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">
+                        <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.visibility='hidden'">
                         <strong>${esc(p.name)}</strong>
                     </div>
                 </td>
@@ -838,7 +543,7 @@ function cerrarEditor() {
     $('modal-inventario').setAttribute('aria-hidden', 'true');
 }
 
-/* ========== TOAST (alertas personalizadas) ========== */
+/* ========== TOAST ========== */
 let toastTimer;
 function toast(titulo, mensaje) {
     $('toast-titulo').textContent = titulo;
@@ -848,9 +553,7 @@ function toast(titulo, mensaje) {
     toastTimer = setTimeout(() => $('admin-toast').classList.remove('activo'), 2800);
 }
 
-/* ========== CONFIRMACIÓN PERSONALIZADA ========== */
 let accionConfirmacion = null;
-
 function mostrarConfirmacion(titulo, mensaje, textoAceptar, callback) {
     $('admin-confirm-titulo').textContent = titulo;
     $('admin-confirm-mensaje').textContent = mensaje;
@@ -859,15 +562,53 @@ function mostrarConfirmacion(titulo, mensaje, textoAceptar, callback) {
     $('admin-confirmacion').classList.add('activo');
     $('admin-confirmacion').setAttribute('aria-hidden', 'false');
 }
-
 function cerrarConfirmacion() {
     $('admin-confirmacion').classList.remove('activo');
     $('admin-confirmacion').setAttribute('aria-hidden', 'true');
     accionConfirmacion = null;
 }
 
-/* ========== OFERTAS ========== */
-let ofertas = leer(CLAVE_OFERTAS);
+let pedidoSeleccionado = null;
+function abrirDetallePedido(id) {
+    pedidos = leer(CLAVE_PEDIDOS);
+    const p = pedidos.find(x => String(x.id) === String(id));
+    if (!p) {
+        toast('Pedido no encontrado', 'No se encontró el pedido seleccionado.');
+        return;
+    }
+    pedidoSeleccionado = p;
+    const items = obtenerItemsPedido(p);
+    const total = obtenerTotalPedido(p);
+    $('pedido-detalle-titulo').textContent = p.id || 'Pedido';
+    $('pedido-detalle-contenido').innerHTML = `
+        <div class="admin-order-summary">
+            <div class="admin-order-box"><small>Cliente</small><strong>${esc(obtenerNombreCliente(p))}</strong></div>
+            <div class="admin-order-box"><small>Estado</small><strong>${esc(textoEstadoPedido(p.estado))}</strong></div>
+            <div class="admin-order-box"><small>Correo</small><strong>${esc(p.correo || p.usuario || 'No especificado')}</strong></div>
+            <div class="admin-order-box"><small>Teléfono</small><strong>${esc(p.telefono || 'No especificado')}</strong></div>
+            <div class="admin-order-box admin-order-box-full"><small>Dirección de entrega</small><strong>${esc(p.direccion || 'No especificada')}</strong></div>
+        </div>
+        <table class="admin-order-items">
+            <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th></tr></thead>
+            <tbody>${items.length ? items.map(i => `
+                <tr>
+                    <td>${esc(i.nombre)}</td>
+                    <td>${Number(i.cantidad)} ${esc(i.unidad)}</td>
+                    <td>${dinero(i.precio)}</td>
+                    <td>${dinero(i.total)}</td>
+                </tr>`).join('') : '<tr><td colspan="4">Sin productos</td></tr>'}
+            </tbody>
+        </table>
+        <div class="admin-order-total"><span>Total:</span><strong>${dinero(total)} MXN</strong></div>`;
+    $('modal-pedido').classList.add('activo');
+    $('modal-pedido').setAttribute('aria-hidden', 'false');
+}
+function cerrarDetallePedido() {
+    $('modal-pedido').classList.remove('activo');
+    $('modal-pedido').setAttribute('aria-hidden', 'true');
+    pedidoSeleccionado = null;
+}
+
 
 function estadoOferta(o) {
     if (!o.activa) return ['pausada', 'Pausada'];
@@ -924,6 +665,67 @@ function renderOfertas() {
     }).join('');
 }
 
+/* ========== PROMOCIONES Y CUPONES ========== */
+let promociones = leer(CLAVE_PROMOCIONES);
+
+function beneficioPromocion(p) {
+    const valor = String(p.valor ?? '').trim();
+    if (p.tipo === 'porcentaje') return (valor ? valor + '%' : '') + ' de descuento';
+    if (p.tipo === 'monto') return (valor ? '$' + valor + ' MXN' : '') + ' de descuento';
+    if (p.tipo === '2x1') return 'Promoción 2x1';
+    return p.descripcion || 'Beneficio informativo';
+}
+
+function renderPromociones() {
+    promociones = leer(CLAVE_PROMOCIONES);
+    const tbody = $('promociones-tabla');
+    $('contador-promociones').textContent = promociones.length + (promociones.length === 1 ? ' promoción' : ' promociones');
+    if (!promociones.length) {
+        tbody.innerHTML = '<tr><td colspan="5"><div class="promocion-vacia"><strong>Aún no hay cupones</strong><br>Crea una promoción usando el formulario de arriba.</div></td></tr>';
+        return;
+    }
+    tbody.innerHTML = promociones.map(p => `
+      <tr>
+        <td>
+            <strong>${esc(p.nombre || 'Promoción sin nombre')}</strong><br>
+            <small>${esc(p.descripcion || 'Sin descripción')}</small>
+        </td>
+        <td><span class="promocion-codigo">${esc(p.codigo || 'SIN CÓDIGO')}</span></td>
+        <td>${esc(beneficioPromocion(p))}</td>
+        <td><span class="promocion-estado ${p.activa ? '' : 'inactiva'}">${p.activa ? 'Activa' : 'Inactiva'}</span></td>
+        <td>
+            <div class="promocion-acciones">
+                <button type="button" data-promo-accion="editar" data-id="${esc(p.id)}">Editar</button>
+                <button type="button" data-promo-accion="estado" data-id="${esc(p.id)}">${p.activa ? 'Desactivar' : 'Activar'}</button>
+                <button type="button" class="eliminar" data-promo-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>
+            </div>
+        </td>
+      </tr>`).join('');
+}
+
+function limpiarFormularioPromocion() {
+    $('form-promocion').reset();
+    $('promocion-id-edicion').value = '';
+    $('titulo-form-promocion').textContent = 'Crear promoción';
+    $('guardar-promocion').textContent = 'Guardar promoción';
+    $('cancelar-edicion-promocion').hidden = true;
+}
+
+function editarPromocion(id) {
+    const p = promociones.find(x => String(x.id) === String(id));
+    if (!p) return;
+    $('promocion-id-edicion').value = p.id;
+    $('promocion-nombre').value = p.nombre ?? '';
+    $('promocion-codigo').value = p.codigo ?? '';
+    $('promocion-tipo').value = p.tipo || 'porcentaje';
+    $('promocion-valor').value = p.valor ?? '';
+    $('promocion-descripcion').value = p.descripcion ?? '';
+    $('titulo-form-promocion').textContent = 'Editar promoción';
+    $('guardar-promocion').textContent = 'Guardar cambios';
+    $('cancelar-edicion-promocion').hidden = false;
+    $('form-promocion').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 /* ========== PEDIDOS ========== */
 let pedidos = leer(CLAVE_PEDIDOS);
 
@@ -973,7 +775,6 @@ function obtenerItemsPedido(pedido) {
             };
         });
     }
-
     if (Array.isArray(pedido.productos) && pedido.productos.length) {
         return pedido.productos.map(item => ({
             nombre: item.producto || item.name || 'Producto',
@@ -983,7 +784,6 @@ function obtenerItemsPedido(pedido) {
             total: Number(item.total) || 0
         }));
     }
-
     return [];
 }
 
@@ -1005,9 +805,7 @@ function obtenerNombreCliente(pedido) {
 }
 
 function obtenerTotalPedido(pedido) {
-    if (Number.isFinite(Number(pedido.total))) {
-        return Number(pedido.total);
-    }
+    if (Number.isFinite(Number(pedido.total))) return Number(pedido.total);
     return obtenerItemsPedido(pedido).reduce((suma, item) => suma + Number(item.total || 0), 0);
 }
 
@@ -1030,7 +828,7 @@ function renderPedidos() {
     if (!lista.length) {
         $('pedidos-tabla').innerHTML = `
             <tr>
-                <td colspan="6" class="admin-empty">No hay pedidos para mostrar.</td>
+                <td colspan="7" class="admin-empty">No hay pedidos para mostrar.</td>
             </tr>`;
         return;
     }
@@ -1051,13 +849,13 @@ function renderPedidos() {
                 <td><strong>${esc(pedido.id || 'Sin ID')}</strong></td>
                 <td>
                     ${esc(nombreCliente)}
-                    ${pedido.correo ? `<small style="display:block;margin-top:3px;color:#718071;">${esc(pedido.correo)}</small>` : ''}
+                    ${pedido.correo ? `<small class="admin-muted-subline">${esc(pedido.correo)}</small>` : ''}
                 </td>
                 <td>${productosTexto}</td>
                 <td><strong>${dinero(total)}</strong></td>
                 <td>
                     ${esc(fecha)}
-                    ${pedido.hora ? `<small style="display:block;margin-top:3px;color:#718071;">${esc(pedido.hora)}</small>` : ''}
+                    ${pedido.hora ? `<small class="admin-muted-subline">${esc(pedido.hora)}</small>` : ''}
                 </td>
                 <td>
                     <select class="admin-select cambiar-estado" data-id="${esc(pedido.id || '')}" aria-label="Estado del pedido ${esc(pedido.id || '')}">
@@ -1070,11 +868,16 @@ function renderPedidos() {
                         <option value="cancelado" ${estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
                     </select>
                 </td>
+                <td>
+                    <div class="admin-order-actions">
+                        <button type="button" class="admin-small-btn ver-pedido" data-id="${esc(pedido.id || '')}">Ver</button>
+                        <button type="button" class="admin-small-btn imprimir-pedido-directo" data-id="${esc(pedido.id || '')}">Imprimir</button>
+                    </div>
+                </td>
             </tr>`;
     }).join('');
 }
 
-/* ========== PEDIDOS DE EJEMPLO ========== */
 const EJEMPLOS = [
     {
         cliente: 'María López',
@@ -1124,28 +927,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const i = Number(btnEliminar.dataset.eliminar);
             const p = inventario[i];
             if (!p) return;
-
-            // Confirmación personalizada al eliminar producto
-            mostrarConfirmacion(
-                'Eliminar producto',
-                `¿Seguro que deseas eliminar "${p.name}" del inventario? Esta acción no se puede deshacer.`,
-                'Eliminar',
-                () => {
-                    const nombreEliminado = p.name;
-                    inventario.splice(i, 1);
-                    guardarInventario();
-
-                    // Quitar ofertas asociadas
-                    ofertas = ofertas.filter(o =>
-                        normalizar(o.producto) !== normalizar(nombreEliminado)
-                    );
-                    escribir(CLAVE_OFERTAS, ofertas);
-
-                    renderizarInventario();
-                    renderOfertas();
-                    toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
-                }
-            );
+            mostrarConfirmacion('Eliminar producto', `¿Seguro que deseas eliminar "${p.name}" del inventario?`, 'Eliminar', () => {
+                const nombreEliminado = p.name;
+                inventario.splice(i, 1);
+                guardarInventario();
+                ofertas = ofertas.filter(o => normalizar(o.producto) !== normalizar(nombreEliminado));
+                escribir(CLAVE_OFERTAS, ofertas);
+                renderizarInventario();
+                renderOfertas();
+                toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
+            });
         }
     });
 
@@ -1157,7 +948,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const precio = Number($('nuevo-precio').value);
         const stock = Number($('nuevo-stock').value);
         let imagenArchivo = $('nuevo-imagen').value.trim();
-      {
+
+        if (!nombre) {
+            toast('Datos incompletos', 'Escribe el nombre del producto.');
+            return;
+        }
+        if (!Number.isFinite(precio) || precio < 0) {
+            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
+            return;
+        }
+        if (!Number.isFinite(stock) || stock < 0) {
+            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
+            return;
+        }
+
+        if (inventario.some(p => normalizar(p.name) === normalizar(nombre))) {
+            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
+            return;
         }
 
         if (!imagenArchivo) {
@@ -1190,10 +997,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toast('Producto agregado', `${nombre} se agregó al inventario.`);
     });
 
-    $('inventario-tabla').addEventListener('error', e => {
-        if (e.target.tagName === 'IMG') e.target.style.visibility = 'hidden';
-    }, true);
-
     $('form-inventario').addEventListener('submit', e => {
         e.preventDefault();
         const i = Number($('producto-indice').value);
@@ -1221,31 +1024,20 @@ document.addEventListener('DOMContentLoaded', () => {
     $('modal-inventario').addEventListener('click', e => {
         if (e.target.id === 'modal-inventario') cerrarEditor();
     });
-
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            cerrarEditor();
-            cerrarConfirmacion();
-        }
+        if (e.key === 'Escape') cerrarEditor();
     });
 
-    // Restaurar inventario con confirmación personalizada
     $('restaurar-inventario').addEventListener('click', () => {
-        mostrarConfirmacion(
-            'Restaurar inventario',
-            '¿Restaurar los precios, existencias y disponibilidad iniciales? Se perderán los cambios actuales.',
-            'Restaurar',
-            () => {
-                inventario = structuredClone(INVENTARIO_INICIAL);
-                guardarInventario();
-                renderizarInventario();
-                renderOfertas();
-                toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
-            }
-        );
+        mostrarConfirmacion('Restaurar inventario', '¿Restaurar los precios, existencias y disponibilidad iniciales?', 'Restaurar', () => {
+            inventario = structuredClone(INVENTARIO_INICIAL);
+            guardarInventario();
+            renderizarInventario();
+            renderOfertas();
+            toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
+        });
     });
 
-    // Eventos del modal de confirmación
     $('admin-confirm-aceptar').addEventListener('click', () => {
         const a = accionConfirmacion;
         cerrarConfirmacion();
@@ -1255,6 +1047,22 @@ document.addEventListener('DOMContentLoaded', () => {
     $('admin-confirmacion').addEventListener('click', e => {
         if (e.target.id === 'admin-confirmacion') cerrarConfirmacion();
     });
+
+    $('pedidos-tabla').addEventListener('click', e => {
+        const v = e.target.closest('.ver-pedido');
+        const im = e.target.closest('.imprimir-pedido-directo');
+        if (v) abrirDetallePedido(v.dataset.id);
+        if (im) {
+            const p = leer(CLAVE_PEDIDOS).find(x => String(x.id) === String(im.dataset.id));
+            if (p) imprimirPedido(p);
+        }
+    });
+    $('cerrar-detalle-pedido').addEventListener('click', cerrarDetallePedido);
+    $('cerrar-detalle-pedido-2').addEventListener('click', cerrarDetallePedido);
+    $('modal-pedido').addEventListener('click', e => {
+        if (e.target.id === 'modal-pedido') cerrarDetallePedido();
+    });
+    $('imprimir-pedido').addEventListener('click', () => imprimirPedido(pedidoSeleccionado));
 
     $('cerrar-sesion-admin').addEventListener('click', () => {
         ['sesionActiva', 'usuario', 'rol', 'nombre', 'datosPerfil'].forEach(k => sessionStorage.removeItem(k));
@@ -1266,11 +1074,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.target.closest('.admin-tab');
         if (!btn) return;
         document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
-        ['inventario', 'ofertas', 'pedidos'].forEach(t => {
+        ['inventario', 'ofertas', 'promociones', 'pedidos'].forEach(t => {
             $('tab-' + t).hidden = t !== btn.dataset.tab;
         });
         if (btn.dataset.tab === 'ofertas') renderOfertas();
-        if (btn.dataset.tab === 'pedidos') renderPedidos();
+        if (btn.dataset.tab === 'promociones') renderPromociones();
+        if (btn.dataset.tab === 'pedidos') {
+            $('filtro-pedidos').value = 'todos';
+            renderPedidos();
+        }
     });
 
     /* ----- Ofertas ----- */
@@ -1318,23 +1130,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (btn.dataset.accion === 'pausar') {
             o.activa = !o.activa;
-            escribir(CLAVE_OFERTAS, ofertas);
-            renderOfertas();
-            toast(o.activa ? 'Oferta activada' : 'Oferta pausada', `${o.producto} ahora está ${o.activa ? 'vigente' : 'pausada'}.`);
         } else {
-            // Confirmación al eliminar oferta
-            mostrarConfirmacion(
-                'Eliminar oferta',
-                `¿Eliminar la oferta de "${o.producto}"?`,
-                'Eliminar',
-                () => {
-                    ofertas = ofertas.filter(x => x !== o);
-                    escribir(CLAVE_OFERTAS, ofertas);
-                    renderOfertas();
-                    toast('Oferta eliminada', `Se eliminó la oferta de ${o.producto}.`);
-                }
-            );
+            ofertas = ofertas.filter(x => x !== o);
         }
+        escribir(CLAVE_OFERTAS, ofertas);
+        renderOfertas();
+    });
+
+    /* ----- Promociones ----- */
+    renderPromociones();
+    $('form-promocion').addEventListener('submit', e => {
+        e.preventDefault();
+        const idEdicion = $('promocion-id-edicion').value;
+        const datos = {
+            nombre: $('promocion-nombre').value,
+            codigo: $('promocion-codigo').value.trim().toUpperCase(),
+            tipo: $('promocion-tipo').value,
+            valor: $('promocion-valor').value,
+            descripcion: $('promocion-descripcion').value,
+            activa: true
+        };
+        if (idEdicion) {
+            const indice = promociones.findIndex(p => String(p.id) === String(idEdicion));
+            if (indice !== -1) promociones[indice] = { ...promociones[indice], ...datos };
+            escribir(CLAVE_PROMOCIONES, promociones);
+            limpiarFormularioPromocion();
+            renderPromociones();
+            toast('Promoción actualizada', 'Los cambios se guardaron correctamente.');
+        } else {
+            promociones.push({
+                id: 'P-' + Date.now() + '-' + Math.random().toString(16).slice(2, 6),
+                ...datos
+            });
+            escribir(CLAVE_PROMOCIONES, promociones);
+            limpiarFormularioPromocion();
+            renderPromociones();
+            toast('Promoción creada', 'La promoción se guardó correctamente.');
+        }
+    });
+    $('cancelar-edicion-promocion').addEventListener('click', limpiarFormularioPromocion);
+    $('promociones-tabla').addEventListener('click', e => {
+        const btn = e.target.closest('[data-promo-accion]');
+        if (!btn) return;
+        const promo = promociones.find(p => String(p.id) === String(btn.dataset.id));
+        if (!promo) return;
+        if (btn.dataset.promoAccion === 'editar') {
+            editarPromocion(promo.id);
+            return;
+        }
+        if (btn.dataset.promoAccion === 'estado') {
+            promo.activa = !promo.activa;
+            escribir(CLAVE_PROMOCIONES, promociones);
+            renderPromociones();
+            toast(promo.activa ? 'Promoción activada' : 'Promoción desactivada', 'El estado se actualizó.');
+            return;
+        }
+        mostrarConfirmacion('Eliminar promoción', '¿Quieres eliminar el cupón ' + (promo.codigo || 'sin código') + '?', 'Eliminar', () => {
+            promociones = promociones.filter(p => String(p.id) !== String(promo.id));
+            escribir(CLAVE_PROMOCIONES, promociones);
+            if ($('promocion-id-edicion').value === String(promo.id)) limpiarFormularioPromocion();
+            renderPromociones();
+            toast('Promoción eliminada', 'El cupón se eliminó correctamente.');
+        });
     });
 
     /* ----- Pedidos ----- */
@@ -1344,12 +1201,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('pedidos-tabla').addEventListener('change', e => {
         if (!e.target.classList.contains('cambiar-estado')) return;
+        pedidos = leer(CLAVE_PEDIDOS);
         const p = pedidos.find(x => String(x.id) === String(e.target.dataset.id));
         if (!p) return;
         p.estado = e.target.value;
         escribir(CLAVE_PEDIDOS, pedidos);
         renderPedidos();
-        toast('Pedido actualizado', `${p.id} ahora está "${textoEstadoPedido(p.estado)}".`);
+        toast('Pedido actualizado', `${p.id} ahora está "${p.estado}".`);
     });
 
     $('cargar-ejemplos').addEventListener('click', () => {
