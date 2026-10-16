@@ -32,6 +32,10 @@
             <a href="#nosotros">Nosotros</a>
             <a href="#beneficios">Beneficios</a>
             <a href="marketing.html">Promociones y comunidad</a>
+            <a href="MisPedidos.html" class="navbar-pedidos solo-sesion"
+    id="navbar-pedidos">Mis pedidos</a>
+        
+</a>
             <a href="#contacto">Contacto</a>
 
             <div class="menu-separador"></div>
@@ -42,14 +46,6 @@
                 <i data-lucide="log-in"></i>
                 Iniciar sesión
             </a>
-<a
-    href="MisPedidos.html"
-    class="navbar-pedidos solo-sesion"
-    id="navbar-pedidos"
->
-    <i data-lucide="package"></i>
-    Mis pedidos
-</a>
             <a href="perfil.html" class="navbar-perfil solo-sesion" id="navbar-perfil">
                 <i data-lucide="user"></i>
                 Perfil
@@ -1194,6 +1190,30 @@
                 font-size: .7rem;
             }
         }
+    
+        /* Cupones del carrito */
+        .carrito-cupones{margin:18px 0;padding:18px;border:1px solid #dfe9df;border-radius:16px;background:#f8fbf7}
+        .carrito-cupones-titulo{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+        .carrito-cupones-titulo h3{margin:0 0 5px;color:#24452d;font-size:1rem}
+        .carrito-cupones-titulo p{margin:0;color:#718075;font-size:.8rem;line-height:1.5}
+        .carrito-cupones-etiqueta{padding:5px 9px;border-radius:20px;background:#e5f2e6;color:#267449;font-size:.7rem;font-weight:700;white-space:nowrap}
+        .carrito-cupones-seleccion,.carrito-cupones-codigo{margin-top:12px}
+        .carrito-cupones label{display:block;margin-bottom:7px;color:#344b38;font-size:.8rem;font-weight:600}
+        .carrito-cupones-fila{display:flex;gap:8px;align-items:stretch}
+        .carrito-cupones select,.carrito-cupones input{flex:1;min-width:0;width:100%;padding:11px 12px;border:1px solid #d6e1d6;border-radius:9px;background:#fff;color:#2d3d30;font:inherit;font-size:.83rem;outline:none}
+        .carrito-cupones select:focus,.carrito-cupones input:focus{border-color:#6fa17a;box-shadow:0 0 0 3px #26744912}
+        .btn-usar-cupon{padding:10px 14px;border:1px solid #267449;border-radius:9px;background:#267449;color:#fff;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;white-space:nowrap}
+        .btn-usar-cupon:hover{background:#1e603b}
+        .btn-usar-cupon.secundario{background:#fff;color:#267449}
+        .btn-usar-cupon.secundario:hover{background:#edf6ed}
+        .carrito-cupon-mensaje{margin-top:12px;padding:10px 12px;border-radius:9px;font-size:.8rem;line-height:1.5}
+        .carrito-cupon-mensaje.exito{background:#e9f6eb;color:#23643a;border:1px solid #c9e5ce}
+        .carrito-cupon-mensaje.error{background:#fff0ed;color:#9c3c2f;border:1px solid #f0cbc4}
+        .carrito-cupon-activo{margin-top:10px;padding:11px 12px;border:1px dashed #8dbb94;border-radius:9px;background:#f0f8f0;color:#285c35;font-size:.82rem}
+        .carrito-cupon-activo button{margin-left:8px;border:0;background:transparent;color:#9b3c30;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer}
+        .carrito-descuento-fila strong{color:#267449}
+        @media(max-width:520px){.carrito-cupones{padding:13px}.carrito-cupones-fila{flex-direction:column}.btn-usar-cupon{width:100%}.carrito-cupones-titulo{flex-direction:column}}
+
     </style>
 
 <!-- =====================================================
@@ -1219,8 +1239,45 @@
             <!-- Se llena con JavaScript -->
         </div>
 
+        <!-- Cupones disponibles para el usuario -->
+        <section class="carrito-cupones" aria-labelledby="carrito-cupones-titulo">
+            <div class="carrito-cupones-titulo">
+                <div>
+                    <h3 id="carrito-cupones-titulo">Cupones y descuentos</h3>
+                    <p>Elige un cupón que hayas obtenido o escribe un código.</p>
+                </div>
+                <span class="carrito-cupones-etiqueta">Opcional</span>
+            </div>
+            <div class="carrito-cupones-seleccion">
+                <label for="carrito-cupon-select">Mis cupones</label>
+                <div class="carrito-cupones-fila">
+                    <select id="carrito-cupon-select">
+                        <option value="">Selecciona un cupón guardado</option>
+                    </select>
+                    <button type="button" id="carrito-usar-cupon" class="btn-usar-cupon">Usar cupón</button>
+                </div>
+            </div>
+            <div class="carrito-cupones-codigo">
+                <label for="carrito-cupon-codigo">O escribe un código</label>
+                <div class="carrito-cupones-fila">
+                    <input type="text" id="carrito-cupon-codigo" placeholder="Ej. VERDE10" autocomplete="off">
+                    <button type="button" id="carrito-aplicar-codigo" class="btn-usar-cupon secundario">Aplicar código</button>
+                </div>
+            </div>
+            <div id="carrito-cupon-mensaje" class="carrito-cupon-mensaje" role="status" aria-live="polite" hidden></div>
+            <div id="carrito-cupon-activo" class="carrito-cupon-activo" hidden></div>
+        </section>
+
         <!-- Resumen y botones -->
         <div class="carrito-resumen">
+            <div class="carrito-resumen-fila carrito-subtotal-fila">
+                <span>Subtotal</span>
+                <strong id="carrito-subtotal">$0.00 MXN</strong>
+            </div>
+            <div class="carrito-resumen-fila carrito-descuento-fila" id="carrito-descuento-fila" hidden>
+                <span>Descuento del cupón</span>
+                <strong id="carrito-descuento">−$0.00 MXN</strong>
+            </div>
             <div class="carrito-resumen-fila">
                 <span>Total</span>
                 <strong id="carrito-total">$0.00 MXN</strong>
@@ -1529,6 +1586,16 @@
         const cerrarCarritoBtn = document.getElementById('cerrar-carrito');
         const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
         const finalizarCarritoBtn = document.getElementById('finalizar-carrito');
+        const carritoCuponSelect = document.getElementById('carrito-cupon-select');
+        const carritoCuponCodigo = document.getElementById('carrito-cupon-codigo');
+        const carritoUsarCuponBtn = document.getElementById('carrito-usar-cupon');
+        const carritoAplicarCodigoBtn = document.getElementById('carrito-aplicar-codigo');
+        const carritoCuponMensaje = document.getElementById('carrito-cupon-mensaje');
+        const carritoCuponActivo = document.getElementById('carrito-cupon-activo');
+        const carritoSubtotal = document.getElementById('carrito-subtotal');
+        const carritoDescuentoFila = document.getElementById('carrito-descuento-fila');
+        const carritoDescuento = document.getElementById('carrito-descuento');
+        let cuponCarritoActual = null;
 
         let precioUnitarioPorKg = 0;
         let unidadActual = 'kg';
@@ -1592,15 +1659,144 @@
             document.body.classList.remove('modal-abierto');
         }
 
+        const CLAVE_PROMOCIONES_CARRITO = 'promocionesSanGerardo';
+        const PROMOCIONES_CUPONES_BASE = [
+            { id: 'base1', nombre: '2x1 en frutas seleccionadas', codigo: 'FRUTA2X1', tipo: '2x1', valor: '10', descripcion: 'Promoción 2x1 simulada.' , activa: true },
+            { id: 'base2', nombre: '10% de descuento', codigo: 'VERDE10', tipo: 'porcentaje', valor: '10', descripcion: 'Descuento del 10% simulado.', activa: true },
+            { id: 'base3', nombre: 'Beneficio de comunidad', codigo: 'COMUNIDAD', tipo: 'texto', valor: '5', descripcion: 'Beneficio del 5% simulado.', activa: true }
+        ];
+
+        function obtenerClaveCuponesUsuario() {
+            const usuario = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
+            return 'cuponesUsuarioSanGerardo_' + encodeURIComponent(usuario);
+        }
+
+        function leerJSONSeguro(clave, respaldo = []) {
+            try {
+                const dato = JSON.parse(localStorage.getItem(clave) || JSON.stringify(respaldo));
+                return Array.isArray(dato) ? dato : respaldo;
+            } catch (error) { return respaldo; }
+        }
+
+        function obtenerPromocionesActivasCupones() {
+            const administradas = leerJSONSeguro(CLAVE_PROMOCIONES_CARRITO, []);
+            const lista = administradas.length ? administradas : PROMOCIONES_CUPONES_BASE;
+            return lista.filter(p => p && p.activa !== false && String(p.codigo || '').trim());
+        }
+
+        function obtenerCuponesUsuario() {
+            const guardados = leerJSONSeguro(obtenerClaveCuponesUsuario(), []);
+            const activas = obtenerPromocionesActivasCupones();
+            return guardados.map(guardado => {
+                const vigente = activas.find(p => String(p.codigo || '').trim().toUpperCase() === String(guardado.codigo || '').trim().toUpperCase());
+                return vigente ? { ...vigente, obtenido: true } : null;
+            }).filter(Boolean);
+        }
+
+        function mostrarMensajeCupon(texto, tipo = 'exito') {
+            if (!carritoCuponMensaje) return;
+            carritoCuponMensaje.textContent = texto;
+            carritoCuponMensaje.className = 'carrito-cupon-mensaje ' + tipo;
+            carritoCuponMensaje.hidden = false;
+        }
+
+        function porcentajeCupon(cupon) {
+            const tipo = String(cupon.tipo || '').toLowerCase();
+            const valor = Number(cupon.valor || 0);
+            if (tipo === 'porcentaje') return Math.max(0, Math.min(valor, 100));
+            if (tipo === 'monto') return 0;
+            if (tipo === '2x1') return 50;
+            if (tipo === 'texto' && valor > 0) return Math.max(0, Math.min(valor, 100));
+            return 0;
+        }
+
+        function calcularDescuentoCupon(subtotal, cupon = cuponCarritoActual) {
+            if (!cupon) return 0;
+            if (String(cupon.tipo || '').toLowerCase() === 'monto') {
+                return Math.min(subtotal, Math.max(0, Number(cupon.valor || 0)));
+            }
+            return Math.min(subtotal, subtotal * porcentajeCupon(cupon) / 100);
+        }
+
+        function renderizarSelectorCupones() {
+            if (!carritoCuponSelect) return;
+            const cupones = obtenerCuponesUsuario();
+            const seleccionadoAnterior = carritoCuponSelect.value;
+            carritoCuponSelect.innerHTML = '<option value="">Selecciona un cupón guardado</option>';
+            cupones.forEach(cupon => {
+                const option = document.createElement('option');
+                option.value = String(cupon.codigo || '').trim().toUpperCase();
+                const tipo = String(cupon.tipo || '').toLowerCase();
+                let beneficio = tipo === 'porcentaje' ? `${cupon.valor || 0}% de descuento` : tipo === 'monto' ? `$${cupon.valor || 0} MXN de descuento` : tipo === '2x1' ? 'Beneficio 2x1 (simulado)' : (cupon.descripcion || 'Beneficio especial');
+                option.textContent = `${cupon.nombre || option.value} · ${beneficio}`;
+                carritoCuponSelect.appendChild(option);
+            });
+            if (cuponCarritoActual) carritoCuponSelect.value = String(cuponCarritoActual.codigo || '').toUpperCase();
+            else if (seleccionadoAnterior) carritoCuponSelect.value = seleccionadoAnterior;
+        }
+
+        function aplicarCuponPorCodigo(codigo, exigirGuardado = false) {
+            const normalizado = String(codigo || '').trim().toUpperCase();
+            const promos = obtenerPromocionesActivasCupones();
+            const cupon = promos.find(p => String(p.codigo || '').trim().toUpperCase() === normalizado);
+            if (!cupon) {
+                mostrarMensajeCupon('No encontramos ese código entre las promociones activas.', 'error');
+                return;
+            }
+            const cuponesUsuario = obtenerCuponesUsuario();
+            const yaObtenido = cuponesUsuario.some(p => String(p.codigo || '').trim().toUpperCase() === normalizado);
+            if (exigirGuardado && !yaObtenido) {
+                mostrarMensajeCupon('Este cupón no está guardado en tus cupones. Puedes obtenerlo desde la página de Promociones.', 'error');
+                return;
+            }
+            cuponCarritoActual = cupon;
+            renderizarCarrito();
+            mostrarMensajeCupon(`Cupón ${normalizado} aplicado. El descuento se calcula como parte de esta demostración.`, 'exito');
+        }
+
+        function quitarCuponCarrito() {
+            cuponCarritoActual = null;
+            if (carritoCuponCodigo) carritoCuponCodigo.value = '';
+            renderizarCarrito();
+            mostrarMensajeCupon('Se quitó el cupón del carrito.', 'exito');
+        }
+
+        if (carritoUsarCuponBtn) carritoUsarCuponBtn.addEventListener('click', () => {
+            if (!carritoCuponSelect.value) {
+                mostrarMensajeCupon('Selecciona uno de tus cupones guardados.', 'error');
+                return;
+            }
+            aplicarCuponPorCodigo(carritoCuponSelect.value, true);
+        });
+        if (carritoAplicarCodigoBtn) carritoAplicarCodigoBtn.addEventListener('click', () => aplicarCuponPorCodigo(carritoCuponCodigo.value, false));
+        if (carritoCuponCodigo) carritoCuponCodigo.addEventListener('keydown', event => {
+            if (event.key === 'Enter') { event.preventDefault(); aplicarCuponPorCodigo(carritoCuponCodigo.value, false); }
+        });
+
         function renderizarCarrito() {
             const carrito = obtenerCarrito();
             const cantidadProductos = carrito.reduce((total, item) => total + Number(item.cantidad), 0);
-            const total = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+            const subtotal = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+            const descuento = calcularDescuentoCupon(subtotal);
+            const total = Math.max(0, subtotal - descuento);
 
             carritoResumen.textContent = cantidadProductos === 1
                 ? '1 producto en tu carrito'
                 : `${cantidadProductos} productos en tu carrito`;
             carritoTotal.textContent = `$${total.toFixed(2)} MXN`;
+            if (carritoSubtotal) carritoSubtotal.textContent = `$${subtotal.toFixed(2)} MXN`;
+            if (carritoDescuento) carritoDescuento.textContent = `−$${descuento.toFixed(2)} MXN`;
+            if (carritoDescuentoFila) carritoDescuentoFila.hidden = !cuponCarritoActual || descuento <= 0;
+            renderizarSelectorCupones();
+            if (carritoCuponActivo) {
+                if (cuponCarritoActual) {
+                    carritoCuponActivo.hidden = false;
+                    carritoCuponActivo.textContent = `Cupón aplicado: ${cuponCarritoActual.codigo} · Descuento: $${descuento.toFixed(2)} MXN `;
+                    const quitar = document.createElement('button');
+                    quitar.type = 'button'; quitar.textContent = 'Quitar'; quitar.addEventListener('click', quitarCuponCarrito);
+                    carritoCuponActivo.appendChild(quitar);
+                } else { carritoCuponActivo.hidden = true; carritoCuponActivo.textContent = ''; }
+            }
             actualizarContadorCarrito();
 
             if (!carrito.length) {
@@ -1787,7 +1983,8 @@
             compraDirectaPendiente = compraDirecta || null;
 
             const cantidadTotal = carrito.reduce((total, item) => total + Number(item.cantidad), 0);
-            const totalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+            const subtotalTerminos = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+            const totalCompra = Math.max(0, subtotalTerminos - calcularDescuentoCupon(subtotalTerminos));
 
             terminosCantidad.textContent = carrito.length === 1
                 ? '1 producto'
@@ -1878,12 +2075,9 @@
        TOTAL DEL PEDIDO
     ========================================== */
 
-    const totalCompra =
-        carrito.reduce(
-            (suma, item) =>
-                suma + calcularTotalItem(item),
-            0
-        );
+    const subtotalCompra = carrito.reduce((suma, item) => suma + calcularTotalItem(item), 0);
+    const descuentoCompra = calcularDescuentoCupon(subtotalCompra);
+    const totalCompra = Math.max(0, subtotalCompra - descuentoCompra);
 
 
     const cantidadArticulos =
@@ -1982,8 +2176,18 @@
         cantidadArticulos:
             cantidadArticulos,
 
-        total:
-            Number(totalCompra.toFixed(2)),
+        subtotal: Number(subtotalCompra.toFixed(2)),
+
+        descuento: Number(descuentoCompra.toFixed(2)),
+
+        cupon: cuponCarritoActual ? {
+            codigo: cuponCarritoActual.codigo || '',
+            nombre: cuponCarritoActual.nombre || '',
+            tipo: cuponCarritoActual.tipo || '',
+            valor: cuponCarritoActual.valor || ''
+        } : null,
+
+        total: Number(totalCompra.toFixed(2)),
 
         fecha: fecha,
 
@@ -2095,6 +2299,9 @@
     /* ==========================================
        LIMPIAR CARRITO
     ========================================== */
+
+    cuponCarritoActual = null;
+    if (carritoCuponCodigo) carritoCuponCodigo.value = '';
 
     if (compraDirectaPendiente) {
         compraDirectaPendiente = null;

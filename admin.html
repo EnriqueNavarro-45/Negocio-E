@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrador | San Gerardo Mayela</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
-    
-    <script>
-        if (sessionStorage.getItem('sesionActiva') !== 'true' ||
-            sessionStorage.getItem('rol') !== 'administrador') {
-            location.replace('login.html');
-        }
-    </script>
 </head>
 <body class="admin-body">
 
@@ -108,11 +103,11 @@
                     </label>
                     <label>
                         Precio / kg
-                        <input type="number" id="nuevo-precio" class="admin-input" min="0" step="0.01" placeholder="0.00" required>
+                        <input type="number" id="nuevo-precio" class="admin-input" step="0.01" placeholder="0.00" required>
                     </label>
                     <label>
                         Stock (kg)
-                        <input type="number" id="nuevo-stock" class="admin-input" min="0" step="0.1" placeholder="10" value="10" required>
+                        <input type="number" id="nuevo-stock" class="admin-input" step="0.1" placeholder="10" value="10" required>
                     </label>
                     <label>
                         Archivo de imagen
@@ -173,7 +168,7 @@
                     </label>
                     <label>
                         Descuento (%)
-                        <input type="number" id="oferta-descuento" class="admin-input" min="1" max="90" step="1" placeholder="Ej. 15" aria-label="Porcentaje de descuento">
+                        <input type="number" id="oferta-descuento" class="admin-input" step="1" placeholder="Ej. 15" aria-label="Porcentaje de descuento">
                     </label>
                     <label>
                         Válida hasta
@@ -196,8 +191,16 @@
                 </div>
             </div>
 
-            <div class="ofertas-form-card">
-                <h3 id="titulo-form-promocion">Crear promoción</h3>
+            <div class="promocion-top-actions">
+                <p>Gestiona los códigos de descuento que podrán usar los clientes en el carrito.</p>
+                <button type="button" class="admin-primary-btn" id="abrir-form-promocion">+ Agregar cupón</button>
+            </div>
+            <div class="admin-overlay" id="modal-promocion" aria-hidden="true">
+              <div class="admin-modal admin-coupon-modal" role="dialog" aria-modal="true" aria-labelledby="titulo-form-promocion">
+                <div class="admin-modal-header">
+                  <div><span class="admin-tag">Marketing</span><h2 id="titulo-form-promocion">Agregar cupón</h2></div>
+                  <button type="button" class="admin-modal-close" id="cerrar-modal-promocion" aria-label="Cerrar">×</button>
+                </div>
                 <p>Todos los campos son opcionales. Puedes guardar la promoción aunque estén vacíos.</p>
                 <form id="form-promocion" class="promocion-form-grid" novalidate>
                     <input type="hidden" id="promocion-id-edicion" value="">
@@ -223,14 +226,46 @@
                         <input type="text" inputmode="decimal" id="promocion-valor" class="admin-input" placeholder="Ej. 10">
                     </label>
                     <label class="promocion-descripcion-label">
-                        Descripción
-                        <textarea id="promocion-descripcion" class="admin-input" rows="2" placeholder="Descripción breve de la promoción"></textarea>
+                        Descripción (la ve la clienta o el cliente)
+                        <textarea id="promocion-descripcion" class="admin-input" rows="2" placeholder="Ej. Descuento en frutas y verduras"></textarea>
+                    </label>
+                    <label>
+                        Aplica a
+                        <select id="promocion-aplica" class="admin-select">
+                            <option value="todos">Todos los productos</option>
+                            <option value="categoria">Una línea (categoría)</option>
+                            <option value="productos">Productos específicos</option>
+                        </select>
+                    </label>
+                    <label id="promocion-categoria-wrap" hidden>
+                        Categoría
+                        <select id="promocion-categoria" class="admin-select">
+                            <option value="frutas">Frutas</option><option value="verduras">Verduras</option>
+                            <option value="cereales">Cereales</option><option value="chiles">Chiles</option>
+                        </select>
+                    </label>
+                    <label id="promocion-productos-wrap" hidden>
+                        Productos específicos
+                        <select id="promocion-productos" class="admin-select" multiple></select>
+                    </label>
+                    <label>
+                        Compra mínima ($)
+                        <input type="text" inputmode="decimal" id="promocion-minimo" class="admin-input" placeholder="0 = sin mínimo">
+                    </label>
+                    <label>
+                        Vigente hasta
+                        <input type="date" id="promocion-fecha-fin" class="admin-input">
+                    </label>
+                    <label class="promocion-activa-check">
+                        <input type="checkbox" id="promocion-activa" checked>
+                        Cupón activo
                     </label>
                     <div class="promocion-form-actions">
                         <button type="submit" class="admin-primary-btn" id="guardar-promocion">Guardar promoción</button>
-                        <button type="button" class="admin-secondary-btn" id="cancelar-edicion-promocion" hidden>Cancelar edición</button>
+                        <button type="button" class="admin-secondary-btn" id="cancelar-edicion-promocion">Cancelar</button>
                     </div>
                 </form>
+              </div>
             </div>
 
             <div class="admin-tools promocion-tools">
@@ -326,14 +361,14 @@
                     Precio por kilogramo
                     <div class="admin-input-prefix">
                         <span>$</span>
-                        <input type="number" id="producto-precio" min="0" step="0.01" required>
+                        <input type="number" id="producto-precio" step="0.01" required>
                     </div>
                 </label>
 
                 <label>
                     Existencia disponible
                     <div class="admin-input-suffix">
-                        <input type="number" id="producto-stock" min="0" step="0.1" required>
+                        <input type="number" id="producto-stock" step="0.1" required>
                         <span>kg</span>
                     </div>
                 </label>
@@ -391,841 +426,9 @@
         <span id="toast-mensaje"></span>
     </div>
 
-<script>
-/* ========== DATOS BASE ========== */
-const BASE = [
-  ['Mango','frutas',45,'Mango1'],['Manzana','frutas',40,'Manzana1'],['Plátano','frutas',22,'Platano1'],
-  ['Fresa','frutas',65,'Fresa1'],['Papaya','frutas',28,'Papaya1'],['Limón','frutas',30,'limon'],
-  ['Naranja','frutas',18,'Naranja1'],['Piña','frutas',32,'Piña1'],['Sandía','frutas',20,'Sandia1'],
-  ['Melón','frutas',25,'Melon1'],
-  ['Jitomate','verduras',28,'Jitomate1'],['Cebolla','verduras',20,'cebolla'],['Papa','verduras',25,'Papa1'],
-  ['Aguacate','verduras',75,'Aguacate1'],['Brócoli','verduras',34,'Brocoli1'],['Calabacita','verduras',26,'calabacita'],
-  ['Zanahoria','verduras',16,'zanahoria'],['Pepino','verduras',22,'Pepino1'],['Espinaca','verduras',30,'Espinaca1'],
-  ['Elote','verduras',24,'Elote1'],
-  ['Arroz','cereales',24,'Arroz1'],['Avena','cereales',30,'avena'],['Frijol Negro','cereales',38,'frijol negro'],
-  ['Almendras','cereales',180,'almendra'],['Maíz','cereales',26,'Maiz1'],['Trigo','cereales',28,'Trigo1'],
-  ['Quinoa','cereales',95,'Quinoa1'],['Lenteja','cereales',36,'Lenteja1'],['Garbanzo','cereales',42,'Garbanzo1'],
-  ['Amaranto','cereales',70,'Amaranto1'],
-  ['Chile Poblano','chiles',45,'poblano'],['Chile Jalapeño','chiles',32,'Jalapeno1'],['Chile Serrano','chiles',36,'serrano'],
-  ['Chile Habanero','chiles',80,'Habanero1'],['Chile Ancho','chiles',88,'Ancho1'],['Chile Guajillo','chiles',82,'Guajillo1'],
-  ['Chile Chilaca','chiles',48,'Chilaca1'],['Chile de Árbol','chiles',90,'Arbol1'],['Chile Pasilla','chiles',88,'Pasilla1'],
-  ['Chile Morita','chiles',95,'Morita1']
-];
+<script src="admin.js" defer></script>
+</body>
+</html>
 
-const INVENTARIO_INICIAL = BASE.map(([name, category, price, img]) => ({
-    name, category, price, stock: 10, unit: 'kg',
-    image: `Imagenes/Img productos/${img}.jpg`, active: true
-}));
-
-const CLAVE_INVENTARIO = 'inventarioSanGerardo';
-const CLAVE_OFERTAS   = 'ofertasSanGerardo';
-const CLAVE_PROMOCIONES = 'promocionesSanGerardo';
-const CLAVE_PEDIDOS   = 'pedidosSanGerardo';
-
-const CATEGORIAS = {
-    frutas: 'Frutas',
-    verduras: 'Verduras',
-    cereales: 'Cereales',
-    chiles: 'Chiles'
-};
-
-/* ========== UTILIDADES ========== */
-const $ = id => document.getElementById(id);
-const esc = t => String(t).replace(/[&<>"']/g, c =>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const normalizar = t => String(t || '')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('es-MX');
-const dinero = n => '$' + Number(n).toFixed(2);
-const hoy = () => new Date().toISOString().slice(0, 10);
-const fechaCorta = iso => new Date(iso).toLocaleDateString('es-MX');
-
-const leer = clave => {
-    try {
-        const d = JSON.parse(localStorage.getItem(clave));
-        return Array.isArray(d) ? d : [];
-    } catch {
-        return [];
-    }
-};
-const escribir = (clave, datos) => localStorage.setItem(clave, JSON.stringify(datos));
-
-/* ========== INVENTARIO ========== */
-function inventarioValido(d) {
-    return Array.isArray(d) && d.length > 0 && d.every(p =>
-        p && typeof p.name === 'string' &&
-        Number.isFinite(Number(p.price)) &&
-        Number.isFinite(Number(p.stock))
-    );
-}
-
-function cargarInventario() {
-    let datos = null;
-    try { datos = JSON.parse(localStorage.getItem(CLAVE_INVENTARIO)); } catch {}
-    if (!inventarioValido(datos)) {
-        datos = structuredClone(INVENTARIO_INICIAL);
-        localStorage.setItem(CLAVE_INVENTARIO, JSON.stringify(datos));
-    }
-    return datos;
-}
-
-let inventario = cargarInventario();
-
-function guardarInventario() {
-    localStorage.setItem(CLAVE_INVENTARIO, JSON.stringify(inventario));
-}
-
-function estado(p) {
-    if (p.stock <= 0) return ['agotado', 'Agotado'];
-    if (!p.active) return ['oculto', 'No disponible'];
-    if (p.stock <= 3) return ['bajo', 'Stock bajo'];
-    return ['disponible', 'Disponible'];
-}
-
-function renderizarInventario() {
-    const termino = normalizar($('buscar-admin').value.trim());
-    const categoria = $('filtro-admin').value;
-
-    const filas = inventario
-        .map((p, i) => ({ p, i }))
-        .filter(({ p }) =>
-            (!termino || normalizar(p.name).includes(termino)) &&
-            (categoria === 'todos' || p.category === categoria)
-        );
-
-    $('inventario-tabla').innerHTML = filas.length
-        ? filas.map(({ p, i }) => {
-            const [clase, texto] = estado(p);
-            return `<tr>
-                <td>
-                    <div class="admin-product-cell">
-                        <img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.style.visibility='hidden'">
-                        <strong>${esc(p.name)}</strong>
-                    </div>
-                </td>
-                <td>${esc(CATEGORIAS[p.category] || p.category)}</td>
-                <td>$${Number(p.price).toFixed(2)} MXN</td>
-                <td>${Number(p.stock)} kg</td>
-                <td><span class="estado estado-${clase}">${texto}</span></td>
-                <td class="admin-actions-cell">
-                    <button type="button" class="admin-edit-btn" data-indice="${i}">Editar</button>
-                    <button type="button" class="btn-eliminar-producto" data-eliminar="${i}">Eliminar</button>
-                </td>
-            </tr>`;
-        }).join('')
-        : `<tr><td colspan="6" class="admin-empty">No encontramos productos con esos criterios.</td></tr>`;
-
-    $('stat-productos').textContent   = inventario.length;
-    $('stat-disponibles').textContent = inventario.filter(p => p.active && p.stock > 0).length;
-    $('stat-stock-bajo').textContent  = inventario.filter(p => p.stock > 0 && p.stock <= 3).length;
-    $('stat-agotados').textContent    = inventario.filter(p => p.stock <= 0).length;
-}
-
-function abrirEditor(indice) {
-    const p = inventario[indice];
-    if (!p) return;
-    $('producto-indice').value = indice;
-    $('modal-inventario-titulo').textContent = p.name;
-    $('modal-producto-nombre').textContent = p.name;
-    $('modal-producto-categoria').textContent = CATEGORIAS[p.category] || p.category;
-    $('modal-producto-imagen').src = p.image;
-    $('modal-producto-imagen').alt = p.name;
-    $('producto-precio').value = p.price;
-    $('producto-stock').value = p.stock;
-    $('producto-activo').checked = p.active;
-    $('modal-inventario').classList.add('activo');
-    $('modal-inventario').setAttribute('aria-hidden', 'false');
-    $('producto-precio').focus();
-}
-
-function cerrarEditor() {
-    $('modal-inventario').classList.remove('activo');
-    $('modal-inventario').setAttribute('aria-hidden', 'true');
-}
-
-/* ========== TOAST ========== */
-let toastTimer;
-function toast(titulo, mensaje) {
-    $('toast-titulo').textContent = titulo;
-    $('toast-mensaje').textContent = mensaje;
-    $('admin-toast').classList.add('activo');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => $('admin-toast').classList.remove('activo'), 2800);
-}
-
-let accionConfirmacion = null;
-function mostrarConfirmacion(titulo, mensaje, textoAceptar, callback) {
-    $('admin-confirm-titulo').textContent = titulo;
-    $('admin-confirm-mensaje').textContent = mensaje;
-    $('admin-confirm-aceptar').textContent = textoAceptar || 'Confirmar';
-    accionConfirmacion = callback;
-    $('admin-confirmacion').classList.add('activo');
-    $('admin-confirmacion').setAttribute('aria-hidden', 'false');
-}
-function cerrarConfirmacion() {
-    $('admin-confirmacion').classList.remove('activo');
-    $('admin-confirmacion').setAttribute('aria-hidden', 'true');
-    accionConfirmacion = null;
-}
-
-let pedidoSeleccionado = null;
-function abrirDetallePedido(id) {
-    pedidos = leer(CLAVE_PEDIDOS);
-    const p = pedidos.find(x => String(x.id) === String(id));
-    if (!p) {
-        toast('Pedido no encontrado', 'No se encontró el pedido seleccionado.');
-        return;
-    }
-    pedidoSeleccionado = p;
-    const items = obtenerItemsPedido(p);
-    const total = obtenerTotalPedido(p);
-    $('pedido-detalle-titulo').textContent = p.id || 'Pedido';
-    $('pedido-detalle-contenido').innerHTML = `
-        <div class="admin-order-summary">
-            <div class="admin-order-box"><small>Cliente</small><strong>${esc(obtenerNombreCliente(p))}</strong></div>
-            <div class="admin-order-box"><small>Estado</small><strong>${esc(textoEstadoPedido(p.estado))}</strong></div>
-            <div class="admin-order-box"><small>Correo</small><strong>${esc(p.correo || p.usuario || 'No especificado')}</strong></div>
-            <div class="admin-order-box"><small>Teléfono</small><strong>${esc(p.telefono || 'No especificado')}</strong></div>
-            <div class="admin-order-box admin-order-box-full"><small>Dirección de entrega</small><strong>${esc(p.direccion || 'No especificada')}</strong></div>
-        </div>
-        <table class="admin-order-items">
-            <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th></tr></thead>
-            <tbody>${items.length ? items.map(i => `
-                <tr>
-                    <td>${esc(i.nombre)}</td>
-                    <td>${Number(i.cantidad)} ${esc(i.unidad)}</td>
-                    <td>${dinero(i.precio)}</td>
-                    <td>${dinero(i.total)}</td>
-                </tr>`).join('') : '<tr><td colspan="4">Sin productos</td></tr>'}
-            </tbody>
-        </table>
-        <div class="admin-order-total"><span>Total:</span><strong>${dinero(total)} MXN</strong></div>`;
-    $('modal-pedido').classList.add('activo');
-    $('modal-pedido').setAttribute('aria-hidden', 'false');
-}
-function cerrarDetallePedido() {
-    $('modal-pedido').classList.remove('activo');
-    $('modal-pedido').setAttribute('aria-hidden', 'true');
-    pedidoSeleccionado = null;
-}
-
-
-function estadoOferta(o) {
-    if (!o.activa) return ['pausada', 'Pausada'];
-    if (o.fin && o.fin < hoy()) return ['vencida', 'Vencida'];
-    return ['vigente', 'Vigente'];
-}
-
-function renderOfertas() {
-    $('oferta-producto').innerHTML =
-        '<option value="">Selecciona un producto</option>' +
-        inventario.map(p => `<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
-
-    const grid = $('ofertas-grid');
-    if (!ofertas.length) {
-        grid.innerHTML = `
-            <div class="ofertas-vacio">
-                <strong>Aún no hay ofertas</strong>
-                Crea la primera con el formulario de arriba.
-            </div>`;
-        return;
-    }
-
-    grid.innerHTML = ofertas.map(o => {
-        const p = inventario.find(x => x.name === o.producto);
-        const base = p ? Number(p.price) : 0;
-        const precioOferta = base * (1 - o.descuento / 100);
-        const [clase, texto] = estadoOferta(o);
-        const img = p ? p.image : '';
-        const categoria = p ? (CATEGORIAS[p.category] || p.category) : '';
-
-        return `
-        <article class="oferta-card">
-            <div class="oferta-card-header">
-                <img src="${esc(img)}" alt="${esc(o.producto)}" loading="lazy" onerror="this.style.visibility='hidden'">
-                <div>
-                    <strong>${esc(o.producto)}</strong>
-                    <span>${esc(categoria)}</span>
-                </div>
-                <span class="oferta-badge estado estado-${clase}">${texto}</span>
-            </div>
-            <div class="oferta-card-body">
-                <span class="oferta-descuento-tag">−${Number(o.descuento)}% OFF</span>
-                <div class="oferta-precios">
-                    <span class="oferta-precio-oferta">${dinero(precioOferta)}</span>
-                    <span class="oferta-precio-normal">${dinero(base)}</span>
-                </div>
-                <p class="oferta-meta">${o.fin ? 'Válida hasta ' + fechaCorta(o.fin + 'T00:00') : 'Sin fecha de vencimiento'}</p>
-            </div>
-            <div class="oferta-card-footer">
-                <button type="button" data-accion="pausar" data-id="${esc(o.id)}">${o.activa ? 'Pausar' : 'Activar'}</button>
-                <button type="button" class="btn-eliminar-oferta" data-accion="eliminar" data-id="${esc(o.id)}">Eliminar</button>
-            </div>
-        </article>`;
-    }).join('');
-}
-
-/* ========== PROMOCIONES Y CUPONES ========== */
-let promociones = leer(CLAVE_PROMOCIONES);
-
-function beneficioPromocion(p) {
-    const valor = String(p.valor ?? '').trim();
-    if (p.tipo === 'porcentaje') return (valor ? valor + '%' : '') + ' de descuento';
-    if (p.tipo === 'monto') return (valor ? '$' + valor + ' MXN' : '') + ' de descuento';
-    if (p.tipo === '2x1') return 'Promoción 2x1';
-    return p.descripcion || 'Beneficio informativo';
-}
-
-function renderPromociones() {
-    promociones = leer(CLAVE_PROMOCIONES);
-    const tbody = $('promociones-tabla');
-    $('contador-promociones').textContent = promociones.length + (promociones.length === 1 ? ' promoción' : ' promociones');
-    if (!promociones.length) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="promocion-vacia"><strong>Aún no hay cupones</strong><br>Crea una promoción usando el formulario de arriba.</div></td></tr>';
-        return;
-    }
-    tbody.innerHTML = promociones.map(p => `
-      <tr>
-        <td>
-            <strong>${esc(p.nombre || 'Promoción sin nombre')}</strong><br>
-            <small>${esc(p.descripcion || 'Sin descripción')}</small>
-        </td>
-        <td><span class="promocion-codigo">${esc(p.codigo || 'SIN CÓDIGO')}</span></td>
-        <td>${esc(beneficioPromocion(p))}</td>
-        <td><span class="promocion-estado ${p.activa ? '' : 'inactiva'}">${p.activa ? 'Activa' : 'Inactiva'}</span></td>
-        <td>
-            <div class="promocion-acciones">
-                <button type="button" data-promo-accion="editar" data-id="${esc(p.id)}">Editar</button>
-                <button type="button" data-promo-accion="estado" data-id="${esc(p.id)}">${p.activa ? 'Desactivar' : 'Activar'}</button>
-                <button type="button" class="eliminar" data-promo-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>
-            </div>
-        </td>
-      </tr>`).join('');
-}
-
-function limpiarFormularioPromocion() {
-    $('form-promocion').reset();
-    $('promocion-id-edicion').value = '';
-    $('titulo-form-promocion').textContent = 'Crear promoción';
-    $('guardar-promocion').textContent = 'Guardar promoción';
-    $('cancelar-edicion-promocion').hidden = true;
-}
-
-function editarPromocion(id) {
-    const p = promociones.find(x => String(x.id) === String(id));
-    if (!p) return;
-    $('promocion-id-edicion').value = p.id;
-    $('promocion-nombre').value = p.nombre ?? '';
-    $('promocion-codigo').value = p.codigo ?? '';
-    $('promocion-tipo').value = p.tipo || 'porcentaje';
-    $('promocion-valor').value = p.valor ?? '';
-    $('promocion-descripcion').value = p.descripcion ?? '';
-    $('titulo-form-promocion').textContent = 'Editar promoción';
-    $('guardar-promocion').textContent = 'Guardar cambios';
-    $('cancelar-edicion-promocion').hidden = false;
-    $('form-promocion').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-/* ========== PEDIDOS ========== */
-let pedidos = leer(CLAVE_PEDIDOS);
-
-function normalizarEstadoPedido(estado) {
-    const valor = normalizar(estado);
-    if (valor === 'pendiente') return 'pendiente';
-    if (valor === 'en camino' || valor === 'encamino') return 'en camino';
-    if (valor === 'entregado') return 'entregado';
-    if (valor === 'cancelado') return 'cancelado';
-    if (valor === 'confirmado') return 'confirmado';
-    if (valor === 'preparando') return 'preparando';
-    if (valor === 'listo para entregar' || valor === 'listoparaentregar') return 'listo para entregar';
-    return 'pendiente';
-}
-
-function textoEstadoPedido(estado) {
-    const estados = {
-        'pendiente': 'Pendiente',
-        'confirmado': 'Confirmado',
-        'preparando': 'Preparando',
-        'listo para entregar': 'Listo para entregar',
-        'en camino': 'En camino',
-        'entregado': 'Entregado',
-        'cancelado': 'Cancelado'
-    };
-    return estados[normalizarEstadoPedido(estado)] || 'Pendiente';
-}
-
-function obtenerItemsPedido(pedido) {
-    if (Array.isArray(pedido.items) && pedido.items.length) {
-        return pedido.items.map(item => {
-            if (item.producto) {
-                return {
-                    nombre: item.producto,
-                    cantidad: Number(item.cantidad) || 0,
-                    unidad: item.unidad || 'kg',
-                    precio: Number(item.precioKg) || 0,
-                    total: Number(item.total) || ((Number(item.cantidad) || 0) * (Number(item.precioKg) || 0))
-                };
-            }
-            return {
-                nombre: item.name || item.producto || 'Producto',
-                cantidad: Number(item.kg) || Number(item.cantidad) || 0,
-                unidad: item.unidad || 'kg',
-                precio: Number(item.price) || Number(item.precioKg) || 0,
-                total: Number(item.total) || ((Number(item.kg) || Number(item.cantidad) || 0) * (Number(item.price) || Number(item.precioKg) || 0))
-            };
-        });
-    }
-    if (Array.isArray(pedido.productos) && pedido.productos.length) {
-        return pedido.productos.map(item => ({
-            nombre: item.producto || item.name || 'Producto',
-            cantidad: Number(item.cantidad) || Number(item.kg) || 0,
-            unidad: item.unidad || 'kg',
-            precio: Number(item.precioKg) || Number(item.price) || 0,
-            total: Number(item.total) || 0
-        }));
-    }
-    return [];
-}
-
-function obtenerFechaPedido(pedido) {
-    if (pedido.fecha) {
-        if (typeof pedido.fecha === 'string' && pedido.fecha.includes('T')) {
-            const fecha = new Date(pedido.fecha);
-            if (!Number.isNaN(fecha.getTime())) {
-                return fecha.toLocaleDateString('es-MX');
-            }
-        }
-        return pedido.fecha;
-    }
-    return 'Sin fecha';
-}
-
-function obtenerNombreCliente(pedido) {
-    return pedido.nombreCliente || pedido.cliente || pedido.nombre || pedido.usuario || 'Cliente';
-}
-
-function obtenerTotalPedido(pedido) {
-    if (Number.isFinite(Number(pedido.total))) return Number(pedido.total);
-    return obtenerItemsPedido(pedido).reduce((suma, item) => suma + Number(item.total || 0), 0);
-}
-
-function renderPedidos() {
-    const filtro = $('filtro-pedidos').value;
-    pedidos = leer(CLAVE_PEDIDOS);
-    const filtroNormalizado = normalizar(filtro);
-
-    const lista = pedidos.filter(pedido => {
-        if (filtroNormalizado === 'todos') return true;
-        return normalizarEstadoPedido(pedido.estado) === filtroNormalizado;
-    });
-
-    const pendientes = pedidos.filter(pedido =>
-        normalizarEstadoPedido(pedido.estado) === 'pendiente'
-    ).length;
-
-    $('tab-btn-pedidos').textContent = 'Pedidos' + (pendientes ? ` (${pendientes})` : '');
-
-    if (!lista.length) {
-        $('pedidos-tabla').innerHTML = `
-            <tr>
-                <td colspan="7" class="admin-empty">No hay pedidos para mostrar.</td>
-            </tr>`;
-        return;
-    }
-
-    $('pedidos-tabla').innerHTML = lista.map(pedido => {
-        const items = obtenerItemsPedido(pedido);
-        const total = obtenerTotalPedido(pedido);
-        const estado = normalizarEstadoPedido(pedido.estado);
-        const nombreCliente = obtenerNombreCliente(pedido);
-        const fecha = obtenerFechaPedido(pedido);
-
-        const productosTexto = items.length
-            ? items.map(item => `${esc(item.nombre)} (${Number(item.cantidad)} ${esc(item.unidad)})`).join(', ')
-            : 'Sin productos';
-
-        return `
-            <tr>
-                <td><strong>${esc(pedido.id || 'Sin ID')}</strong></td>
-                <td>
-                    ${esc(nombreCliente)}
-                    ${pedido.correo ? `<small class="admin-muted-subline">${esc(pedido.correo)}</small>` : ''}
-                </td>
-                <td>${productosTexto}</td>
-                <td><strong>${dinero(total)}</strong></td>
-                <td>
-                    ${esc(fecha)}
-                    ${pedido.hora ? `<small class="admin-muted-subline">${esc(pedido.hora)}</small>` : ''}
-                </td>
-                <td>
-                    <select class="admin-select cambiar-estado" data-id="${esc(pedido.id || '')}" aria-label="Estado del pedido ${esc(pedido.id || '')}">
-                        <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                        <option value="confirmado" ${estado === 'confirmado' ? 'selected' : ''}>Confirmado</option>
-                        <option value="preparando" ${estado === 'preparando' ? 'selected' : ''}>Preparando</option>
-                        <option value="listo para entregar" ${estado === 'listo para entregar' ? 'selected' : ''}>Listo para entregar</option>
-                        <option value="en camino" ${estado === 'en camino' ? 'selected' : ''}>En camino</option>
-                        <option value="entregado" ${estado === 'entregado' ? 'selected' : ''}>Entregado</option>
-                        <option value="cancelado" ${estado === 'cancelado' ? 'selected' : ''}>Cancelado</option>
-                    </select>
-                </td>
-                <td>
-                    <div class="admin-order-actions">
-                        <button type="button" class="admin-small-btn ver-pedido" data-id="${esc(pedido.id || '')}">Ver</button>
-                        <button type="button" class="admin-small-btn imprimir-pedido-directo" data-id="${esc(pedido.id || '')}">Imprimir</button>
-                    </div>
-                </td>
-            </tr>`;
-    }).join('');
-}
-
-const EJEMPLOS = [
-    {
-        cliente: 'María López',
-        estado: 'pendiente',
-        items: [
-            { name: 'Mango', kg: 2, price: 45 },
-            { name: 'Aguacate', kg: 1, price: 75 }
-        ]
-    },
-    {
-        cliente: 'Juan Pérez',
-        estado: 'en camino',
-        items: [
-            { name: 'Jitomate', kg: 3, price: 28 }
-        ]
-    },
-    {
-        cliente: 'Ana Ruiz',
-        estado: 'entregado',
-        items: [
-            { name: 'Chile Habanero', kg: 0.5, price: 80 },
-            { name: 'Limón', kg: 2, price: 30 }
-        ]
-    }
-];
-
-/* ========== INICIALIZACIÓN ========== */
-document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('sesionActiva') !== 'true' ||
-        sessionStorage.getItem('rol') !== 'administrador') return;
-
-    /* ----- Inventario ----- */
-    renderizarInventario();
-
-    $('buscar-admin').addEventListener('input', renderizarInventario);
-    $('filtro-admin').addEventListener('change', renderizarInventario);
-
-    $('inventario-tabla').addEventListener('click', e => {
-        const btnEdit = e.target.closest('.admin-edit-btn');
-        if (btnEdit) {
-            abrirEditor(Number(btnEdit.dataset.indice));
-            return;
-        }
-
-        const btnEliminar = e.target.closest('[data-eliminar]');
-        if (btnEliminar) {
-            const i = Number(btnEliminar.dataset.eliminar);
-            const p = inventario[i];
-            if (!p) return;
-            mostrarConfirmacion('Eliminar producto', `¿Seguro que deseas eliminar "${p.name}" del inventario?`, 'Eliminar', () => {
-                const nombreEliminado = p.name;
-                inventario.splice(i, 1);
-                guardarInventario();
-                ofertas = ofertas.filter(o => normalizar(o.producto) !== normalizar(nombreEliminado));
-                escribir(CLAVE_OFERTAS, ofertas);
-                renderizarInventario();
-                renderOfertas();
-                toast('Producto eliminado', `${nombreEliminado} se eliminó del inventario.`);
-            });
-        }
-    });
-
-    $('form-agregar-producto').addEventListener('submit', e => {
-        e.preventDefault();
-
-        const nombre = $('nuevo-nombre').value.trim();
-        const category = $('nuevo-categoria').value;
-        const precio = Number($('nuevo-precio').value);
-        const stock = Number($('nuevo-stock').value);
-        let imagenArchivo = $('nuevo-imagen').value.trim();
-
-        if (!nombre) {
-            toast('Datos incompletos', 'Escribe el nombre del producto.');
-            return;
-        }
-        if (!Number.isFinite(precio) || precio < 0) {
-            toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
-            return;
-        }
-        if (!Number.isFinite(stock) || stock < 0) {
-            toast('Stock no válido', 'Indica una existencia mayor o igual a 0.');
-            return;
-        }
-
-        if (inventario.some(p => normalizar(p.name) === normalizar(nombre))) {
-            toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
-            return;
-        }
-
-        if (!imagenArchivo) {
-            imagenArchivo = nombre.replace(/\s+/g, '') + '1.jpg';
-        }
-        if (!/\.(jpe?g|png|webp|avif)$/i.test(imagenArchivo)) {
-            imagenArchivo += '.jpg';
-        }
-
-        const imagePath = imagenArchivo.includes('/')
-            ? imagenArchivo
-            : `Imagenes/Img productos/${imagenArchivo}`;
-
-        inventario.push({
-            name: nombre,
-            category,
-            price: precio,
-            stock,
-            unit: 'kg',
-            image: imagePath,
-            active: true
-        });
-
-        guardarInventario();
-        $('form-agregar-producto').reset();
-        $('nuevo-stock').value = '10';
-        $('nuevo-categoria').value = 'frutas';
-        renderizarInventario();
-        renderOfertas();
-        toast('Producto agregado', `${nombre} se agregó al inventario.`);
-    });
-
-    $('form-inventario').addEventListener('submit', e => {
-        e.preventDefault();
-        const i = Number($('producto-indice').value);
-        const textoPrecio = $('producto-precio').value.trim();
-        const textoStock = $('producto-stock').value.trim();
-        const precio = Number(textoPrecio);
-        const stock = Number(textoStock);
-
-        if (!textoPrecio || !textoStock || !Number.isFinite(precio) || !Number.isFinite(stock) || precio < 0 || stock < 0) {
-            toast('Datos no válidos', 'Completa el precio y la existencia con números mayores o iguales a 0.');
-            return;
-        }
-
-        inventario[i].price = precio;
-        inventario[i].stock = stock;
-        inventario[i].active = $('producto-activo').checked;
-        guardarInventario();
-        cerrarEditor();
-        renderizarInventario();
-        toast('Inventario actualizado', `${inventario[i].name} se actualizó correctamente.`);
-    });
-
-    $('cerrar-modal-admin').addEventListener('click', cerrarEditor);
-    $('cancelar-edicion').addEventListener('click', cerrarEditor);
-    $('modal-inventario').addEventListener('click', e => {
-        if (e.target.id === 'modal-inventario') cerrarEditor();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') cerrarEditor();
-    });
-
-    $('restaurar-inventario').addEventListener('click', () => {
-        mostrarConfirmacion('Restaurar inventario', '¿Restaurar los precios, existencias y disponibilidad iniciales?', 'Restaurar', () => {
-            inventario = structuredClone(INVENTARIO_INICIAL);
-            guardarInventario();
-            renderizarInventario();
-            renderOfertas();
-            toast('Inventario restaurado', 'Se recuperaron los valores iniciales.');
-        });
-    });
-
-    $('admin-confirm-aceptar').addEventListener('click', () => {
-        const a = accionConfirmacion;
-        cerrarConfirmacion();
-        if (typeof a === 'function') a();
-    });
-    $('admin-confirm-cancelar').addEventListener('click', cerrarConfirmacion);
-    $('admin-confirmacion').addEventListener('click', e => {
-        if (e.target.id === 'admin-confirmacion') cerrarConfirmacion();
-    });
-
-    $('pedidos-tabla').addEventListener('click', e => {
-        const v = e.target.closest('.ver-pedido');
-        const im = e.target.closest('.imprimir-pedido-directo');
-        if (v) abrirDetallePedido(v.dataset.id);
-        if (im) {
-            const p = leer(CLAVE_PEDIDOS).find(x => String(x.id) === String(im.dataset.id));
-            if (p) imprimirPedido(p);
-        }
-    });
-    $('cerrar-detalle-pedido').addEventListener('click', cerrarDetallePedido);
-    $('cerrar-detalle-pedido-2').addEventListener('click', cerrarDetallePedido);
-    $('modal-pedido').addEventListener('click', e => {
-        if (e.target.id === 'modal-pedido') cerrarDetallePedido();
-    });
-    $('imprimir-pedido').addEventListener('click', () => imprimirPedido(pedidoSeleccionado));
-
-    $('cerrar-sesion-admin').addEventListener('click', () => {
-        ['sesionActiva', 'usuario', 'rol', 'nombre', 'datosPerfil'].forEach(k => sessionStorage.removeItem(k));
-        window.location.href = 'login.html';
-    });
-
-    /* ----- Tabs ----- */
-    document.querySelector('.admin-tabs').addEventListener('click', e => {
-        const btn = e.target.closest('.admin-tab');
-        if (!btn) return;
-        document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
-        ['inventario', 'ofertas', 'promociones', 'pedidos'].forEach(t => {
-            $('tab-' + t).hidden = t !== btn.dataset.tab;
-        });
-        if (btn.dataset.tab === 'ofertas') renderOfertas();
-        if (btn.dataset.tab === 'promociones') renderPromociones();
-        if (btn.dataset.tab === 'pedidos') {
-            $('filtro-pedidos').value = 'todos';
-            renderPedidos();
-        }
-    });
-
-    /* ----- Ofertas ----- */
-    renderOfertas();
-
-    $('form-oferta').addEventListener('submit', e => {
-        e.preventDefault();
-        const producto = $('oferta-producto').value;
-        const descuento = Number($('oferta-descuento').value);
-        const fin = $('oferta-fin').value;
-
-        if (!producto || !Number.isFinite(descuento) || descuento < 1 || descuento > 90) {
-            toast('Datos no válidos', 'Elige un producto y un descuento entre 1% y 90%.');
-            return;
-        }
-        if (fin && fin < hoy()) {
-            toast('Fecha no válida', 'La fecha de vencimiento no puede estar en el pasado.');
-            return;
-        }
-
-        const existente = ofertas.find(o => o.producto === producto);
-        if (existente) {
-            Object.assign(existente, { descuento, fin, activa: true });
-        } else {
-            ofertas.push({
-                id: 'O-' + Date.now(),
-                producto,
-                descuento,
-                fin,
-                activa: true
-            });
-        }
-
-        escribir(CLAVE_OFERTAS, ofertas);
-        $('form-oferta').reset();
-        renderOfertas();
-        toast('Oferta guardada', `${producto} con ${descuento}% de descuento.`);
-    });
-
-    $('ofertas-grid').addEventListener('click', e => {
-        const btn = e.target.closest('[data-accion]');
-        if (!btn) return;
-        const o = ofertas.find(x => x.id === btn.dataset.id);
-        if (!o) return;
-
-        if (btn.dataset.accion === 'pausar') {
-            o.activa = !o.activa;
-        } else {
-            ofertas = ofertas.filter(x => x !== o);
-        }
-        escribir(CLAVE_OFERTAS, ofertas);
-        renderOfertas();
-    });
-
-    /* ----- Promociones ----- */
-    renderPromociones();
-    $('form-promocion').addEventListener('submit', e => {
-        e.preventDefault();
-        const idEdicion = $('promocion-id-edicion').value;
-        const datos = {
-            nombre: $('promocion-nombre').value,
-            codigo: $('promocion-codigo').value.trim().toUpperCase(),
-            tipo: $('promocion-tipo').value,
-            valor: $('promocion-valor').value,
-            descripcion: $('promocion-descripcion').value,
-            activa: true
-        };
-        if (idEdicion) {
-            const indice = promociones.findIndex(p => String(p.id) === String(idEdicion));
-            if (indice !== -1) promociones[indice] = { ...promociones[indice], ...datos };
-            escribir(CLAVE_PROMOCIONES, promociones);
-            limpiarFormularioPromocion();
-            renderPromociones();
-            toast('Promoción actualizada', 'Los cambios se guardaron correctamente.');
-        } else {
-            promociones.push({
-                id: 'P-' + Date.now() + '-' + Math.random().toString(16).slice(2, 6),
-                ...datos
-            });
-            escribir(CLAVE_PROMOCIONES, promociones);
-            limpiarFormularioPromocion();
-            renderPromociones();
-            toast('Promoción creada', 'La promoción se guardó correctamente.');
-        }
-    });
-    $('cancelar-edicion-promocion').addEventListener('click', limpiarFormularioPromocion);
-    $('promociones-tabla').addEventListener('click', e => {
-        const btn = e.target.closest('[data-promo-accion]');
-        if (!btn) return;
-        const promo = promociones.find(p => String(p.id) === String(btn.dataset.id));
-        if (!promo) return;
-        if (btn.dataset.promoAccion === 'editar') {
-            editarPromocion(promo.id);
-            return;
-        }
-        if (btn.dataset.promoAccion === 'estado') {
-            promo.activa = !promo.activa;
-            escribir(CLAVE_PROMOCIONES, promociones);
-            renderPromociones();
-            toast(promo.activa ? 'Promoción activada' : 'Promoción desactivada', 'El estado se actualizó.');
-            return;
-        }
-        mostrarConfirmacion('Eliminar promoción', '¿Quieres eliminar el cupón ' + (promo.codigo || 'sin código') + '?', 'Eliminar', () => {
-            promociones = promociones.filter(p => String(p.id) !== String(promo.id));
-            escribir(CLAVE_PROMOCIONES, promociones);
-            if ($('promocion-id-edicion').value === String(promo.id)) limpiarFormularioPromocion();
-            renderPromociones();
-            toast('Promoción eliminada', 'El cupón se eliminó correctamente.');
-        });
-    });
-
-    /* ----- Pedidos ----- */
-    renderPedidos();
-
-    $('filtro-pedidos').addEventListener('change', renderPedidos);
-
-    $('pedidos-tabla').addEventListener('change', e => {
-        if (!e.target.classList.contains('cambiar-estado')) return;
-        pedidos = leer(CLAVE_PEDIDOS);
-        const p = pedidos.find(x => String(x.id) === String(e.target.dataset.id));
-        if (!p) return;
-        p.estado = e.target.value;
-        escribir(CLAVE_PEDIDOS, pedidos);
-        renderPedidos();
-        toast('Pedido actualizado', `${p.id} ahora está "${p.estado}".`);
-    });
-
-    $('cargar-ejemplos').addEventListener('click', () => {
-        EJEMPLOS.forEach((ej, i) => {
-            pedidos.push({
-                id: 'P-' + (1001 + pedidos.length),
-                cliente: ej.cliente,
-                items: ej.items,
-                total: ej.items.reduce((s, it) => s + it.kg * it.price, 0),
-                fecha: new Date(Date.now() - i * 86400000).toISOString(),
-                estado: ej.estado
-            });
-        });
-        escribir(CLAVE_PEDIDOS, pedidos);
-        renderPedidos();
-        toast('Pedidos de ejemplo', 'Se agregaron 3 pedidos de prueba.');
-    });
-});
-</script>
 </body>
 </html>
