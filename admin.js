@@ -404,9 +404,32 @@ function obtenerFechaPedido(pedido) {
     return pedido.fecha;
 }
 
-function obtenerNombreCliente(pedido) {
-    return pedido.nombreCliente || pedido.cliente || pedido.nombre || pedido.usuario || 'Cliente';
+/* Convierte cualquier valor guardado (texto u objeto) en texto legible */
+function textoPlano(v) {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'object') {
+        const partes = [v.nombre, v.apellido, v.apellidos]
+            .filter(x => typeof x === 'string' && x.trim());
+        if (partes.length) return partes.join(' ');
+        return textoPlano(v.name || v.nombreCompleto || v.correo || v.email || '');
+    }
+    return String(v).trim();
 }
+
+function obtenerNombreCliente(pedido) {
+    for (const campo of [pedido.nombreCliente, pedido.cliente, pedido.nombre, pedido.usuario]) {
+        const t = textoPlano(campo);
+        if (t && t !== 'usuario_sin_correo') return t;
+    }
+    return 'Cliente';
+}
+
+function obtenerCorreoPedido(pedido) {
+    const t = textoPlano(pedido.correo || pedido.usuario);
+    return t && t !== 'usuario_sin_correo' ? t : '';
+}
+
+const slugEstado = e => normalizarEstadoPedido(e).replace(/\s+/g, '-');
 
 function obtenerTotalPedido(pedido) {
     if (pedido.total !== undefined && pedido.total !== null && Number.isFinite(Number(pedido.total))) {
@@ -445,7 +468,7 @@ function renderPedidos() {
             <td><strong>${esc(pedido.id || 'Sin ID')}</strong></td>
             <td>
                 ${esc(obtenerNombreCliente(pedido))}
-                ${pedido.correo ? `<small class="admin-muted-subline">${esc(pedido.correo)}</small>` : ''}
+                ${obtenerCorreoPedido(pedido) ? `<small class="admin-muted-subline">${esc(obtenerCorreoPedido(pedido))}</small>` : ''}
             </td>
             <td>${productosTexto}</td>
             <td><strong>${dinero(total)}</strong></td>
@@ -454,9 +477,11 @@ function renderPedidos() {
                 ${pedido.hora ? `<small class="admin-muted-subline">${esc(pedido.hora)}</small>` : ''}
             </td>
             <td>
-                <select class="admin-select cambiar-estado" data-id="${id}" aria-label="Estado del pedido ${id}">
-                    ${opciones.map(o => `<option value="${o}" ${est === o ? 'selected' : ''}>${textoEstadoPedido(o)}</option>`).join('')}
-                </select>
+                <span class="pedido-estado estado-${slugEstado(est)}">
+                    <select class="cambiar-estado" data-id="${id}" aria-label="Estado del pedido ${id}">
+                        ${opciones.map(o => `<option value="${o}" ${est === o ? 'selected' : ''}>${textoEstadoPedido(o)}</option>`).join('')}
+                    </select>
+                </span>
             </td>
             <td>
                 <div class="admin-order-actions">
@@ -484,8 +509,8 @@ function abrirDetallePedido(id) {
     $('pedido-detalle-contenido').innerHTML = `
         <div class="admin-order-summary">
             <div class="admin-order-box"><small>Cliente</small><strong>${esc(obtenerNombreCliente(p))}</strong></div>
-            <div class="admin-order-box"><small>Estado</small><strong>${esc(textoEstadoPedido(p.estado))}</strong></div>
-            <div class="admin-order-box"><small>Correo</small><strong>${esc(p.correo || p.usuario || 'No especificado')}</strong></div>
+            <div class="admin-order-box"><small>Estado</small><span class="pedido-badge estado-${slugEstado(p.estado)}">${esc(textoEstadoPedido(p.estado))}</span></div>
+            <div class="admin-order-box"><small>Correo</small><strong>${esc(obtenerCorreoPedido(p) || 'No especificado')}</strong></div>
             <div class="admin-order-box"><small>Teléfono</small><strong>${esc(p.telefono || 'No especificado')}</strong></div>
             <div class="admin-order-box admin-order-box-full"><small>Dirección de entrega</small><strong>${esc(p.direccion || 'No especificada')}</strong></div>
         </div>
@@ -532,7 +557,7 @@ function imprimirPedido(p) {
     <p class="muted">Nota de pedido ${esc(p.id || '')}</p>
     <div class="datos">
         <strong>Cliente:</strong> ${esc(obtenerNombreCliente(p))}<br>
-        <strong>Correo:</strong> ${esc(p.correo || p.usuario || 'No especificado')}<br>
+        <strong>Correo:</strong> ${esc(obtenerCorreoPedido(p) || 'No especificado')}<br>
         <strong>Teléfono:</strong> ${esc(p.telefono || 'No especificado')}<br>
         <strong>Dirección:</strong> ${esc(p.direccion || 'No especificada')}<br>
         <strong>Fecha:</strong> ${esc(obtenerFechaPedido(p))}<br>

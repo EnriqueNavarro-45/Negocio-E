@@ -388,6 +388,9 @@ textarea.admin-input { resize: vertical; }
 .estado-oculto,
 .promocion-estado.inactiva { background: #eff1ef; color: #6f7872; }
 .estado-en-camino { background: #dbeafe; color: #1e40af; }
+.estado-confirmado { background: #e0f2fe; color: #075985; }
+.estado-preparando { background: #ffedd5; color: #9a3412; }
+.estado-listo-para-entregar { background: #ede9fe; color: #5b21b6; }
 
 /* ========== TARJETAS DE FORMULARIO ========== */
 .agregar-form-card,
@@ -822,4 +825,71 @@ textarea.admin-input { resize: vertical; }
     .admin-modal-actions { flex-direction: column-reverse; }
     .admin-confirm-actions { flex-direction: column-reverse; }
     .admin-order-summary { grid-template-columns: 1fr; }
+}
+
+/* ========== ESTADO DE PEDIDO (píldora) ========== */
+.pedido-estado {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    transition: background .18s, box-shadow .18s;
+}
+
+.pedido-estado::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    pointer-events: none;
+}
+
+.pedido-estado::after {
+    content: "";
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-70%) rotate(45deg);
+    opacity: .65;
+    pointer-events: none;
+}
+
+.pedido-estado:hover { filter: brightness(.97); }
+.pedido-estado:focus-within { box-shadow: 0 0 0 3px rgba(43, 126, 79, .2); }
+
+.pedido-estado select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: auto;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 7px 32px 7px 29px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.pedido-estado option {
+    color: var(--texto);
+    background: #fff;
+    font-weight: 500;
+}
+
+.pedido-badge {
+    display: inline-block;
+    padding: 5px 13px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
 }

@@ -638,7 +638,10 @@
                 <h3>No encontramos ese producto</h3>
                 <p>Prueba con otro nombre o cambia la categoría.</p>
             </div>
-<!-- =====================================================
+        </div>
+    </section>
+
+    <!-- =====================================================
          MODAL DE COMPRA
     ====================================================== -->
     <div id="modal-compra" class="modal-compra-overlay">
@@ -1000,30 +1003,60 @@
          FOOTER
     ====================================================== -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-contenido">
-                <!-- LOGO -->
-                <div class="footer-logo">
-                    <div class="footer-logo-mark">
-                        <i data-lucide="leaf"></i>
-                    </div>
-                    <div>
-                        <h3>San Gerardo Mayela</h3>
-                        <p>Frutas y verduras frescas todos los días.</p>
-                    </div>
-                </div>
+        <div class="footer-inner">
+            <div class="footer-grid">
 
-                <!-- CTA -->
-                <div class="footer-cta">
-                    <span>¿Quieres contactarnos?</span>
-                    <a href="https://wa.me/524492578963" target="_blank" rel="noopener noreferrer">
+                <!-- MARCA -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-mark">
+                            <i data-lucide="leaf"></i>
+                        </div>
+                        <div>
+                            <h3>San Gerardo Mayela</h3>
+                            <p>Frutas y verduras frescas todos los días.</p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/524492578963" class="footer-wa" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="message-circle"></i>
                         Escríbenos por WhatsApp
                         <i data-lucide="arrow-right"></i>
                     </a>
                 </div>
 
+                <!-- ENLACES -->
+                <nav class="footer-col" aria-label="Enlaces del sitio">
+                    <h4>Explora</h4>
+                    <ul>
+                        <li><a href="#Productos">Productos</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#beneficios">Beneficios</a></li>
+                        <li><a href="marketing.html">Promociones y comunidad</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </nav>
+
+                <!-- CONTACTO -->
+                <div class="footer-col">
+                    <h4>Contacto</h4>
+                    <ul class="footer-datos">
+                        <li>
+                            <i data-lucide="map-pin"></i>
+                            <span>Corregidora 809, Morelos I<br>20298 Aguascalientes, Ags.</span>
+                        </li>
+                        <li>
+                            <i data-lucide="clock-3"></i>
+                            <span>Lun a Sáb: 7:30 am – 8:00 pm<br>Domingo: 7:30 am – 4:00 pm</span>
+                        </li>
+                        <li>
+                            <i data-lucide="phone"></i>
+                            <a href="tel:+524492578963">+52 449 257 8963</a>
+                        </li>
+                    </ul>
+                </div>
+
                 <!-- REDES -->
-                <div class="footer-redes">
+                <div class="footer-col footer-redes">
                     <h4>Síguenos</h4>
                     <div class="redes-iconos">
                         <!-- FACEBOOK -->
@@ -1047,13 +1080,38 @@
 
             <div class="footer-copy">
                 <p>© 2026 San Gerardo Mayela. Todos los derechos reservados.</p>
-                <a href="#inicio">
+
+                <div class="footer-pagos" aria-label="Tarjetas aceptadas">
+                    <span>Aceptamos</span>
+                    <span class="pago-logo" title="Visa" role="img" aria-label="Visa">
+                        <svg viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="30" rx="5" fill="#fff"/><text x="24" y="21" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" font-style="italic" fill="#1a1f71" letter-spacing="-.5">VISA</text></svg>
+                    </span>
+                    <span class="pago-logo" title="Mastercard" role="img" aria-label="Mastercard">
+                        <svg viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="30" rx="5" fill="#fff"/><circle cx="19" cy="15" r="9" fill="#eb001b"/><circle cx="29" cy="15" r="9" fill="#f79e1b"/><path d="M24 7.52a9 9 0 0 1 0 14.96a9 9 0 0 1 0-14.96z" fill="#ff5f00"/></svg>
+                    </span>
+                    <span class="pago-logo" title="American Express" role="img" aria-label="American Express">
+                        <svg viewBox="0 0 48 30" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="30" rx="5" fill="#2e77bb"/><text x="24" y="19.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="800" fill="#fff" letter-spacing=".4">AMEX</text></svg>
+                    </span>
+                </div>
+                <a href="#top" class="footer-top">
                     Volver arriba
                     <i data-lucide="arrow-up"></i>
                 </a>
             </div>
         </div>
     </footer>
+
+    <script>
+        /* Oculta el botón flotante de WhatsApp cuando el footer está a la vista */
+        document.addEventListener('DOMContentLoaded', function () {
+            const boton = document.querySelector('.whatsapp-float');
+            const pie = document.querySelector('.footer');
+            if (!boton || !pie || !('IntersectionObserver' in window)) return;
+            new IntersectionObserver(function (entradas) {
+                boton.classList.toggle('oculto', entradas[0].isIntersecting);
+            }).observe(pie);
+        });
+    </script>
 
     <!-- =====================================================
          WHATSAPP FLOTANTE
@@ -1387,7 +1445,7 @@
   <script>
     const ICONOS = {
         user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
-        settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"></path><path d="m19.4 15 .1.1a2 2 0 0 1-2.8 2.8l-.1-.1a2 2 0 0 0-3.4 1.4V19a2 2 0 0 1-4 0v-.2A2 2 0 0 0 5.8 17l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A2 2 0 0 0 1.6 10.8H2a2 2 0 0 1 0-4h.2A2 2 0 0 0 4.6 3.4l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A2 2 0 0 0 10.8 2H11a2 2 0 0 1 4 0v.2A2 2 0 0 0 18.4 4l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A2 2 0 0 0 22.6 10H22a2 2 0 0 1 0 4h-.2a2 2 0 0 0-2.4 1Z"></path></svg>',
+        settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
         'log-out': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H8"></path></svg>',
         'log-in': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"></path><path d="M10 16l4-4-4-4"></path><path d="M14 12H4"></path></svg>',
         'shopping-cart': '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M3 4h2l2.5 12h11l2-8H7"></path></svg>',
@@ -3008,11 +3066,15 @@ function mostrarProductosRelacionados(
     }
 
 
+    const galeria =
+        document.querySelector(
+            '.modal-galeria'
+        );
+
     let relacionados =
         document.getElementById(
             'productos-relacionados'
         );
-
 
     if (!relacionados) {
 
@@ -3027,12 +3089,31 @@ function mostrarProductosRelacionados(
         relacionados.className =
             'productos-relacionados';
 
+    }
+
+    /*
+       En escritorio se colocan debajo de la galería
+       (columna izquierda, aprovechando el espacio vacío).
+       En móvil, donde todo va en una sola columna,
+       se dejan antes del botón de compra.
+    */
+    const esEscritorio =
+        window.matchMedia(
+            '(min-width: 901px)'
+        ).matches;
+
+    if (esEscritorio && galeria) {
+
+        galeria.appendChild(
+            relacionados
+        );
+
+    } else {
 
         const footer =
             modalContenido.querySelector(
                 '.modal-footer'
             );
-
 
         if (footer) {
 
