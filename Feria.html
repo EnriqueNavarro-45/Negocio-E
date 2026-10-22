@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feria agrícola | San Gerardo Mayela</title>
+<link rel="stylesheet" href="marketing.css">
+<link rel="stylesheet" href="feria.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="mk-nav">
+    <a class="mk-brand" href="Productos.html">
+        <img src="Imagenes/LogoFrut.jpg" alt="Logo">
+        <span>San Gerardo Mayela<small>Frutas y verduras frescas</small></span>
+    </a>
+    <nav>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#publicar">Publicar</a>
+        <a href="#feria">La feria</a>
+        <a href="marketing.html">Promociones</a>
+        <a class="mk-nav-cta" href="Productos.html">Ver tienda</a>
+    </nav>
+</header>
+
+<main>
+
+    <!-- HERO -->
+    <section class="mk-hero">
+        <div>
+            <span class="eyebrow">FERIA AGRÍCOLA · DE HUERTO A HUERTO</span>
+            <h1>Del huerto de tu vecino, <em>directo a tu mesa.</em></h1>
+            <p>Un espacio para que las personas vendan lo que cosechan en sus huertos personales a otras personas de la comunidad. Publica tus productos o encuentra lo que otros cultivan cerca de ti.</p>
+            <div class="actions">
+                <a class="btn primary" href="#publicar">Publicar mi producto</a>
+                <a class="btn light" href="#feria">Ver la feria</a>
+            </div>
+            <div class="feria-stats">
+                <div class="feria-stat"><strong id="stat-publicaciones">0</strong><span>Publicaciones</span></div>
+                <div class="feria-stat"><strong id="stat-productores">0</strong><span>Productores</span></div>
+            </div>
+            <span class="feria-aviso">Pantalla demostrativa: las publicaciones se guardan solo en este navegador.</span>
+        </div>
+        <div class="hero-image">
+            <img src="Imagenes/Verduras.avif" alt="Verduras de huerto">
+            <div class="floating">
+                <strong>Cosecha de la comunidad</strong>
+                <span>Vendedores y compradores, sin intermediarios</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA -->
+    <section class="section" id="como-funciona">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">ASÍ DE FÁCIL</span>
+                <h2>Cómo funciona la feria</h2>
+            </div>
+            <p>Tres pasos para vender o comprar entre vecinos.</p>
+        </div>
+        <div class="feria-pasos">
+            <article class="feria-paso">
+                <div class="feria-paso-num">1</div>
+                <h3>Publica tu cosecha</h3>
+                <p>Cuéntanos qué cultivas en tu huerto, cuánto tienes disponible y a qué precio lo quieres ofrecer.</p>
+            </article>
+            <article class="feria-paso">
+                <div class="feria-paso-num">2</div>
+                <h3>Conecta con compradores</h3>
+                <p>Las personas interesadas te escriben directamente para preguntar por tu producto.</p>
+            </article>
+            <article class="feria-paso">
+                <div class="feria-paso-num">3</div>
+                <h3>Acuerda la entrega</h3>
+                <p>Ponte de acuerdo con el comprador para entregar o recoger el producto fresco.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- PUBLICAR -->
+    <section class="section feria-publicar" id="publicar">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">VENDE LO QUE CULTIVAS</span>
+                <h2>Publica tu producto</h2>
+            </div>
+            <p>Todos los campos son opcionales. Puedes publicar aunque estén vacíos.</p>
+        </div>
+
+        <div class="feria-publicar-layout">
+            <form class="feria-form" id="feria-form" novalidate>
+                <div class="feria-form-grid">
+                    <label class="feria-campo">
+                        Tu nombre
+                        <input type="text" id="f-nombre" placeholder="Ej. María Hernández">
+                    </label>
+                    <label class="feria-campo">
+                        Producto
+                        <input type="text" id="f-producto" placeholder="Ej. Jitomate de huerto">
+                    </label>
+                    <label class="feria-campo">
+                        Categoría
+                        <select id="f-categoria">
+                            <option value="frutas">Frutas</option>
+                            <option value="verduras">Verduras</option>
+                            <option value="hierbas">Hierbas y aromáticas</option>
+                            <option value="otros">Otros productos del huerto</option>
+                        </select>
+                    </label>
+                    <div class="feria-campo">
+                        Precio
+                        <div class="feria-precio">
+                            <input type="text" id="f-precio" placeholder="Ej. 25" inputmode="decimal">
+                            <select id="f-unidad" aria-label="Unidad">
+                                <option value="kg">por kg</option>
+                                <option value="pieza">por pieza</option>
+                                <option value="manojo">por manojo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label class="feria-campo">
+                        Cantidad disponible
+                        <input type="text" id="f-cantidad" placeholder="Ej. 8" inputmode="decimal">
+                    </label>
+                    <label class="feria-campo">
+                        Colonia o zona
+                        <input type="text" id="f-zona" placeholder="Ej. Col. Morelos I">
+                    </label>
+                    <label class="feria-campo completo">
+                        Descripción
+                        <textarea id="f-descripcion" placeholder="Cuéntanos cómo lo cultivas, si es de temporada, etc."></textarea>
+                    </label>
+                    <label class="feria-campo completo">
+                        Foto del producto
+                        <span class="feria-foto">
+                            <span class="feria-foto-icono">📷</span>
+                            <span><span id="f-foto-texto">Elegir una foto</span><small>Opcional · JPG o PNG</small></span>
+                            <input type="file" id="f-foto" accept="image/*">
+                        </span>
+                    </label>
+                </div>
+                <div class="feria-form-acciones">
+                    <button class="btn primary" type="submit">Publicar en la feria</button>
+                    <small>No se realiza ninguna validación de campos.</small>
+                </div>
+            </form>
+
+            <aside class="feria-consejos">
+                <h3>Consejos para vender mejor</h3>
+                <ul>
+                    <li>Sube una foto clara y con buena luz.</li>
+                    <li>Indica cuánto tienes disponible.</li>
+                    <li>Menciona si es de temporada o sin químicos.</li>
+                    <li>Responde pronto a los compradores.</li>
+                    <li>Acuerda un punto de entrega cercano.</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <!-- LA FERIA -->
+    <section class="section" id="feria">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">PRODUCTOS DE LA COMUNIDAD</span>
+                <h2>La feria</h2>
+            </div>
+            <p>Lo que cultivan tus vecinos, publicado por ellos mismos.</p>
+        </div>
+
+        <div class="feria-filtros" id="feria-filtros">
+            <button type="button" class="feria-chip activo" data-cat="todos">Todos</button>
+            <button type="button" class="feria-chip" data-cat="frutas">Frutas</button>
+            <button type="button" class="feria-chip" data-cat="verduras">Verduras</button>
+            <button type="button" class="feria-chip" data-cat="hierbas">Hierbas</button>
+            <button type="button" class="feria-chip" data-cat="otros">Otros</button>
+            <input type="search" class="feria-buscar" id="feria-buscar" placeholder="Buscar producto o productor...">
+        </div>
+
+        <div class="feria-grid" id="feria-grid"></div>
+    </section>
+
+</main>
+
+<footer class="mk-footer">
+    <a class="mk-brand" href="Productos.html">
+        <img src="Imagenes/LogoFrut.jpg" alt="">
+        <span>San Gerardo Mayela<small>Frutas y verduras frescas</small></span>
+    </a>
+    <a href="Productos.html">Volver al catálogo</a>
+</footer>
+
+<!-- MODAL CONTACTAR (simulado) -->
+<div class="feria-modal" id="modal-contacto" hidden>
+    <div class="feria-modal-caja" role="dialog" aria-modal="true" aria-labelledby="contacto-titulo">
+        <h3 id="contacto-titulo">Contactar al productor</h3>
+        <p id="contacto-sub"></p>
+        <textarea id="contacto-mensaje"></textarea>
+        <div class="feria-modal-acciones">
+            <button type="button" class="btn light" id="contacto-cancelar">Cancelar</button>
+            <button type="button" class="btn primary" id="contacto-enviar">Enviar mensaje</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+    const CLAVE = 'feriaAgricolaSanGerardo';
+    const $ = id => document.getElementById(id);
+    const esc = t => String(t ?? '').replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const CATEGORIAS = { frutas: 'FRUTAS', verduras: 'VERDURAS', hierbas: 'HIERBAS', otros: 'HUERTO' };
+    const EMOJIS = { frutas: '🍊', verduras: '🥕', hierbas: '🌿', otros: '🧺' };
+
+    /* Publicaciones de ejemplo (de otros vecinos) */
+    const SEMILLAS = [
+        { id: 'S1', productor: 'María Hernández', producto: 'Jitomate bola de huerto', categoria: 'verduras', precio: '26', unidad: 'kg', cantidad: '8', zona: 'Col. Morelos I', descripcion: 'Cultivado en mi azotea sin químicos. Se corta el mismo día de la entrega.', imagen: 'Imagenes/Img productos/Jitomate1.jpg' },
+        { id: 'S2', productor: 'Don Ernesto Ruiz', producto: 'Limón con semilla', categoria: 'frutas', precio: '22', unidad: 'kg', cantidad: '15', zona: 'Fracc. San Cayetano', descripcion: 'Del árbol de mi patio. Muy jugoso, ideal para agua y cocina.', imagen: 'Imagenes/Img productos/limon.jpg' },
+        { id: 'S3', productor: 'Familia Rangel', producto: 'Calabacita criolla', categoria: 'verduras', precio: '20', unidad: 'kg', cantidad: '6', zona: 'Col. Insurgentes', descripcion: 'Cosecha de temporada, tierna y sin plaguicidas.', imagen: 'Imagenes/Img productos/calabacita.jpg' },
+        { id: 'S4', productor: 'Lupita Ortiz', producto: 'Zanahoria de huerto', categoria: 'verduras', precio: '18', unidad: 'kg', cantidad: '10', zona: 'Col. Jardines', descripcion: 'Crece en tierra de composta casera. Dulce y crujiente.', imagen: 'Imagenes/Img productos/zanahoria.jpg' },
+        { id: 'S5', productor: 'Rosa Elena Díaz', producto: 'Espinaca fresca', categoria: 'verduras', precio: '15', unidad: 'manojo', cantidad: '12', zona: 'Col. Morelos II', descripcion: 'Manojos recién cortados por la mañana.', imagen: 'Imagenes/Img productos/Espinaca1.jpg' },
+        { id: 'S6', productor: 'Javier Cruz', producto: 'Naranja de patio', categoria: 'frutas', precio: '14', unidad: 'kg', cantidad: '20', zona: 'Col. Centro', descripcion: 'Naranjas dulces para jugo, de mi árbol de más de 10 años.', imagen: 'Imagenes/Img productos/Naranja1.jpg' }
+    ];
+
+    let propias = [];
+    try {
+        const d = JSON.parse(localStorage.getItem(CLAVE) || '[]');
+        propias = Array.isArray(d) ? d : [];
+    } catch (e) { propias = []; }
+
+    let categoria = 'todos';
+    let busqueda = '';
+    let fotoSeleccionada = null;
+    let contactoActual = null;
+
+    /* ---------- Toast ---------- */
+    let tTimer;
+    function aviso(mensaje) {
+        const t = $('toast');
+        t.textContent = mensaje;
+        t.className = 'toast visible success';
+        clearTimeout(tTimer);
+        tTimer = setTimeout(() => t.classList.remove('visible'), 3200);
+    }
+
+    function guardar() {
+        try { localStorage.setItem(CLAVE, JSON.stringify(propias)); return true; }
+        catch (e) { return false; }
+    }
+
+    /* ---------- Render ---------- */
+    function precioTexto(p) {
+        const n = parseFloat(p.precio);
+        if (Number.isFinite(n)) return '$' + n.toFixed(2) + ' / ' + esc(p.unidad);
+        return p.precio ? esc(p.precio) : 'Precio a convenir';
+    }
+
+    function render() {
+        const todas = [...propias.map(p => ({ ...p, propia: true })), ...SEMILLAS];
+
+        $('stat-publicaciones').textContent = todas.length;
+        $('stat-productores').textContent = new Set(todas.map(p => p.productor)).size;
+
+        const q = busqueda.trim().toLowerCase();
+        const lista = todas.filter(p =>
+            (categoria === 'todos' || p.categoria === categoria) &&
+            (!q || (p.producto + ' ' + p.productor).toLowerCase().includes(q))
+        );
+
+        if (!lista.length) {
+            $('feria-grid').innerHTML = '<div class="feria-vacio"><strong>No hay publicaciones aquí todavía</strong><br>Sé el primero en publicar en esta categoría.</div>';
+            return;
+        }
+
+        $('feria-grid').innerHTML = lista.map(p => `
+        <article class="feria-card">
+            <div class="feria-card-foto">
+                ${p.imagen
+                    ? `<img src="${esc(p.imagen)}" alt="${esc(p.producto)}" loading="lazy">`
+                    : `<div class="feria-card-emoji">${EMOJIS[p.categoria] || '🧺'}</div>`}
+                <span class="feria-card-etiqueta">${CATEGORIAS[p.categoria] || 'HUERTO'}</span>
+                ${p.propia ? '<span class="feria-card-nueva">TU PUBLICACIÓN</span>' : ''}
+            </div>
+            <div class="feria-card-cuerpo">
+                <h3>${esc(p.producto)}</h3>
+                <p class="feria-precio-texto">${precioTexto(p)}</p>
+                <p class="feria-card-desc">${esc(p.descripcion)}</p>
+                <div class="feria-card-datos">
+                    <span>${p.cantidad ? 'Disponible: ' + esc(p.cantidad) + ' ' + esc(p.unidad) : 'Cantidad por confirmar'}</span>
+                    <span>${esc(p.zona)}</span>
+                </div>
+                <div class="feria-productor">
+                    <div class="avatar">${esc(p.productor.charAt(0).toUpperCase())}</div>
+                    <div><strong>${esc(p.productor)}</strong><small>Productor de la comunidad</small></div>
+                </div>
+                <div class="feria-card-acciones">
+                    <button type="button" class="btn primary" data-accion="contactar" data-id="${esc(p.id)}">Contactar</button>
+                    ${p.propia ? `<button type="button" class="btn feria-eliminar" data-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>` : ''}
+                </div>
+            </div>
+        </article>`).join('');
+    }
+
+    /* ---------- Filtros ---------- */
+    $('feria-filtros').addEventListener('click', e => {
+        const chip = e.target.closest('.feria-chip');
+        if (!chip) return;
+        categoria = chip.dataset.cat;
+        document.querySelectorAll('.feria-chip').forEach(c => c.classList.toggle('activo', c === chip));
+        render();
+    });
+    $('feria-buscar').addEventListener('input', e => { busqueda = e.target.value; render(); });
+
+    /* ---------- Foto (se reduce para que quepa en el navegador) ---------- */
+    function reducirImagen(archivo) {
+        return new Promise(resolver => {
+            if (!archivo) return resolver('');
+            const lector = new FileReader();
+            lector.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    const escala = Math.min(1, 640 / Math.max(img.width, img.height));
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(img.width * escala);
+                    c.height = Math.round(img.height * escala);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    resolver(c.toDataURL('image/jpeg', 0.72));
+                };
+                img.onerror = () => resolver('');
+                img.src = lector.result;
+            };
+            lector.onerror = () => resolver('');
+            lector.readAsDataURL(archivo);
+        });
+    }
+
+    $('f-foto').addEventListener('change', e => {
+        fotoSeleccionada = e.target.files[0] || null;
+        $('f-foto-texto').textContent = fotoSeleccionada ? fotoSeleccionada.name : 'Elegir una foto';
+    });
+
+    /* ---------- Publicar (sin validaciones) ---------- */
+    $('feria-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const val = id => $(id).value.trim();
+        const imagen = await reducirImagen(fotoSeleccionada);
+
+        propias.unshift({
+            id: 'F-' + Date.now(),
+            productor: val('f-nombre') || 'Productor de la comunidad',
+            producto: val('f-producto') || 'Producto de mi huerto',
+            categoria: $('f-categoria').value,
+            precio: val('f-precio'),
+            unidad: $('f-unidad').value,
+            cantidad: val('f-cantidad'),
+            zona: val('f-zona') || 'Aguascalientes',
+            descripcion: val('f-descripcion') || 'Cosechado en mi huerto personal.',
+            imagen
+        });
+
+        const ok = guardar();
+        $('feria-form').reset();
+        fotoSeleccionada = null;
+        $('f-foto-texto').textContent = 'Elegir una foto';
+        categoria = 'todos';
+        busqueda = '';
+        $('feria-buscar').value = '';
+        document.querySelectorAll('.feria-chip').forEach(c => c.classList.toggle('activo', c.dataset.cat === 'todos'));
+        render();
+        aviso(ok ? '¡Tu producto ya está publicado en la feria!' : 'Publicado (no se pudo guardar en el navegador).');
+        $('feria').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* ---------- Contactar / eliminar ---------- */
+    $('feria-grid').addEventListener('click', e => {
+        const btn = e.target.closest('[data-accion]');
+        if (!btn) return;
+        const todas = [...propias, ...SEMILLAS];
+        const p = todas.find(x => x.id === btn.dataset.id);
+        if (!p) return;
+
+        if (btn.dataset.accion === 'eliminar') {
+            propias = propias.filter(x => x.id !== p.id);
+            guardar();
+            render();
+            aviso('Publicación eliminada.');
+            return;
+        }
+
+        contactoActual = p;
+        $('contacto-titulo').textContent = 'Contactar a ' + p.productor;
+        $('contacto-sub').textContent = p.producto + ' · ' + p.zona;
+        $('contacto-mensaje').value = 'Hola ' + p.productor + ', me interesa tu ' + p.producto.toLowerCase() + '. ¿Sigue disponible?';
+        $('modal-contacto').hidden = false;
+    });
+
+    const cerrarContacto = () => { $('modal-contacto').hidden = true; contactoActual = null; };
+    $('contacto-cancelar').addEventListener('click', cerrarContacto);
+    $('modal-contacto').addEventListener('click', e => { if (e.target.id === 'modal-contacto') cerrarContacto(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarContacto(); });
+    $('contacto-enviar').addEventListener('click', () => {
+        const nombre = contactoActual ? contactoActual.productor : 'el productor';
+        cerrarContacto();
+        aviso('Mensaje enviado a ' + nombre + ' (simulación).');
+    });
+
+    render();
+})();
+</script>
+</body>
+</html>

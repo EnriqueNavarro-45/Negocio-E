@@ -629,7 +629,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    $('form-agregar-producto').addEventListener('submit', e => {
+    /* ----- Foto del producto: se elige desde el dispositivo y se reduce para guardarla ----- */
+    const MAX_FOTOS = 3;
+    let fotosNuevas = [];
+    let urlVistaPrevia = '';
+
+    function reducirImagen(archivo, maxLado = 800) {
+        return new Promise(resolver => {
+            if (!archivo) return resolver('');
+            const lector = new FileReader();
+            lector.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+                    const lienzo = document.createElement('canvas');
+                    lienzo.width = Math.round(img.width * escala);
+                    lienzo.height = Math.round(img.height * escala);
+                    const ctx = lienzo.getContext('2d');
+                    ctx.fillStyle = '#fff';               // PNG con transparencia -> fondo blanco
+                    ctx.fillRect(0, 0, lienzo.width, lienzo.height);
+                    ctx.drawImage(img, 0, 0, lienzo.width, lienzo.height);
+                    resolver(lienzo.toDataURL('image/jpeg', 0.8));
+                };
+                img.onerror = () => resolver('');
+                img.src = lector.result;
+            };
+            lector.onerror = () => resolver('');
+            lector.readAsDataURL(archivo);
+        });
+    }
+
+    function mostrarVistaPreviaFoto() {
+        const previa = $('nuevo-imagen-preview');
+        if (urlVistaPrevia) URL.revokeObjectURL(urlVistaPrevia);
+        urlVistaPrevia = '';
+        if (fotosNuevas.length) {
+            urlVistaPrevia = URL.createObjectURL(fotosNuevas[0]);
+            previa.style.backgroundImage = `url("${urlVistaPrevia}")`;
+            previa.textContent = '';
+            $('nuevo-imagen-texto').textContent = fotosNuevas.length === 1
+                ? fotosNuevas[0].name
+                : `${fotosNuevas.length} fotos seleccionadas`;
+        } else {
+            previa.style.backgroundImage = '';
+            previa.textContent = '📷';
+            $('nuevo-imagen-texto').textContent = 'Elegir fotos…';
+        }
+    }
+
+    $('nuevo-imagen').addEventListener('change', e => {
+        const elegidas = Array.from(e.target.files);
+        if (elegidas.length > MAX_FOTOS) {
+            toast('Máximo de fotos', `Se usarán las primeras ${MAX_FOTOS} fotos.`);
+        }
+        fotosNuevas = elegidas.slice(0, MAX_FOTOS);
+        mostrarVistaPreviaFoto();
+    });
+
+    $('form-agregar-producto').addEventListener('submit', async e => {
         e.preventDefault();
 
         const nombre = $('nuevo-nombre').value.trim();
@@ -637,7 +694,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const textoPrecio = $('nuevo-precio').value.trim();
         const precio = Number(textoPrecio);
         const stock = Number($('nuevo-stock').value);
-        let imagenArchivo = $('nuevo-imagen').value.trim();
 
         if (!nombre) return toast('Datos incompletos', 'Escribe el nombre del producto.');
         if (!textoPrecio || !Number.isFinite(precio) || precio < 0) return toast('Precio no válido', 'Indica un precio mayor o igual a 0.');
@@ -646,17 +702,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return toast('Producto duplicado', `"${nombre}" ya está en el inventario.`);
         }
 
-        if (!imagenArchivo) imagenArchivo = nombre.replace(/\s+/g, '') + '1.jpg';
-        if (!/\.(jpe?g|png|webp|avif)$/i.test(imagenArchivo)) imagenArchivo += '.jpg';
+        /* Fotos elegidas (la primera es la principal); si no hay ninguna se usa la ruta por nombre como antes */
+        const imagenes = (await Promise.all(fotosNuevas.map(f => reducirImagen(f)))).filter(Boolean);
+        if (!imagenes.length) imagenes.push(`Imagenes/Img productos/${nombre.replace(/\s+/g, '')}1.jpg`);
 
-        const imagePath = imagenArchivo.includes('/') ? imagenArchivo : `Imagenes/Img productos/${imagenArchivo}`;
+        inventario.push({ name: nombre, category, price: precio, stock, unit: 'kg', image: imagenes[0], images: imagenes, active: true });
 
-        inventario.push({ name: nombre, category, price: precio, stock, unit: 'kg', image: imagePath, active: true });
-        guardarInventario();
+        try {
+            guardarInventario();
+        } catch (error) {
+            inventario.pop();
+            return toast('No se pudo guardar', 'La foto es muy pesada para el navegador. Prueba con una más ligera.');
+        }
 
         $('form-agregar-producto').reset();
         $('nuevo-stock').value = '10';
         $('nuevo-categoria').value = 'frutas';
+        fotosNuevas = [];
+        mostrarVistaPreviaFoto();
         renderizarInventario();
         renderOfertas();
         toast('Producto agregado', `${nombre} se agregó al inventario.`);
@@ -883,7 +946,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pedidos = leer(CLAVE_PEDIDOS);
         EJEMPLOS.forEach((ej, i) => {
             pedidos.push({
-                id: 'P-' + (1001 + pedidos.length),
+                id: 'P-' + (pedidos.reduce((m, x) => Math.max(m, parseInt(String(x.id || '').replace(/\D/g, ''), 10) || 0), 1000) + 1),
                 cliente: ej.cliente,
                 items: ej.items,
                 total: ej.items.reduce((s, it) => s + it.kg * it.price, 0),

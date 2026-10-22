@@ -32,6 +32,7 @@
             <a href="#nosotros">Nosotros</a>
             <a href="#beneficios">Beneficios</a>
             <a href="marketing.html">Promociones y comunidad</a>
+            <a href="feria.html">Feria agrícola</a>
             <a href="MisPedidos.html" class="navbar-pedidos solo-sesion"
     id="navbar-pedidos">Mis pedidos</a>
         
@@ -1032,6 +1033,7 @@
                         <li><a href="#nosotros">Nosotros</a></li>
                         <li><a href="#beneficios">Beneficios</a></li>
                         <li><a href="marketing.html">Promociones y comunidad</a></li>
+                        <li><a href="feria.html">Feria agrícola</a></li>
                         <li><a href="#contacto">Contacto</a></li>
                     </ul>
                 </nav>
@@ -2686,7 +2688,9 @@
                 const article = document.createElement('article');
                 article.className = 'catalogo-card catalogo-card-dinamico';
                 article.dataset.category = cat;
-                article.dataset.imagenes = '';
+                /* Fotos extra del producto (la principal ya va en <img>); la galería muestra máximo 3 */
+                const extras = Array.isArray(producto.images) ? producto.images.slice(1, 3) : [];
+                article.dataset.imagenes = extras.join('|');
                 article.innerHTML = `
                     <div class="card-imagen-wrapper">
                         <img src="${img}" alt="${producto.name}">

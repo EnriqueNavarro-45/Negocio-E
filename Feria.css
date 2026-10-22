@@ -1,0 +1,492 @@
+/* =========================================================
+   FERIA AGRÍCOLA (C2C) — usa las variables de marketing.css
+========================================================= */
+
+.feria-aviso {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    padding: 8px 14px;
+    font-size: 11px;
+    color: #5d7a64;
+    background: #eef6ec;
+    border: 1px solid #d7e8d4;
+    border-radius: 999px;
+}
+
+.feria-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 26px;
+}
+
+.feria-stat {
+    min-width: 130px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.feria-stat strong {
+    display: block;
+    font-size: 24px;
+    line-height: 1.1;
+    color: var(--dark);
+}
+
+.feria-stat span {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* ---------- Cómo funciona ---------- */
+.feria-pasos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.feria-paso {
+    padding: 26px;
+    background: #f7faf6;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+}
+
+.feria-paso-num {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 16px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--green);
+    border-radius: 12px;
+}
+
+.feria-paso h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: var(--dark);
+}
+
+.feria-paso p {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #657368;
+}
+
+/* ---------- Publicar ---------- */
+.feria-publicar {
+    background: #f7faf6;
+}
+
+.feria-publicar-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.feria-form,
+.feria-consejos {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+}
+
+.feria-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.feria-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.feria-campo.completo {
+    grid-column: 1 / -1;
+}
+
+.feria-campo input[type="text"],
+.feria-campo input[type="number"],
+.feria-campo select,
+.feria-campo textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid #dce6dc;
+    border-radius: 10px;
+    outline: none;
+}
+
+.feria-campo textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.feria-campo input:focus,
+.feria-campo select:focus,
+.feria-campo textarea:focus {
+    border-color: #6fa17a;
+    box-shadow: 0 0 0 3px #26744912;
+}
+
+.feria-precio {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 10px;
+}
+
+.feria-foto {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: #f7faf6;
+    border: 1px dashed #b8cdb8;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.feria-foto input {
+    display: none;
+}
+
+.feria-foto-icono {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    background: #e6f1e5;
+    border-radius: 12px;
+}
+
+.feria-foto small {
+    display: block;
+    margin-top: 2px;
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.feria-form-acciones {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.feria-form-acciones small {
+    color: #89938a;
+    font-size: 10.5px;
+}
+
+.feria-consejos h3 {
+    margin: 0 0 14px;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+.feria-consejos ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12.5px;
+    line-height: 2;
+    color: #53675a;
+}
+
+/* ---------- Escaparate de la feria ---------- */
+.feria-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.feria-chip {
+    padding: 9px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dark);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.feria-chip:hover {
+    border-color: var(--green);
+}
+
+.feria-chip.activo {
+    color: #fff;
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.feria-buscar {
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+    margin-left: auto;
+    padding: 10px 14px;
+    font: inherit;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+}
+
+.feria-buscar:focus {
+    border-color: #6fa17a;
+}
+
+.feria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.feria-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.feria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px #1d462014;
+}
+
+.feria-card-foto {
+    position: relative;
+    height: 180px;
+    background: linear-gradient(135deg, #e6f1e5, #f6f1dc);
+}
+
+.feria-card-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feria-card-emoji {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-size: 54px;
+}
+
+.feria-card-etiqueta {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 11px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    color: var(--green);
+    background: #ffffffe6;
+    border-radius: 999px;
+}
+
+.feria-card-nueva {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 6px 11px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #d69b32;
+    border-radius: 999px;
+}
+
+.feria-card-cuerpo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.feria-card h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    color: var(--dark);
+}
+
+.feria-precio-texto {
+    margin: 0 0 10px;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--green);
+}
+
+.feria-card-desc {
+    margin: 0 0 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #667468;
+}
+
+.feria-card-datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 16px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.feria-productor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid #edf1ed;
+}
+
+.feria-productor strong {
+    display: block;
+    font-size: 12px;
+    color: var(--dark);
+}
+
+.feria-productor small {
+    font-size: 10px;
+    color: #879187;
+}
+
+.feria-card-acciones {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.feria-card-acciones .btn {
+    flex: 1;
+    padding: 11px 14px;
+}
+
+.feria-eliminar {
+    flex: 0 0 auto !important;
+    color: #9d3a2c;
+    background: #fff;
+    border: 1px solid #efd5d5;
+}
+
+.feria-vacio {
+    grid-column: 1 / -1;
+    padding: 50px 20px;
+    text-align: center;
+    color: var(--muted);
+    background: #fafcfa;
+    border: 1px dashed #d4e8d4;
+    border-radius: 18px;
+}
+
+/* ---------- Modal de contacto ---------- */
+.feria-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(10, 35, 23, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+.feria-modal-caja {
+    width: min(480px, 100%);
+    padding: 28px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+}
+
+.feria-modal-caja h3 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    color: var(--dark);
+}
+
+.feria-modal-caja > p {
+    margin: 0 0 16px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.feria-modal-caja textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: 13px;
+    border: 1px solid #dce6dc;
+    border-radius: 10px;
+    outline: none;
+    resize: vertical;
+}
+
+.feria-modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+@media (max-width: 900px) {
+    .feria-pasos,
+    .feria-publicar-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .feria-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .feria-grid,
+    .feria-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feria-buscar {
+        max-width: none;
+        margin-left: 0;
+    }
+
+    .feria-form-acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

@@ -86,7 +86,7 @@
 
             <div class="agregar-form-card">
                 <h3>Agregar producto</h3>
-                <p>Completa los datos. La imagen debe existir en <code>Imagenes/Img productos/</code> (no se renombran archivos).</p>
+                <p>Completa los datos y elige hasta 3 fotos desde tu dispositivo. La primera será la imagen principal.</p>
                 <form id="form-agregar-producto" class="agregar-form-grid" novalidate>
                     <label>
                         Nombre
@@ -110,8 +110,12 @@
                         <input type="number" id="nuevo-stock" class="admin-input" step="0.1" placeholder="10" value="10" required>
                     </label>
                     <label>
-                        Archivo de imagen
-                        <input type="text" id="nuevo-imagen" class="admin-input" placeholder="Ej. Kiwi1.jpg" autocomplete="off">
+                        Fotos del producto (hasta 3)
+                        <span class="admin-foto">
+                            <span class="admin-foto-preview" id="nuevo-imagen-preview">📷</span>
+                            <span class="admin-foto-texto" id="nuevo-imagen-texto">Elegir fotos…</span>
+                            <input type="file" id="nuevo-imagen" accept="image/*" multiple>
+                        </span>
                     </label>
                     <button type="submit" class="admin-primary-btn">Agregar</button>
                 </form>
@@ -427,8 +431,5 @@
     </div>
 
 <script src="admin.js" defer></script>
-</body>
-</html>
-
 </body>
 </html>
