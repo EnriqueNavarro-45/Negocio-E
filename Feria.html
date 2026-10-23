@@ -21,6 +21,7 @@
         <a href="#como-funciona">Cómo funciona</a>
         <a href="#publicar">Publicar</a>
         <a href="#feria">La feria</a>
+        <a href="#subasta">Subasta</a>
         <a href="marketing.html">Promociones</a>
         <a class="mk-nav-cta" href="Productos.html">Ver tienda</a>
     </nav>
@@ -41,6 +42,7 @@
             <div class="feria-stats">
                 <div class="feria-stat"><strong id="stat-publicaciones">0</strong><span>Publicaciones</span></div>
                 <div class="feria-stat"><strong id="stat-productores">0</strong><span>Productores</span></div>
+                <div class="feria-stat"><strong id="stat-subastas">0</strong><span>Subastas en vivo</span></div>
             </div>
             <span class="feria-aviso">Pantalla demostrativa: las publicaciones se guardan solo en este navegador.</span>
         </div>
@@ -184,6 +186,24 @@
         <div class="feria-grid" id="feria-grid"></div>
     </section>
 
+    <!-- SUBASTA -->
+    <section class="section subasta" id="subasta">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">SUBASTA EN VIVO</span>
+                <h2>Subasta de la feria</h2>
+            </div>
+            <p>Puja por productos especiales de la comunidad. Gana el mejor postor cuando se acabe el tiempo.</p>
+        </div>
+
+        <div class="subasta-barra">
+            <span class="feria-aviso">Subasta demostrativa: las pujas y los otros postores son simulados.</span>
+            <button type="button" class="btn light" id="subasta-reiniciar">Reiniciar subastas</button>
+        </div>
+
+        <div class="subasta-grid" id="subasta-grid"></div>
+    </section>
+
 </main>
 
 <footer class="mk-footer">
@@ -203,6 +223,32 @@
         <div class="feria-modal-acciones">
             <button type="button" class="btn light" id="contacto-cancelar">Cancelar</button>
             <button type="button" class="btn primary" id="contacto-enviar">Enviar mensaje</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PUJAR (simulado) -->
+<div class="feria-modal" id="modal-puja" hidden>
+    <div class="feria-modal-caja puja-caja" role="dialog" aria-modal="true" aria-labelledby="puja-titulo">
+        <h3 id="puja-titulo"></h3>
+        <p id="puja-sub"></p>
+
+        <div class="puja-resumen">
+            <div><small>Puja actual</small><strong id="puja-actual"></strong></div>
+            <div><small>Tiempo restante</small><strong id="puja-reloj"></strong></div>
+        </div>
+
+        <div class="puja-historial" id="puja-historial"></div>
+
+        <label class="feria-campo">
+            Tu puja (MXN)
+            <input type="text" id="puja-monto" inputmode="decimal">
+        </label>
+        <div class="puja-chips" id="puja-chips"></div>
+
+        <div class="feria-modal-acciones">
+            <button type="button" class="btn light" id="puja-cancelar">Cancelar</button>
+            <button type="button" class="btn primary" id="puja-confirmar">Confirmar puja</button>
         </div>
     </div>
 </div>
@@ -412,6 +458,283 @@
     });
 
     render();
+})();
+</script>
+<script>
+/* ===================== SUBASTA (simulada) ===================== */
+(() => {
+    const CLAVE = 'subastaFeriaSanGerardo';
+    const $ = id => document.getElementById(id);
+    const esc = t => String(t ?? '').replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const dinero = n => '$' + Number(n).toFixed(2);
+
+    const BOTS = ['Carmen V.', 'Luis M.', 'Sofía R.', 'Pedro A.', 'Ana L.'];
+
+    const ITEMS = [
+        { id: 's1', titulo: 'Fruta Wumpa · edición limitada', vendedor: 'San Gerardo Mayela', emoji: '🍑',
+          desc: 'La fruta exótica más codiciada. Una sola pieza, jugosa y de sabor dulce.',
+          imagen: 'Imagenes/Img productos/wumpa.jpeg', contener: true,
+          incremento: 10, duracion: 150 * 60000,
+          pujasIni: [['Carmen V.', 99], ['Luis M.', 109], ['Sofía R.', 129]] },
+        { id: 's2', titulo: 'Caja de aguacate de patio · 3 kg', vendedor: 'Don Ernesto Ruiz', emoji: '🥑',
+          desc: 'Aguacates del árbol de su patio, cosechados esta semana.',
+          imagen: 'Imagenes/Img productos/Aguacate2.jpg', contener: false,
+          incremento: 5, duracion: 5 * 60000,
+          pujasIni: [['Pedro A.', 80], ['Ana L.', 90]] },
+        { id: 's3', titulo: 'Canasta de huerto de temporada', vendedor: 'Familia Rangel', emoji: '🧺',
+          desc: 'Jitomate, calabacita, zanahoria y hierbas frescas de su huerto.',
+          imagen: 'Imagenes/Img productos/Jitomate2.jpg', contener: false,
+          incremento: 10, duracion: 80 * 60000,
+          pujasIni: [['Luis M.', 120]] }
+    ];
+
+    /* ---------- Estado (se guarda en el navegador) ---------- */
+    function crearEstado() {
+        const ahora = Date.now();
+        const e = {};
+        ITEMS.forEach(it => {
+            e[it.id] = {
+                endsAt: ahora + it.duracion,
+                pujas: it.pujasIni.map(([quien, monto], i) => ({
+                    quien, monto, t: ahora - (it.pujasIni.length - i) * 420000
+                }))
+            };
+        });
+        return e;
+    }
+
+    let estado = (() => {
+        try {
+            const d = JSON.parse(localStorage.getItem(CLAVE));
+            if (d && typeof d === 'object' && ITEMS.every(it => d[it.id] && Array.isArray(d[it.id].pujas))) return d;
+        } catch (e) {}
+        return crearEstado();
+    })();
+
+    function guardar() {
+        try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {}
+    }
+    guardar();
+
+    const mejor = id => estado[id].pujas[estado[id].pujas.length - 1];
+    const terminada = id => Date.now() >= estado[id].endsAt;
+    const minimo = it => mejor(it.id).monto + it.incremento;
+
+    function claseEstado(it) {
+        if (terminada(it.id)) return ['fin', 'FINALIZADA'];
+        if (estado[it.id].endsAt - Date.now() < 10 * 60000) return ['pronto', 'TERMINA PRONTO'];
+        return ['vivo', 'EN VIVO'];
+    }
+
+    function formatoTiempo(ms) {
+        if (ms <= 0) return '00:00:00';
+        const s = Math.floor(ms / 1000);
+        return [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60]
+            .map(n => String(n).padStart(2, '0')).join(':');
+    }
+
+    function hace(t) {
+        const s = Math.floor((Date.now() - t) / 1000);
+        if (s < 60) return 'hace unos segundos';
+        if (s < 3600) return 'hace ' + Math.floor(s / 60) + ' min';
+        return 'hace ' + Math.floor(s / 3600) + ' h';
+    }
+
+    /* ---------- Toast ---------- */
+    let tTimer;
+    function aviso(mensaje, tipo = 'success') {
+        const t = $('toast');
+        t.textContent = mensaje;
+        t.className = 'toast visible ' + tipo;
+        clearTimeout(tTimer);
+        tTimer = setTimeout(() => t.classList.remove('visible'), 3600);
+    }
+
+    /* ---------- Render de tarjetas ---------- */
+    const finalizadas = {};
+
+    function tarjetaHTML(it) {
+        const st = estado[it.id];
+        const top = mejor(it.id);
+        const fin = terminada(it.id);
+        const mia = top.quien === 'Tú';
+        const [clase, texto] = claseEstado(it);
+
+        const lider = fin
+            ? (mia ? '🏆 ¡Ganaste esta subasta!' : 'Ganador: ' + esc(top.quien))
+            : (mia ? '✅ Vas ganando' : 'Mejor postor: ' + esc(top.quien));
+
+        return `
+        <article class="subasta-card ${fin ? 'terminada' : ''}" data-id="${it.id}">
+            <div class="subasta-foto">
+                <div class="subasta-emoji">${it.emoji}</div>
+                <img class="${it.contener ? 'contener' : ''}" src="${esc(it.imagen)}" alt="${esc(it.titulo)}" loading="lazy" onerror="this.remove()">
+                <span class="subasta-estado ${clase}">${texto}</span>
+                <span class="subasta-reloj" data-reloj="${it.id}">${formatoTiempo(st.endsAt - Date.now())}</span>
+            </div>
+            <div class="subasta-cuerpo">
+                <h3>${esc(it.titulo)}</h3>
+                <p class="subasta-vendedor">Vendedor: <strong>${esc(it.vendedor)}</strong></p>
+                <p class="subasta-desc">${esc(it.desc)}</p>
+                <div class="subasta-precio">
+                    <div><small>${fin ? 'Puja ganadora' : 'Puja actual'}</small><strong>${dinero(top.monto)}</strong></div>
+                    <div class="subasta-pujas"><strong>${st.pujas.length}</strong><small>pujas</small></div>
+                </div>
+                <p class="subasta-lider ${mia ? 'mia' : ''}">${lider}</p>
+                <button type="button" class="btn primary" data-accion="pujar" data-id="${it.id}" ${fin ? 'disabled' : ''}>
+                    ${fin ? 'Subasta finalizada' : 'Pujar'}
+                </button>
+            </div>
+        </article>`;
+    }
+
+    function actualizarStat() {
+        $('stat-subastas').textContent = ITEMS.filter(it => !terminada(it.id)).length;
+    }
+
+    function renderGrid() {
+        $('subasta-grid').innerHTML = ITEMS.map(tarjetaHTML).join('');
+        ITEMS.forEach(it => { finalizadas[it.id] = terminada(it.id); });
+        actualizarStat();
+    }
+
+    /* ---------- Modal de puja ---------- */
+    let itemModal = null;
+
+    function refrescarModal() {
+        if (!itemModal) return;
+        const it = itemModal;
+        const st = estado[it.id];
+        $('puja-actual').textContent = dinero(mejor(it.id).monto);
+        $('puja-reloj').textContent = formatoTiempo(st.endsAt - Date.now());
+        $('puja-historial').innerHTML = st.pujas.slice(-5).reverse().map(p => `
+            <div class="puja-fila">
+                <span class="avatar">${esc(p.quien.charAt(0))}</span>
+                <span class="puja-quien">${esc(p.quien)}</span>
+                <strong>${dinero(p.monto)}</strong>
+                <small>${hace(p.t)}</small>
+            </div>`).join('');
+    }
+
+    function abrirPuja(id) {
+        const it = ITEMS.find(x => x.id === id);
+        if (!it || terminada(id)) return;
+        itemModal = it;
+        $('puja-titulo').textContent = it.titulo;
+        $('puja-sub').textContent = 'Vendedor: ' + it.vendedor;
+        $('puja-monto').value = minimo(it).toFixed(2);
+        const actual = mejor(id).monto;
+        $('puja-chips').innerHTML = [1, 2, 5].map(k => {
+            const v = actual + it.incremento * k;
+            return `<button type="button" class="feria-chip" data-valor="${v}">${dinero(v)}</button>`;
+        }).join('');
+        refrescarModal();
+        $('modal-puja').hidden = false;
+    }
+
+    function cerrarPuja() {
+        $('modal-puja').hidden = true;
+        itemModal = null;
+    }
+
+    $('subasta-grid').addEventListener('click', e => {
+        const b = e.target.closest('[data-accion="pujar"]');
+        if (b) abrirPuja(b.dataset.id);
+    });
+
+    $('puja-chips').addEventListener('click', e => {
+        const c = e.target.closest('[data-valor]');
+        if (c) $('puja-monto').value = Number(c.dataset.valor).toFixed(2);
+    });
+
+    $('puja-cancelar').addEventListener('click', cerrarPuja);
+    $('modal-puja').addEventListener('click', e => { if (e.target.id === 'modal-puja') cerrarPuja(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarPuja(); });
+
+    /* Confirmar puja (sin validaciones: si el monto no alcanza se ajusta al mínimo) */
+    $('puja-confirmar').addEventListener('click', () => {
+        const it = itemModal;
+        if (!it) return;
+        if (terminada(it.id)) {
+            cerrarPuja();
+            renderGrid();
+            aviso('Esta subasta ya terminó.', 'error');
+            return;
+        }
+        let monto = parseFloat(String($('puja-monto').value).replace(',', '.'));
+        const min = minimo(it);
+        if (!Number.isFinite(monto) || monto < min) monto = min;
+
+        estado[it.id].pujas.push({ quien: 'Tú', monto, t: Date.now() });
+        guardar();
+        cerrarPuja();
+        renderGrid();
+        aviso('¡Tu puja de ' + dinero(monto) + ' va a la cabeza! (simulación)');
+    });
+
+    /* ---------- Reloj (cada segundo) ---------- */
+    setInterval(() => {
+        let rehacer = false;
+
+        ITEMS.forEach(it => {
+            const ms = estado[it.id].endsAt - Date.now();
+            const reloj = document.querySelector('[data-reloj="' + it.id + '"]');
+            if (reloj) reloj.textContent = formatoTiempo(ms);
+
+            if (ms <= 0 && !finalizadas[it.id]) {
+                finalizadas[it.id] = true;
+                rehacer = true;
+                const top = mejor(it.id);
+                aviso(top.quien === 'Tú'
+                    ? '¡Ganaste la subasta de ' + it.titulo + '!'
+                    : 'La subasta de ' + it.titulo + ' terminó. Ganó ' + top.quien + '.');
+                if (itemModal && itemModal.id === it.id) cerrarPuja();
+            } else if (ms > 0) {
+                const insignia = document.querySelector('[data-id="' + it.id + '"] .subasta-estado');
+                if (insignia && !insignia.classList.contains(claseEstado(it)[0])) rehacer = true;
+            }
+        });
+
+        if (rehacer) renderGrid();
+        actualizarStat();
+        if (itemModal) {
+            $('puja-reloj').textContent = formatoTiempo(estado[itemModal.id].endsAt - Date.now());
+        }
+    }, 1000);
+
+    /* ---------- Otros postores simulados ---------- */
+    setInterval(() => {
+        let hubo = false;
+        ITEMS.forEach(it => {
+            if (terminada(it.id) || Math.random() > 0.3) return;
+            const top = mejor(it.id);
+            const candidatos = BOTS.filter(b => b !== top.quien);
+            const quien = candidatos[Math.floor(Math.random() * candidatos.length)];
+            const monto = top.monto + it.incremento * (1 + Math.floor(Math.random() * 2));
+            estado[it.id].pujas.push({ quien, monto, t: Date.now() });
+            hubo = true;
+            if (top.quien === 'Tú') {
+                aviso(quien + ' superó tu puja en ' + it.titulo + ' (' + dinero(monto) + ').', 'error');
+            }
+        });
+        if (hubo) {
+            guardar();
+            renderGrid();
+            refrescarModal();
+        }
+    }, 9000);
+
+    /* ---------- Reiniciar demostración ---------- */
+    $('subasta-reiniciar').addEventListener('click', () => {
+        estado = crearEstado();
+        guardar();
+        cerrarPuja();
+        renderGrid();
+        aviso('Subastas reiniciadas.');
+    });
+
+    renderGrid();
 })();
 </script>
 </body>

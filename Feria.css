@@ -490,3 +490,288 @@
         align-items: stretch;
     }
 }
+
+/* =========================================================
+   SUBASTA
+========================================================= */
+.subasta {
+    background: #fbf9ef;
+}
+
+.subasta-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.subasta-barra .feria-aviso {
+    margin-top: 0;
+}
+
+.subasta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.subasta-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.subasta-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px #1d462014;
+}
+
+.subasta-card.terminada {
+    opacity: 0.8;
+}
+
+.subasta-foto {
+    position: relative;
+    height: 210px;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 40%, #fff4cf, #eef6ec 70%);
+}
+
+.subasta-emoji {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 64px;
+}
+
+.subasta-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.subasta-foto img.contener {
+    object-fit: contain;
+    padding: 18px;
+    mix-blend-mode: multiply;
+}
+
+.subasta-estado {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    padding: 6px 11px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: #fff;
+    border-radius: 999px;
+}
+
+.subasta-estado.vivo { background: #267449; }
+.subasta-estado.pronto { background: #d9822b; animation: subasta-pulso 1.4s ease-in-out infinite; }
+.subasta-estado.fin { background: #7d897f; }
+
+@keyframes subasta-pulso {
+    50% { opacity: 0.6; }
+}
+
+.subasta-reloj {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+    color: #fff;
+    background: #173e2bd9;
+    border-radius: 10px;
+}
+
+.subasta-cuerpo {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.subasta-cuerpo h3 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--dark);
+}
+
+.subasta-vendedor {
+    margin: 0 0 8px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.subasta-vendedor strong {
+    color: var(--dark);
+}
+
+.subasta-desc {
+    margin: 0 0 14px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #667468;
+}
+
+.subasta-precio {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f7faf6;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.subasta-precio small {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.subasta-precio strong {
+    font-size: 24px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    color: var(--green);
+}
+
+.subasta-pujas {
+    text-align: right;
+}
+
+.subasta-pujas strong {
+    font-size: 18px;
+    color: var(--dark);
+}
+
+.subasta-lider {
+    margin: 12px 0 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #53675a;
+}
+
+.subasta-lider.mia {
+    color: #1f6b3a;
+}
+
+.subasta-cuerpo .btn {
+    width: 100%;
+    margin-top: auto;
+}
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ----- Modal de puja ----- */
+.puja-caja {
+    max-height: 92vh;
+    overflow: auto;
+}
+
+.puja-resumen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.puja-resumen > div {
+    padding: 12px 14px;
+    background: #f7faf6;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.puja-resumen small {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.puja-resumen strong {
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+    color: var(--dark);
+}
+
+.puja-historial {
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.puja-fila {
+    display: grid;
+    grid-template-columns: 34px 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid #edf1ed;
+    font-size: 12px;
+}
+
+.puja-fila:last-child {
+    border-bottom: 0;
+}
+
+.puja-fila .avatar {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+    font-size: 12px;
+}
+
+.puja-fila small {
+    font-size: 10px;
+    color: #879187;
+}
+
+.puja-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .subasta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .subasta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .puja-fila {
+        grid-template-columns: 34px 1fr auto;
+    }
+
+    .puja-fila small {
+        display: none;
+    }
+}
