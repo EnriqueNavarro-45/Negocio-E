@@ -44,10 +44,9 @@
                 <div class="feria-stat"><strong id="stat-productores">0</strong><span>Productores</span></div>
                 <div class="feria-stat"><strong id="stat-subastas">0</strong><span>Subastas en vivo</span></div>
             </div>
-            <span class="feria-aviso">Pantalla demostrativa: las publicaciones se guardan solo en este navegador.</span>
         </div>
         <div class="hero-image">
-            <img src="Imagenes/Feria.png" alt="Verduras de huerto">
+            <img src="Imagenes/Verduras.avif" alt="Verduras de huerto">
             <div class="floating">
                 <strong>Cosecha de la comunidad</strong>
                 <span>Vendedores y compradores, sin intermediarios</span>
@@ -457,6 +456,16 @@
         aviso('Mensaje enviado a ' + nombre + ' (simulación).');
     });
 
+    /* Si el administrador elimina publicaciones, se refleja aquí */
+    window.addEventListener('storage', e => {
+        if (e.key !== CLAVE) return;
+        try {
+            const d = JSON.parse(e.newValue || '[]');
+            propias = Array.isArray(d) ? d : [];
+        } catch (err) { propias = []; }
+        render();
+    });
+
     render();
 })();
 </script>
@@ -732,6 +741,19 @@
         cerrarPuja();
         renderGrid();
         aviso('Subastas reiniciadas.');
+    });
+
+    /* Si el administrador cambia una subasta, se refleja aquí */
+    window.addEventListener('storage', e => {
+        if (e.key !== CLAVE || !e.newValue) return;
+        try {
+            const d = JSON.parse(e.newValue);
+            if (d && typeof d === 'object' && ITEMS.every(it => d[it.id] && Array.isArray(d[it.id].pujas))) {
+                estado = d;
+                renderGrid();
+                refrescarModal();
+            }
+        } catch (err) {}
     });
 
     renderGrid();

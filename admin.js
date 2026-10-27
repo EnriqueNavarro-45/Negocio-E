@@ -583,6 +583,151 @@ const EJEMPLOS = [
       items: [{ name: 'Chile Habanero', kg: 0.5, price: 80 }, { name: 'Limón', kg: 2, price: 30 }] }
 ];
 
+/* ========== FERIA AGRÍCOLA Y SUBASTA ========== */
+const CLAVE_FERIA    = 'feriaAgricolaSanGerardo';
+const CLAVE_SUBASTA  = 'subastaFeriaSanGerardo';
+
+const EMOJIS_FERIA = { frutas: '🍊', verduras: '🥕', hierbas: '🌿', otros: '🧺' };
+const CATEGORIAS_FERIA = { frutas: 'Frutas', verduras: 'Verduras', hierbas: 'Hierbas', otros: 'Otros' };
+
+/* Mismas subastas y tiempos que usa feria.html (si cambias una, cambia la otra) */
+const SUBASTAS_META = [
+    { id: 's1', titulo: 'Fruta Wumpa · edición limitada', vendedor: 'San Gerardo Mayela', duracion: 150 * 60000,
+      pujasIni: [['Carmen V.', 99], ['Luis M.', 109], ['Sofía R.', 129]] },
+    { id: 's2', titulo: 'Caja de aguacate de patio · 3 kg', vendedor: 'Don Ernesto Ruiz', duracion: 5 * 60000,
+      pujasIni: [['Pedro A.', 80], ['Ana L.', 90]] },
+    { id: 's3', titulo: 'Canasta de huerto de temporada', vendedor: 'Familia Rangel', duracion: 80 * 60000,
+      pujasIni: [['Luis M.', 120]] }
+];
+
+function crearSubasta(meta, ahora = Date.now()) {
+    return {
+        endsAt: ahora + meta.duracion,
+        pujas: meta.pujasIni.map(([quien, monto], i) => ({
+            quien, monto, t: ahora - (meta.pujasIni.length - i) * 420000
+        }))
+    };
+}
+
+function escribirSubastas(datos) {
+    localStorage.setItem(CLAVE_SUBASTA, JSON.stringify(datos));
+}
+
+function leerSubastas() {
+    try {
+        const d = JSON.parse(localStorage.getItem(CLAVE_SUBASTA));
+        if (d && typeof d === 'object' && SUBASTAS_META.every(m => d[m.id] && Array.isArray(d[m.id].pujas))) return d;
+    } catch {}
+    const nuevo = {};
+    SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m); });
+    escribirSubastas(nuevo);
+    return nuevo;
+}
+
+function formatoTiempoAdmin(ms) {
+    if (ms <= 0) return '00:00:00';
+    const s = Math.floor(ms / 1000);
+    return [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60]
+        .map(n => String(n).padStart(2, '0')).join(':');
+}
+
+function precioFeria(p) {
+    const n = parseFloat(p.precio);
+    if (Number.isFinite(n)) return dinero(n) + ' / ' + (p.unidad || 'kg');
+    return p.precio ? String(p.precio) : 'A convenir';
+}
+
+function renderFeria() {
+    const lista = leer(CLAVE_FERIA);
+
+    $('feria-resumen').textContent = lista.length
+        ? `${lista.length} ${lista.length === 1 ? 'publicación' : 'publicaciones'} de usuarios (las 6 de ejemplo vienen incluidas en la página).`
+        : 'Aún no hay publicaciones de usuarios (las 6 de ejemplo vienen incluidas en la página).';
+    $('feria-vaciar').disabled = !lista.length;
+
+    if (!lista.length) {
+        $('feria-tabla').innerHTML = '<tr><td colspan="8" class="admin-empty">Nadie ha publicado todavía en la feria.</td></tr>';
+        return;
+    }
+
+    $('feria-tabla').innerHTML = lista.map(p => {
+        const marca = Number(String(p.id || '').replace(/\D/g, ''));
+        const fecha = marca > 1e12 ? fechaCorta(marca) : '—';
+        const foto = p.imagen
+            ? `<img src="${esc(p.imagen)}" alt="${esc(p.producto)}" loading="lazy" onerror="this.style.visibility='hidden'">`
+            : `<span class="admin-emoji-thumb">${EMOJIS_FERIA[p.categoria] || '🧺'}</span>`;
+        return `<tr>
+            <td>
+                <div class="admin-product-cell">
+                    ${foto}
+                    <div>
+                        <strong>${esc(p.producto || 'Sin nombre')}</strong>
+                        <small class="admin-muted-subline">${esc(String(p.descripcion || '').slice(0, 60))}</small>
+                    </div>
+                </div>
+            </td>
+            <td>${esc(p.productor || 'Productor')}</td>
+            <td>${esc(CATEGORIAS_FERIA[p.categoria] || p.categoria || '—')}</td>
+            <td>${esc(precioFeria(p))}</td>
+            <td>${p.cantidad ? esc(p.cantidad) + ' ' + esc(p.unidad || '') : 'Por confirmar'}</td>
+            <td>${esc(p.zona || '—')}</td>
+            <td>${esc(fecha)}</td>
+            <td>
+                <div class="admin-row-actions">
+                    <button type="button" class="btn-eliminar-producto" data-feria-eliminar="${esc(p.id)}">Eliminar</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function renderSubastas() {
+    const estados = leerSubastas();
+    const ahora = Date.now();
+
+    $('subastas-tabla').innerHTML = SUBASTAS_META.map(m => {
+        const s = estados[m.id];
+        const top = s.pujas[s.pujas.length - 1];
+        const ms = s.endsAt - ahora;
+        const fin = ms <= 0;
+        const [clase, texto] = fin ? ['oculto', 'Finalizada']
+            : ms < 600000 ? ['bajo', 'Termina pronto'] : ['vigente', 'En vivo'];
+        return `<tr>
+            <td><strong>${esc(m.titulo)}</strong></td>
+            <td>${esc(m.vendedor)}</td>
+            <td><strong>${dinero(top.monto)}</strong></td>
+            <td>${s.pujas.length}</td>
+            <td>${esc(top.quien)}</td>
+            <td>
+                <span class="estado estado-${clase}">${texto}</span>
+                <small class="admin-muted-subline" data-reloj-admin="${m.id}">${fin ? 'Terminó' : formatoTiempoAdmin(ms) + ' restante'}</small>
+            </td>
+            <td>
+                <div class="admin-row-actions">
+                    <button type="button" class="admin-small-btn" data-sub-accion="ver" data-id="${m.id}">Ver pujas</button>
+                    ${fin ? '' : `<button type="button" class="admin-small-btn" data-sub-accion="finalizar" data-id="${m.id}">Finalizar</button>`}
+                    <button type="button" class="admin-small-btn" data-sub-accion="reiniciar" data-id="${m.id}">Reiniciar</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function abrirPujasAdmin(id) {
+    const m = SUBASTAS_META.find(x => x.id === id);
+    if (!m) return;
+    const s = leerSubastas()[id];
+    $('pujas-admin-titulo').textContent = m.titulo;
+    $('pujas-admin-contenido').innerHTML = s.pujas.slice().reverse().map((p, i) => `
+        <div class="admin-puja-fila ${i === 0 ? 'ganadora' : ''}">
+            <span>${esc(p.quien)}${i === 0 ? ' · mejor puja' : ''}</span>
+            <strong>${dinero(p.monto)}</strong>
+            <small>${esc(new Date(p.t).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }))}</small>
+        </div>`).join('');
+    abrirOverlay('modal-pujas-admin');
+}
+const cerrarPujasAdmin = () => cerrarOverlay('modal-pujas-admin');
+
 /* ========== INICIALIZACIÓN ========== */
 document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('sesionActiva') !== 'true' ||
@@ -598,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cerrarEditor();
         cerrarFormPromocion();
         cerrarDetallePedido();
+        cerrarPujasAdmin();
     });
 
     /* ----- Inventario ----- */
@@ -782,11 +928,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.target.closest('.admin-tab');
         if (!btn) return;
         document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
-        ['inventario', 'ofertas', 'promociones', 'pedidos'].forEach(t => {
+        ['inventario', 'ofertas', 'promociones', 'pedidos', 'feria'].forEach(t => {
             $('tab-' + t).hidden = t !== btn.dataset.tab;
         });
         if (btn.dataset.tab === 'ofertas') renderOfertas();
         if (btn.dataset.tab === 'promociones') renderPromociones();
+        if (btn.dataset.tab === 'feria') {
+            renderFeria();
+            renderSubastas();
+        }
         if (btn.dataset.tab === 'pedidos') {
             $('filtro-pedidos').value = 'todos';
             renderPedidos();
@@ -909,6 +1059,90 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPromociones();
             toast('Promoción eliminada', 'El cupón se eliminó correctamente.');
         });
+    });
+
+    /* ----- Feria y subasta ----- */
+    renderFeria();
+    renderSubastas();
+
+    $('feria-tabla').addEventListener('click', e => {
+        const btn = e.target.closest('[data-feria-eliminar]');
+        if (!btn) return;
+        const lista = leer(CLAVE_FERIA);
+        const p = lista.find(x => String(x.id) === String(btn.dataset.feriaEliminar));
+        if (!p) return;
+        mostrarConfirmacion('Eliminar publicación', `¿Eliminar "${p.producto || 'esta publicación'}" de la feria?`, 'Eliminar', () => {
+            escribir(CLAVE_FERIA, leer(CLAVE_FERIA).filter(x => String(x.id) !== String(p.id)));
+            renderFeria();
+            toast('Publicación eliminada', 'Ya no aparece en la feria.');
+        });
+    });
+
+    $('feria-vaciar').addEventListener('click', () => {
+        mostrarConfirmacion('Eliminar publicaciones', '¿Eliminar todas las publicaciones de usuarios de la feria?', 'Eliminar todas', () => {
+            escribir(CLAVE_FERIA, []);
+            renderFeria();
+            toast('Feria vaciada', 'Se eliminaron las publicaciones de usuarios.');
+        });
+    });
+
+    $('subastas-tabla').addEventListener('click', e => {
+        const btn = e.target.closest('[data-sub-accion]');
+        if (!btn) return;
+        const meta = SUBASTAS_META.find(m => m.id === btn.dataset.id);
+        if (!meta) return;
+        const accion = btn.dataset.subAccion;
+
+        if (accion === 'ver') return abrirPujasAdmin(meta.id);
+
+        const estados = leerSubastas();
+        if (accion === 'finalizar') {
+            estados[meta.id].endsAt = Date.now() - 1;
+            escribirSubastas(estados);
+            renderSubastas();
+            const top = estados[meta.id].pujas[estados[meta.id].pujas.length - 1];
+            return toast('Subasta finalizada', `Ganó ${top.quien} con ${dinero(top.monto)}.`);
+        }
+
+        estados[meta.id] = crearSubasta(meta);
+        escribirSubastas(estados);
+        renderSubastas();
+        toast('Subasta reiniciada', meta.titulo);
+    });
+
+    $('subastas-reiniciar').addEventListener('click', () => {
+        mostrarConfirmacion('Reiniciar subastas', '¿Reiniciar las subastas? Se borrarán las pujas hechas y los tiempos empezarán de nuevo.', 'Reiniciar', () => {
+            const nuevo = {};
+            SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m); });
+            escribirSubastas(nuevo);
+            renderSubastas();
+            toast('Subastas reiniciadas', 'Los tiempos empezaron de nuevo.');
+        });
+    });
+
+    $('cerrar-pujas-admin').addEventListener('click', cerrarPujasAdmin);
+    $('cerrar-pujas-admin-2').addEventListener('click', cerrarPujasAdmin);
+    $('modal-pujas-admin').addEventListener('click', e => { if (e.target.id === 'modal-pujas-admin') cerrarPujasAdmin(); });
+
+    /* Reloj de las subastas mientras la pestaña está abierta */
+    setInterval(() => {
+        if ($('tab-feria').hidden) return;
+        const estados = leerSubastas();
+        let cambio = false;
+        SUBASTAS_META.forEach(m => {
+            const celda = document.querySelector(`[data-reloj-admin="${m.id}"]`);
+            if (!celda) return;
+            const ms = estados[m.id].endsAt - Date.now();
+            if (ms <= 0) { if (celda.textContent !== 'Terminó') cambio = true; }
+            else celda.textContent = formatoTiempoAdmin(ms) + ' restante';
+        });
+        if (cambio) renderSubastas();
+    }, 1000);
+
+    /* Si la feria cambia en otra pestaña (pujas, publicaciones), se actualiza aquí */
+    window.addEventListener('storage', e => {
+        if (e.key === CLAVE_FERIA) renderFeria();
+        if (e.key === CLAVE_SUBASTA) renderSubastas();
     });
 
     /* ----- Pedidos ----- */

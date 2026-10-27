@@ -946,3 +946,76 @@ textarea.admin-input { resize: vertical; }
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+/* ========== FERIA Y SUBASTA (admin) ========== */
+.admin-subhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 30px 18px;
+}
+
+.admin-subhead.separado {
+    margin-top: 14px;
+    padding-top: 30px;
+    border-top: 1px solid var(--borde);
+}
+
+.admin-subhead h3 {
+    margin: 0 0 3px;
+    font-size: 17px;
+    color: var(--verde);
+}
+
+.admin-subhead p {
+    margin: 0;
+    color: var(--gris);
+    font-size: 13px;
+}
+
+.admin-secondary-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.admin-emoji-thumb {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--borde);
+    border-radius: 11px;
+    background: var(--verde-claro);
+    font-size: 22px;
+}
+
+.admin-puja-fila {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 4px;
+    border-bottom: 1px solid #edf2ee;
+    font-size: 13.5px;
+}
+
+.admin-puja-fila:last-child {
+    border-bottom: 0;
+}
+
+.admin-puja-fila small {
+    color: var(--gris);
+}
+
+.admin-puja-fila.ganadora strong {
+    color: var(--verde3);
+}
+
+@media (max-width: 640px) {
+    .admin-subhead {
+        padding: 8px 18px 16px;
+    }
+}

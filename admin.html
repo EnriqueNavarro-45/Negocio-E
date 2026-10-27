@@ -69,6 +69,7 @@
             <button type="button" class="admin-tab" data-tab="ofertas">Ofertas</button>
             <button type="button" class="admin-tab" data-tab="promociones">Promociones</button>
             <button type="button" class="admin-tab" data-tab="pedidos" id="tab-btn-pedidos">Pedidos</button>
+            <button type="button" class="admin-tab" data-tab="feria">Feria y subasta</button>
         </nav>
 
         <!-- INVENTARIO -->
@@ -337,6 +338,67 @@
                 </table>
             </div>
         </section>
+        <!-- FERIA Y SUBASTA -->
+        <section class="admin-panel" id="tab-feria" hidden>
+            <div class="admin-panel-header">
+                <div>
+                    <span class="admin-tag">Comunidad</span>
+                    <h2>Feria agrícola y subasta</h2>
+                    <p>Revisa lo que publica la comunidad y controla las subastas de la feria.</p>
+                </div>
+            </div>
+
+            <div class="admin-subhead">
+                <div>
+                    <h3>Publicaciones de la feria</h3>
+                    <p id="feria-resumen"></p>
+                </div>
+                <button type="button" id="feria-vaciar" class="admin-secondary-btn">Eliminar todas</button>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Productor</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Disponible</th>
+                            <th>Zona</th>
+                            <th>Publicado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feria-tabla"></tbody>
+                </table>
+            </div>
+
+            <div class="admin-subhead separado">
+                <div>
+                    <h3>Subastas</h3>
+                    <p>Estado de las subastas que ven los clientes en la feria.</p>
+                </div>
+                <button type="button" id="subastas-reiniciar" class="admin-secondary-btn">Reiniciar todas</button>
+            </div>
+
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Vendedor</th>
+                            <th>Puja actual</th>
+                            <th>Pujas</th>
+                            <th>Mejor postor</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subastas-tabla"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <!-- MODAL EDITAR PRODUCTO -->
@@ -403,6 +465,23 @@
             <div class="admin-confirm-actions">
                 <button type="button" class="admin-secondary-btn" id="admin-confirm-cancelar">Cancelar</button>
                 <button type="button" class="admin-danger-btn" id="admin-confirm-aceptar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORIAL DE PUJAS -->
+    <div class="admin-overlay" id="modal-pujas-admin" aria-hidden="true">
+        <div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="pujas-admin-titulo">
+            <div class="admin-modal-header">
+                <div>
+                    <span class="admin-tag">Historial de pujas</span>
+                    <h2 id="pujas-admin-titulo">Subasta</h2>
+                </div>
+                <button type="button" class="admin-modal-close" id="cerrar-pujas-admin" aria-label="Cerrar">×</button>
+            </div>
+            <div id="pujas-admin-contenido"></div>
+            <div class="admin-modal-actions">
+                <button type="button" class="admin-secondary-btn" id="cerrar-pujas-admin-2">Cerrar</button>
             </div>
         </div>
     </div>
