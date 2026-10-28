@@ -7021,3 +7021,208 @@ body {
         flex-wrap: wrap;
     }
 }
+
+/* =========================================================
+   VALORACIONES DE PRODUCTOS
+========================================================= */
+
+.val-estrellas {
+    color: #e0a82e;
+    letter-spacing: 1px;
+}
+
+/* Línea en la tarjeta del catálogo */
+.valoracion-resumen {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 0.45rem 0;
+    font-size: 0.8rem;
+}
+
+.valoracion-resumen .val-estrellas {
+    font-size: 0.85rem;
+}
+
+.valoracion-resumen strong {
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.valoracion-resumen small {
+    color: #8a948c;
+    font-size: 0.72rem;
+}
+
+.valoracion-resumen.vacia .val-estrellas {
+    color: #c7d0c8;
+}
+
+/* Resumen bajo el título del modal */
+.modal-valoracion-resumen {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: -2px 0 10px;
+    font-size: 0.85rem;
+}
+
+.modal-valoracion-resumen strong {
+    color: #1f2937;
+}
+
+.modal-valoracion-resumen small {
+    color: #8a948c;
+    font-size: 0.78rem;
+}
+
+/* Bloque de valoraciones bajo la galería */
+.modal-valoraciones {
+    margin-top: 18px;
+    padding: 18px;
+    background: #f8fbf7;
+    border: 1px solid var(--border, #dfe9e2);
+    border-radius: 16px;
+}
+
+.valoraciones-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.valoraciones-cabecera h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: #111827;
+}
+
+.valoraciones-promedio {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.valoraciones-promedio strong {
+    font-size: 1.15rem;
+    color: #1f2937;
+}
+
+.valoraciones-promedio small {
+    font-size: 0.75rem;
+    color: #8a948c;
+}
+
+.valoraciones-form {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding-top: 14px;
+    border-top: 1px solid #e6eee6;
+}
+
+.val-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #456050;
+}
+
+.val-selector {
+    display: flex;
+    gap: 2px;
+}
+
+.val-estrella {
+    padding: 0 2px;
+    font: inherit;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: #d3dcd3;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: transform 0.15s, color 0.15s;
+}
+
+.val-estrella.activa {
+    color: #e0a82e;
+}
+
+.val-estrella:hover {
+    transform: scale(1.15);
+}
+
+.val-estrella:focus-visible {
+    outline: 2px solid #6fa17a;
+    border-radius: 6px;
+}
+
+.valoraciones-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 0.82rem;
+    color: #25352b;
+    background: #fff;
+    border: 1px solid #dce6dc;
+    border-radius: 10px;
+    outline: none;
+    resize: vertical;
+}
+
+.valoraciones-form textarea:focus {
+    border-color: #6fa17a;
+}
+
+.btn-valorar {
+    align-self: flex-start;
+    padding: 9px 16px;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    background: #267449;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-valorar:hover {
+    background: #1d5a38;
+}
+
+.valoraciones-lista {
+    margin-top: 4px;
+}
+
+.val-item {
+    padding: 11px 0;
+    border-top: 1px solid #e6eee6;
+    font-size: 0.8rem;
+}
+
+.val-item:first-child {
+    margin-top: 14px;
+}
+
+.val-item-cab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.val-item p {
+    margin: 4px 0 2px;
+    color: #4b5a4f;
+    line-height: 1.55;
+}
+
+.val-item small {
+    color: #98a29a;
+    font-size: 0.7rem;
+}

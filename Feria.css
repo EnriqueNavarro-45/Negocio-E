@@ -580,6 +580,7 @@
 .subasta-estado.vivo { background: #267449; }
 .subasta-estado.pronto { background: #d9822b; animation: subasta-pulso 1.4s ease-in-out infinite; }
 .subasta-estado.fin { background: #7d897f; }
+.subasta-estado.proximo { background: #5b7fa6; }
 
 @keyframes subasta-pulso {
     50% { opacity: 0.6; }

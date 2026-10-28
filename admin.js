@@ -600,9 +600,10 @@ const SUBASTAS_META = [
       pujasIni: [['Luis M.', 120]] }
 ];
 
-function crearSubasta(meta, ahora = Date.now()) {
+function crearSubasta(meta, iniciada = true, ahora = Date.now()) {
     return {
-        endsAt: ahora + meta.duracion,
+        iniciada,
+        endsAt: iniciada ? ahora + meta.duracion : 0,
         pujas: meta.pujasIni.map(([quien, monto], i) => ({
             quien, monto, t: ahora - (meta.pujasIni.length - i) * 420000
         }))
@@ -619,7 +620,7 @@ function leerSubastas() {
         if (d && typeof d === 'object' && SUBASTAS_META.every(m => d[m.id] && Array.isArray(d[m.id].pujas))) return d;
     } catch {}
     const nuevo = {};
-    SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m); });
+    SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m, false); });
     escribirSubastas(nuevo);
     return nuevo;
 }
@@ -687,28 +688,34 @@ function renderSubastas() {
 
     $('subastas-tabla').innerHTML = SUBASTAS_META.map(m => {
         const s = estados[m.id];
+        const arrancada = s.iniciada !== false;
         const top = s.pujas[s.pujas.length - 1];
         const ms = s.endsAt - ahora;
-        const fin = ms <= 0;
-        const [clase, texto] = fin ? ['oculto', 'Finalizada']
-            : ms < 600000 ? ['bajo', 'Termina pronto'] : ['vigente', 'En vivo'];
+        const fin = arrancada && ms <= 0;
+
+        let clase, texto, reloj;
+        if (!arrancada) { clase = 'confirmado'; texto = 'Sin iniciar'; reloj = 'Dura ' + formatoTiempoAdmin(m.duracion); }
+        else if (fin) { clase = 'oculto'; texto = 'Finalizada'; reloj = 'Terminó'; }
+        else if (ms < 600000) { clase = 'bajo'; texto = 'Termina pronto'; reloj = formatoTiempoAdmin(ms) + ' restante'; }
+        else { clase = 'vigente'; texto = 'En vivo'; reloj = formatoTiempoAdmin(ms) + ' restante'; }
+
+        const botones = !arrancada
+            ? `<button type="button" class="admin-primary-btn admin-small-primary" data-sub-accion="iniciar" data-id="${m.id}">Iniciar</button>`
+            : `<button type="button" class="admin-small-btn" data-sub-accion="ver" data-id="${m.id}">Ver pujas</button>
+               ${fin ? '' : `<button type="button" class="admin-small-btn" data-sub-accion="finalizar" data-id="${m.id}">Finalizar</button>`}
+               <button type="button" class="admin-small-btn" data-sub-accion="reiniciar" data-id="${m.id}">Reiniciar</button>`;
+
         return `<tr>
             <td><strong>${esc(m.titulo)}</strong></td>
             <td>${esc(m.vendedor)}</td>
-            <td><strong>${dinero(top.monto)}</strong></td>
-            <td>${s.pujas.length}</td>
-            <td>${esc(top.quien)}</td>
+            <td><strong>${dinero(arrancada ? top.monto : m.pujasIni[0][1])}</strong>${arrancada ? '' : '<small class="admin-muted-subline">precio inicial</small>'}</td>
+            <td>${arrancada ? s.pujas.length : '—'}</td>
+            <td>${arrancada ? esc(top.quien) : '—'}</td>
             <td>
                 <span class="estado estado-${clase}">${texto}</span>
-                <small class="admin-muted-subline" data-reloj-admin="${m.id}">${fin ? 'Terminó' : formatoTiempoAdmin(ms) + ' restante'}</small>
+                <small class="admin-muted-subline" data-reloj-admin="${m.id}">${reloj}</small>
             </td>
-            <td>
-                <div class="admin-row-actions">
-                    <button type="button" class="admin-small-btn" data-sub-accion="ver" data-id="${m.id}">Ver pujas</button>
-                    ${fin ? '' : `<button type="button" class="admin-small-btn" data-sub-accion="finalizar" data-id="${m.id}">Finalizar</button>`}
-                    <button type="button" class="admin-small-btn" data-sub-accion="reiniciar" data-id="${m.id}">Reiniciar</button>
-                </div>
-            </td>
+            <td><div class="admin-row-actions">${botones}</div></td>
         </tr>`;
     }).join('');
 }
@@ -1096,6 +1103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (accion === 'ver') return abrirPujasAdmin(meta.id);
 
         const estados = leerSubastas();
+        if (accion === 'iniciar') {
+            estados[meta.id] = crearSubasta(meta, true);
+            escribirSubastas(estados);
+            renderSubastas();
+            return toast('Subasta iniciada', `${meta.titulo} ya está en vivo.`);
+        }
         if (accion === 'finalizar') {
             estados[meta.id].endsAt = Date.now() - 1;
             escribirSubastas(estados);
@@ -1104,19 +1117,34 @@ document.addEventListener('DOMContentLoaded', () => {
             return toast('Subasta finalizada', `Ganó ${top.quien} con ${dinero(top.monto)}.`);
         }
 
-        estados[meta.id] = crearSubasta(meta);
+        estados[meta.id] = crearSubasta(meta, false);
         escribirSubastas(estados);
         renderSubastas();
-        toast('Subasta reiniciada', meta.titulo);
+        toast('Subasta reiniciada', `${meta.titulo} volvió a "Sin iniciar".`);
+    });
+
+    $('subastas-iniciar').addEventListener('click', () => {
+        const estados = leerSubastas();
+        let iniciadas = 0;
+        SUBASTAS_META.forEach(m => {
+            if (estados[m.id].iniciada === false) {
+                estados[m.id] = crearSubasta(m, true);
+                iniciadas++;
+            }
+        });
+        escribirSubastas(estados);
+        renderSubastas();
+        toast(iniciadas ? 'Subastas iniciadas' : 'Sin cambios',
+              iniciadas ? `Se iniciaron ${iniciadas} ${iniciadas === 1 ? 'subasta' : 'subastas'}.` : 'No había subastas por iniciar.');
     });
 
     $('subastas-reiniciar').addEventListener('click', () => {
-        mostrarConfirmacion('Reiniciar subastas', '¿Reiniciar las subastas? Se borrarán las pujas hechas y los tiempos empezarán de nuevo.', 'Reiniciar', () => {
+        mostrarConfirmacion('Reiniciar subastas', 'Todas las subastas volverán a "Sin iniciar" y se borrarán las pujas hechas. Después podrás iniciarlas de nuevo.', 'Reiniciar', () => {
             const nuevo = {};
-            SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m); });
+            SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m, false); });
             escribirSubastas(nuevo);
             renderSubastas();
-            toast('Subastas reiniciadas', 'Los tiempos empezaron de nuevo.');
+            toast('Subastas reiniciadas', 'Quedaron en "Sin iniciar".');
         });
     });
 
@@ -1131,7 +1159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let cambio = false;
         SUBASTAS_META.forEach(m => {
             const celda = document.querySelector(`[data-reloj-admin="${m.id}"]`);
-            if (!celda) return;
+            if (!celda || estados[m.id].iniciada === false) return;
             const ms = estados[m.id].endsAt - Date.now();
             if (ms <= 0) { if (celda.textContent !== 'Terminó') cambio = true; }
             else celda.textContent = formatoTiempoAdmin(ms) + ' restante';

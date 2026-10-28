@@ -44,6 +44,7 @@
                 <div class="feria-stat"><strong id="stat-productores">0</strong><span>Productores</span></div>
                 <div class="feria-stat"><strong id="stat-subastas">0</strong><span>Subastas en vivo</span></div>
             </div>
+            <span class="feria-aviso">Pantalla demostrativa: las publicaciones se guardan solo en este navegador.</span>
         </div>
         <div class="hero-image">
             <img src="Imagenes/Verduras.avif" alt="Verduras de huerto">
@@ -196,8 +197,7 @@
         </div>
 
         <div class="subasta-barra">
-            <span class="feria-aviso">Subasta demostrativa: las pujas y los otros postores son simulados.</span>
-            <button type="button" class="btn light" id="subasta-reiniciar">Reiniciar subastas</button>
+            <span class="feria-aviso">Subasta demostrativa: las pujas y los otros postores son simulados. El administrador inicia y reinicia las subastas.</span>
         </div>
 
         <div class="subasta-grid" id="subasta-grid"></div>
@@ -504,7 +504,8 @@
         const e = {};
         ITEMS.forEach(it => {
             e[it.id] = {
-                endsAt: ahora + it.duracion,
+                iniciada: false,
+                endsAt: 0,
                 pujas: it.pujasIni.map(([quien, monto], i) => ({
                     quien, monto, t: ahora - (it.pujasIni.length - i) * 420000
                 }))
@@ -527,10 +528,13 @@
     guardar();
 
     const mejor = id => estado[id].pujas[estado[id].pujas.length - 1];
-    const terminada = id => Date.now() >= estado[id].endsAt;
+    const iniciada = id => estado[id].iniciada !== false;
+    const terminada = id => iniciada(id) && Date.now() >= estado[id].endsAt;
+    const enCurso = id => iniciada(id) && !terminada(id);
     const minimo = it => mejor(it.id).monto + it.incremento;
 
     function claseEstado(it) {
+        if (!iniciada(it.id)) return ['proximo', 'PRÓXIMAMENTE'];
         if (terminada(it.id)) return ['fin', 'FINALIZADA'];
         if (estado[it.id].endsAt - Date.now() < 10 * 60000) return ['pronto', 'TERMINA PRONTO'];
         return ['vivo', 'EN VIVO'];
@@ -565,41 +569,51 @@
 
     function tarjetaHTML(it) {
         const st = estado[it.id];
+        const arrancada = iniciada(it.id);
         const top = mejor(it.id);
         const fin = terminada(it.id);
-        const mia = top.quien === 'Tú';
+        const mia = arrancada && top.quien === 'Tú';
         const [clase, texto] = claseEstado(it);
 
-        const lider = fin
-            ? (mia ? '🏆 ¡Ganaste esta subasta!' : 'Ganador: ' + esc(top.quien))
-            : (mia ? '✅ Vas ganando' : 'Mejor postor: ' + esc(top.quien));
+        const monto = arrancada ? top.monto : it.pujasIni[0][1];
+        const etiquetaPrecio = !arrancada ? 'Precio inicial' : (fin ? 'Puja ganadora' : 'Puja actual');
+        const numPujas = arrancada ? st.pujas.length : 0;
+        const reloj = arrancada ? formatoTiempo(st.endsAt - Date.now()) : 'Dura ' + formatoTiempo(it.duracion);
+
+        let lider;
+        if (!arrancada) lider = 'Aún no inicia esta subasta';
+        else if (fin) lider = mia ? '🏆 ¡Ganaste esta subasta!' : 'Ganador: ' + esc(top.quien);
+        else lider = mia ? '✅ Vas ganando' : 'Mejor postor: ' + esc(top.quien);
+
+        const bloqueado = !arrancada || fin;
+        const textoBoton = !arrancada ? 'Aún no inicia' : (fin ? 'Subasta finalizada' : 'Pujar');
 
         return `
-        <article class="subasta-card ${fin ? 'terminada' : ''}" data-id="${it.id}">
+        <article class="subasta-card ${fin ? 'terminada' : ''} ${!arrancada ? 'proxima' : ''}" data-id="${it.id}">
             <div class="subasta-foto">
                 <div class="subasta-emoji">${it.emoji}</div>
                 <img class="${it.contener ? 'contener' : ''}" src="${esc(it.imagen)}" alt="${esc(it.titulo)}" loading="lazy" onerror="this.remove()">
                 <span class="subasta-estado ${clase}">${texto}</span>
-                <span class="subasta-reloj" data-reloj="${it.id}">${formatoTiempo(st.endsAt - Date.now())}</span>
+                <span class="subasta-reloj" ${arrancada ? `data-reloj="${it.id}"` : ''}>${reloj}</span>
             </div>
             <div class="subasta-cuerpo">
                 <h3>${esc(it.titulo)}</h3>
                 <p class="subasta-vendedor">Vendedor: <strong>${esc(it.vendedor)}</strong></p>
                 <p class="subasta-desc">${esc(it.desc)}</p>
                 <div class="subasta-precio">
-                    <div><small>${fin ? 'Puja ganadora' : 'Puja actual'}</small><strong>${dinero(top.monto)}</strong></div>
-                    <div class="subasta-pujas"><strong>${st.pujas.length}</strong><small>pujas</small></div>
+                    <div><small>${etiquetaPrecio}</small><strong>${dinero(monto)}</strong></div>
+                    <div class="subasta-pujas"><strong>${numPujas}</strong><small>pujas</small></div>
                 </div>
                 <p class="subasta-lider ${mia ? 'mia' : ''}">${lider}</p>
-                <button type="button" class="btn primary" data-accion="pujar" data-id="${it.id}" ${fin ? 'disabled' : ''}>
-                    ${fin ? 'Subasta finalizada' : 'Pujar'}
+                <button type="button" class="btn primary" data-accion="pujar" data-id="${it.id}" ${bloqueado ? 'disabled' : ''}>
+                    ${textoBoton}
                 </button>
             </div>
         </article>`;
     }
 
     function actualizarStat() {
-        $('stat-subastas').textContent = ITEMS.filter(it => !terminada(it.id)).length;
+        $('stat-subastas').textContent = ITEMS.filter(it => enCurso(it.id)).length;
     }
 
     function renderGrid() {
@@ -628,7 +642,7 @@
 
     function abrirPuja(id) {
         const it = ITEMS.find(x => x.id === id);
-        if (!it || terminada(id)) return;
+        if (!it || !enCurso(id)) return;
         itemModal = it;
         $('puja-titulo').textContent = it.titulo;
         $('puja-sub').textContent = 'Vendedor: ' + it.vendedor;
@@ -665,10 +679,10 @@
     $('puja-confirmar').addEventListener('click', () => {
         const it = itemModal;
         if (!it) return;
-        if (terminada(it.id)) {
+        if (!enCurso(it.id)) {
             cerrarPuja();
             renderGrid();
-            aviso('Esta subasta ya terminó.', 'error');
+            aviso('Esta subasta no está en curso.', 'error');
             return;
         }
         let monto = parseFloat(String($('puja-monto').value).replace(',', '.'));
@@ -687,6 +701,7 @@
         let rehacer = false;
 
         ITEMS.forEach(it => {
+            if (!iniciada(it.id)) return;
             const ms = estado[it.id].endsAt - Date.now();
             const reloj = document.querySelector('[data-reloj="' + it.id + '"]');
             if (reloj) reloj.textContent = formatoTiempo(ms);
@@ -716,7 +731,7 @@
     setInterval(() => {
         let hubo = false;
         ITEMS.forEach(it => {
-            if (terminada(it.id) || Math.random() > 0.3) return;
+            if (!enCurso(it.id) || Math.random() > 0.3) return;
             const top = mejor(it.id);
             const candidatos = BOTS.filter(b => b !== top.quien);
             const quien = candidatos[Math.floor(Math.random() * candidatos.length)];
@@ -734,15 +749,6 @@
         }
     }, 9000);
 
-    /* ---------- Reiniciar demostración ---------- */
-    $('subasta-reiniciar').addEventListener('click', () => {
-        estado = crearEstado();
-        guardar();
-        cerrarPuja();
-        renderGrid();
-        aviso('Subastas reiniciadas.');
-    });
-
     /* Si el administrador cambia una subasta, se refleja aquí */
     window.addEventListener('storage', e => {
         if (e.key !== CLAVE || !e.newValue) return;
@@ -750,6 +756,7 @@
             const d = JSON.parse(e.newValue);
             if (d && typeof d === 'object' && ITEMS.every(it => d[it.id] && Array.isArray(d[it.id].pujas))) {
                 estado = d;
+                if (itemModal && !enCurso(itemModal.id)) cerrarPuja();
                 renderGrid();
                 refrescarModal();
             }

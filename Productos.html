@@ -660,12 +660,36 @@
                             <button type="button" class="modal-galeria-flecha modal-galeria-siguiente" id="modal-galeria-siguiente" aria-label="Imagen siguiente">›</button>
                         </div>
                     </div>
+                    <section class="modal-valoraciones" id="modal-valoraciones">
+                        <div class="valoraciones-cabecera">
+                            <h4>Valoraciones</h4>
+                            <div class="valoraciones-promedio">
+                                <strong id="val-promedio">—</strong>
+                                <span class="val-estrellas" id="val-estrellas-promedio">☆☆☆☆☆</span>
+                                <small id="val-total">Sin valoraciones todavía</small>
+                            </div>
+                        </div>
+                        <div class="valoraciones-form">
+                            <span class="val-label">Tu valoración</span>
+                            <div class="val-selector" id="val-selector" role="radiogroup" aria-label="Calificación en estrellas">
+                                <button type="button" class="val-estrella activa" data-valor="1" aria-label="1 estrella">★</button>
+                                <button type="button" class="val-estrella activa" data-valor="2" aria-label="2 estrellas">★</button>
+                                <button type="button" class="val-estrella activa" data-valor="3" aria-label="3 estrellas">★</button>
+                                <button type="button" class="val-estrella activa" data-valor="4" aria-label="4 estrellas">★</button>
+                                <button type="button" class="val-estrella activa" data-valor="5" aria-label="5 estrellas">★</button>
+                            </div>
+                            <textarea id="val-comentario" rows="2" maxlength="140" placeholder="Cuéntanos qué te pareció (opcional)"></textarea>
+                            <button type="button" class="btn-valorar" id="val-enviar">Enviar valoración</button>
+                        </div>
+                        <div class="valoraciones-lista" id="val-lista"></div>
+                    </section>
                 </div>
 
                 <div class="modal-producto-contenido">
                     <span class="badge-disponibilidad">En Stock</span>
                     <span class="modal-categoria" id="modal-categoria">PRODUCTO</span>
                     <h3 id="modal-titulo-producto">Producto</h3>
+                    <div class="modal-valoracion-resumen" id="modal-valoracion-resumen"></div>
                     <div class="modal-precio-grande">$<span id="modal-precio-numero">0.00</span> <small>MXN / kg</small></div>
                     <p class="modal-descripcion" id="modal-descripcion">Descripción del producto.</p>
 
@@ -2529,6 +2553,9 @@
 
             mostrarProductosRelacionados(productoActual);
 
+            reiniciarFormularioValoracion();
+            pintarValoracionesModal(productoActual);
+
             modal.classList.add('activo');
             document.body.classList.add('modal-abierto');
         });
@@ -2719,9 +2746,145 @@
             });
         }
 
+        /* ===== VALORACIONES DE PRODUCTOS ===== */
+        const CLAVE_VALORACIONES = 'valoracionesProductosSanGerardo';
+        let valorSeleccionado = 5;
+
+        function escaparValoracion(t) {
+            return String(t ?? '').replace(/[&<>"']/g, c =>
+                ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function leerValoraciones() {
+            try {
+                const d = JSON.parse(localStorage.getItem(CLAVE_VALORACIONES));
+                return d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+            } catch (e) { return {}; }
+        }
+
+        function valoracionesDe(nombre) {
+            const v = leerValoraciones()[nombre];
+            return Array.isArray(v) ? v : [];
+        }
+
+        function promedioDe(lista) {
+            return lista.length ? lista.reduce((s, v) => s + (Number(v.estrellas) || 0), 0) / lista.length : 0;
+        }
+
+        function estrellasTexto(valor) {
+            const llenas = Math.max(0, Math.min(5, Math.round(Number(valor) || 0)));
+            return '★'.repeat(llenas) + '☆'.repeat(5 - llenas);
+        }
+
+        /* Línea de estrellas en cada tarjeta del catálogo */
+        function pintarValoracionesTarjetas() {
+            const todas = leerValoraciones();
+            obtenerTarjetas().forEach(tarjeta => {
+                const titulo = tarjeta.querySelector('h2');
+                const info = tarjeta.querySelector('.catalogo-info');
+                if (!titulo || !info) return;
+                let el = info.querySelector('.valoracion-resumen');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.className = 'valoracion-resumen';
+                    titulo.after(el);
+                }
+                const lista = Array.isArray(todas[titulo.textContent.trim()]) ? todas[titulo.textContent.trim()] : [];
+                if (lista.length) {
+                    const p = promedioDe(lista);
+                    el.classList.remove('vacia');
+                    el.innerHTML = `<span class="val-estrellas">${estrellasTexto(p)}</span><strong>${p.toFixed(1)}</strong><small>(${lista.length})</small>`;
+                } else {
+                    el.classList.add('vacia');
+                    el.innerHTML = '<span class="val-estrellas">☆☆☆☆☆</span><small>Sin valoraciones</small>';
+                }
+            });
+        }
+
+        function pintarSelectorEstrellas(valor) {
+            document.querySelectorAll('#val-selector .val-estrella').forEach(b => {
+                b.classList.toggle('activa', Number(b.dataset.valor) <= valor);
+            });
+        }
+
+        /* Resumen, formulario y últimas opiniones dentro del modal */
+        function pintarValoracionesModal(nombre) {
+            const lista = valoracionesDe(nombre);
+            const p = promedioDe(lista);
+            const total = lista.length
+                ? `${lista.length} ${lista.length === 1 ? 'valoración' : 'valoraciones'}`
+                : 'Sin valoraciones todavía';
+
+            document.getElementById('val-promedio').textContent = lista.length ? p.toFixed(1) : '—';
+            document.getElementById('val-estrellas-promedio').textContent = estrellasTexto(p);
+            document.getElementById('val-total').textContent = total;
+            document.getElementById('modal-valoracion-resumen').innerHTML = lista.length
+                ? `<span class="val-estrellas">${estrellasTexto(p)}</span><strong>${p.toFixed(1)}</strong><small>${total}</small>`
+                : '<span class="val-estrellas">☆☆☆☆☆</span><small>Sé el primero en valorar este producto</small>';
+
+            document.getElementById('val-lista').innerHTML = lista.slice(-3).reverse().map(v => `
+                <div class="val-item">
+                    <div class="val-item-cab">
+                        <strong>${escaparValoracion(v.usuario)}</strong>
+                        <span class="val-estrellas">${estrellasTexto(v.estrellas)}</span>
+                    </div>
+                    ${v.comentario ? `<p>${escaparValoracion(v.comentario)}</p>` : ''}
+                    <small>${escaparValoracion(v.fecha)}</small>
+                </div>`).join('');
+        }
+
+        function reiniciarFormularioValoracion() {
+            valorSeleccionado = 5;
+            pintarSelectorEstrellas(5);
+            document.getElementById('val-comentario').value = '';
+        }
+
+        document.getElementById('val-selector').addEventListener('click', e => {
+            const b = e.target.closest('.val-estrella');
+            if (!b) return;
+            valorSeleccionado = Number(b.dataset.valor);
+            pintarSelectorEstrellas(valorSeleccionado);
+        });
+
+        document.getElementById('val-enviar').addEventListener('click', () => {
+            const nombre = productoActual;
+            if (!nombre) return;
+            let usuario = sessionStorage.getItem('nombre');
+            if (!usuario) {
+                try {
+                    const perfil = JSON.parse(sessionStorage.getItem('datosPerfil') || '{}');
+                    usuario = typeof perfil.nombre === 'string' ? perfil.nombre : '';
+                } catch (e) { usuario = ''; }
+            }
+            const todas = leerValoraciones();
+            const lista = Array.isArray(todas[nombre]) ? todas[nombre] : [];
+            lista.push({
+                estrellas: valorSeleccionado,
+                comentario: document.getElementById('val-comentario').value.trim(),
+                usuario: (usuario || '').trim() || 'Cliente',
+                fecha: new Date().toLocaleDateString('es-MX')
+            });
+            todas[nombre] = lista;
+            try { localStorage.setItem(CLAVE_VALORACIONES, JSON.stringify(todas)); } catch (e) {}
+            const dada = valorSeleccionado;
+            reiniciarFormularioValoracion();
+            pintarValoracionesModal(nombre);
+            pintarValoracionesTarjetas();
+            mostrarNotificacion(
+                '¡Gracias por tu valoración!',
+                `Calificaste <strong>${escaparValoracion(nombre)}</strong> con ${dada} ${dada === 1 ? 'estrella' : 'estrellas'}.`
+            );
+        });
+
+        window.addEventListener('storage', e => {
+            if (e.key === CLAVE_VALORACIONES) pintarValoracionesTarjetas();
+        });
+        /* ===== FIN VALORACIONES ===== */
+
         function aplicarInventarioAdministrador() {
             const inventario = cargarInventarioAdministrador();
             sincronizarProductosDinamicos();
+            pintarValoracionesTarjetas();
 
             obtenerTarjetas().forEach(tarjeta => {
                 const nombre = tarjeta.querySelector('h2')?.textContent.trim();

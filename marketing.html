@@ -59,7 +59,30 @@
 </section>
 
 <section class="campaign" id="campana"><div class="campaign-image"><img src="Imagenes/Frutas.avif" alt="Frutas de temporada"><span>DE LA HUERTA A TU HOGAR</span></div><div class="campaign-copy"><span class="eyebrow">CAMPAÑA DE TEMPORADA</span><h2>Llena tu semana de color y frescura</h2><p>Arma tu selección con frutas, verduras y productos para tu despensa. Encuentra opciones para preparar tus recetas favoritas.</p><ul><li>Variedad para todos los días</li><li>Productos para tus recetas</li><li>Una experiencia de compra sencilla</li></ul><a class="btn primary" href="Productos.html">Comprar ahora →</a><small>Campaña demostrativa para el proyecto escolar.</small></div></section>
-<section class="section testimonials"><div class="section-heading"><div><span class="eyebrow">VOCES DE LA COMUNIDAD</span><h2>Lo que dicen nuestros clientes</h2></div><p>Testimonios de ejemplo, incluidos con fines demostrativos.</p></div><div class="review-grid"><article class="review"><div class="stars">★★★★★</div><p>“Me gustó encontrar varias opciones para preparar las comidas de la semana.”</p><strong>María G.</strong><small>Cliente de ejemplo</small></article><article class="review"><div class="stars">★★★★★</div><p>“La página es sencilla de recorrer y las categorías ayudan a encontrar productos.”</p><strong>Daniel R.</strong><small>Cliente de ejemplo</small></article><article class="review"><div class="stars">★★★★★</div><p>“Las promociones hacen que sea fácil descubrir productos diferentes.”</p><strong>Andrea M.</strong><small>Cliente de ejemplo</small></article></div></section>
+<section class="section testimonials"><div class="section-heading"><div><span class="eyebrow">VOCES DE LA COMUNIDAD</span><h2>Lo que dicen nuestros clientes</h2></div><p>Testimonios de ejemplo, incluidos con fines demostrativos.</p></div><div class="review-grid"><article class="review"><div class="stars">★★★★★</div><p>“Me gustó encontrar varias opciones para preparar las comidas de la semana.”</p><strong>María G.</strong><small>Cliente de ejemplo</small></article><article class="review"><div class="stars">★★★★★</div><p>“La página es sencilla de recorrer y las categorías ayudan a encontrar productos.”</p><strong>Daniel R.</strong><small>Cliente de ejemplo</small></article><article class="review"><div class="stars">★★★★★</div><p>“Las promociones hacen que sea fácil descubrir productos diferentes.”</p><strong>Andrea M.</strong><small>Cliente de ejemplo</small></article></div>
+
+<div class="val-card" id="valoracion-card">
+    <div class="val-card-texto">
+        <h3>Deja tu valoración</h3>
+        <p>Califica tu experiencia con estrellas y cuéntanos en pocas palabras. Llenar los campos es opcional.</p>
+    </div>
+    <form id="valoracion-form" class="val-form" novalidate>
+        <div class="val-estrellas-fila">
+            <div class="val-estrellas-input" id="val-estrellas-input" role="radiogroup" aria-label="Calificación en estrellas">
+                <button type="button" class="on" data-valor="1" aria-label="1 estrella">★</button>
+                <button type="button" class="on" data-valor="2" aria-label="2 estrellas">★</button>
+                <button type="button" class="on" data-valor="3" aria-label="3 estrellas">★</button>
+                <button type="button" class="on" data-valor="4" aria-label="4 estrellas">★</button>
+                <button type="button" class="on" data-valor="5" aria-label="5 estrellas">★</button>
+            </div>
+            <small id="val-estrellas-texto">5 de 5 estrellas</small>
+        </div>
+        <input id="valoracion-nombre" type="text" placeholder="Tu nombre (opcional)">
+        <textarea id="valoracion-texto" rows="2" maxlength="140" placeholder="Un pequeño comentario sobre tu experiencia (opcional)"></textarea>
+        <button class="btn primary" type="submit">Enviar valoración</button>
+    </form>
+</div>
+</section>
 <section class="section community" id="comunidad"><div class="community-intro"><span class="eyebrow">TU OPINIÓN CUENTA</span><h2>Comparte tu experiencia</h2><p>Deja un comentario para la comunidad. Puedes publicar sin llenar los campos. Los comentarios se guardan en este navegador.</p></div><div class="comment-layout"><form id="comment-form" class="comment-form" novalidate><label for="comment-name">Tu nombre (opcional)</label><input id="comment-name" type="text" placeholder="¿Cómo te llamas?"><label for="comment-text">Comentario (opcional)</label><textarea id="comment-text" rows="4" placeholder="Cuéntanos qué te pareció..."></textarea><button class="btn primary" type="submit">Publicar comentario</button><small>No se realiza ninguna validación de campos.</small></form><div class="comments-panel"><div class="comments-heading"><h3>Comentarios recientes</h3><span id="comment-count">3 comentarios</span></div><div id="comments-list"></div></div></div></section>
 </main><footer class="mk-footer"><a class="mk-brand" href="Productos.html"><img src="Imagenes/LogoFrut.jpg" alt=""><span>San Gerardo Mayela<small>Frutas y verduras frescas</small></span></a><a href="feria.html">Feria agrícola</a><a href="Productos.html">Volver al catálogo</a></footer><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -86,5 +109,84 @@
  const base=[{nombre:'María G.',texto:'Me gustó encontrar varias opciones para preparar las comidas de la semana.',fecha:'Comentario de ejemplo'},{nombre:'Daniel R.',texto:'La página es sencilla de recorrer y las categorías ayudan a encontrar productos.',fecha:'Comentario de ejemplo'},{nombre:'Andrea M.',texto:'Las promociones hacen que sea fácil descubrir productos diferentes.',fecha:'Comentario de ejemplo'}];const key='comentariosMarketingSanGerardo';let comentarios=[];try{comentarios=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(comentarios))comentarios=[]}catch(e){comentarios=[]}
  function render(){const lista=document.getElementById('comments-list');lista.innerHTML='';[...base,...comentarios].slice().reverse().forEach(c=>{const article=document.createElement('article');article.className='comment';const avatar=document.createElement('span');avatar.className='avatar';avatar.textContent=(c.nombre||'Visitante').trim().charAt(0).toUpperCase()||'V';const body=document.createElement('div');const name=document.createElement('strong');name.textContent=c.nombre||'Visitante';const date=document.createElement('small');date.textContent=c.fecha||'Publicado ahora';const p=document.createElement('p');p.textContent=c.texto||'El usuario publicó un comentario sin texto.';body.append(name,date,p);article.append(avatar,body);lista.append(article)});document.getElementById('comment-count').textContent=(base.length+comentarios.length)+' comentarios'}
  document.getElementById('comment-form').addEventListener('submit',e=>{e.preventDefault();comentarios.push({nombre:document.getElementById('comment-name').value.trim()||'Visitante',texto:document.getElementById('comment-text').value.trim()||'El usuario publicó un comentario sin texto.',fecha:new Date().toLocaleString('es-MX')});try{localStorage.setItem(key,JSON.stringify(comentarios))}catch(e){}render();e.currentTarget.reset();aviso('Comentario publicado (simulado).')});render();
+})();
+</script>
+<script>
+/* Valoraciones de usuarios (sección de testimonios). Es independiente de la sección de comentarios. */
+(() => {
+    const CLAVE = 'valoracionesMarketingSanGerardo';
+    const grid = document.querySelector('.review-grid');
+    const selector = document.getElementById('val-estrellas-input');
+    const toastEl = document.getElementById('toast');
+    if (!grid || !selector) return;
+
+    let propias = [];
+    try { const d = JSON.parse(localStorage.getItem(CLAVE) || '[]'); propias = Array.isArray(d) ? d : []; } catch (e) { propias = []; }
+    let estrellas = 5;
+    let tTimer;
+
+    function aviso(texto) {
+        toastEl.textContent = texto;
+        toastEl.className = 'toast visible success';
+        clearTimeout(tTimer);
+        tTimer = setTimeout(() => toastEl.classList.remove('visible'), 3200);
+    }
+
+    function pintarSelector() {
+        selector.querySelectorAll('button').forEach(b => b.classList.toggle('on', Number(b.dataset.valor) <= estrellas));
+        document.getElementById('val-estrellas-texto').textContent = estrellas + (estrellas === 1 ? ' de 5 estrella' : ' de 5 estrellas');
+    }
+
+    selector.addEventListener('click', e => {
+        const b = e.target.closest('button[data-valor]');
+        if (!b) return;
+        estrellas = Number(b.dataset.valor);
+        pintarSelector();
+    });
+
+    function renderPropias() {
+        grid.querySelectorAll('.review.propia').forEach(n => n.remove());
+        propias.forEach(v => {
+            const n = Math.max(0, Math.min(5, Number(v.estrellas) || 0));
+            const art = document.createElement('article');
+            art.className = 'review propia';
+
+            const st = document.createElement('div');
+            st.className = 'stars';
+            st.textContent = '★'.repeat(n) + '☆'.repeat(5 - n);
+
+            const p = document.createElement('p');
+            p.textContent = '“' + (v.texto || 'Valoró con ' + n + (n === 1 ? ' estrella.' : ' estrellas.')) + '”';
+
+            const nombre = document.createElement('strong');
+            nombre.textContent = v.nombre || 'Visitante';
+
+            const small = document.createElement('small');
+            small.textContent = 'Valoración de usuario · ' + (v.fecha || '');
+
+            art.append(st, p, nombre, small);
+            grid.append(art);
+        });
+    }
+
+    document.getElementById('valoracion-form').addEventListener('submit', e => {
+        e.preventDefault();
+        propias.push({
+            estrellas,
+            nombre: document.getElementById('valoracion-nombre').value.trim() || 'Visitante',
+            texto: document.getElementById('valoracion-texto').value.trim(),
+            fecha: new Date().toLocaleDateString('es-MX')
+        });
+        try { localStorage.setItem(CLAVE, JSON.stringify(propias)); } catch (err) {}
+        renderPropias();
+        e.currentTarget.reset();
+        estrellas = 5;
+        pintarSelector();
+        aviso('¡Gracias por tu valoración!');
+        grid.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    pintarSelector();
+    renderPropias();
 })();
 </script></body></html>

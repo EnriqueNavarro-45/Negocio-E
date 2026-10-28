@@ -24,3 +24,22 @@
 .destacado-nota{display:block;margin-top:16px;color:#8b958c;font-size:10px}
 .mk-footer>a:not(.mk-brand){font-size:11px;font-weight:600}
 @media(max-width:800px){.destacado{grid-template-columns:1fr}.destacado-foto{min-height:300px}.destacado-foto img{max-height:240px}}
+
+/* ===== VALORACIÓN CON ESTRELLAS (testimonios) ===== */
+.val-card{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px;align-items:center;margin-top:28px;padding:30px;background:#f7faf6;border:1px solid var(--border);border-radius:22px}
+.val-card-texto h3{margin:0 0 8px;font-size:22px;letter-spacing:-.5px;color:var(--dark)}
+.val-card-texto p{margin:0;font-size:13px;line-height:1.8;color:#657368}
+.val-form{display:flex;flex-direction:column;gap:12px}
+.val-estrellas-fila{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.val-estrellas-input{display:inline-flex;gap:2px}
+.val-estrellas-input button{padding:0 2px;font:inherit;font-size:34px;line-height:1;color:#d3dcd3;background:none;border:0;cursor:pointer;transition:transform .15s,color .15s}
+.val-estrellas-input button.on{color:#e0a82e}
+.val-estrellas-input button:hover{transform:scale(1.15)}
+.val-estrellas-input button:focus-visible{outline:2px solid #6fa17a;border-radius:6px}
+#val-estrellas-texto{font-size:12px;font-weight:600;color:var(--muted)}
+.val-form input,.val-form textarea{width:100%;padding:12px 14px;font:inherit;font-size:13px;color:var(--text);background:#fff;border:1px solid #dce6dc;border-radius:10px;outline:none}
+.val-form textarea{resize:vertical}
+.val-form input:focus,.val-form textarea:focus{border-color:#6fa17a;box-shadow:0 0 0 3px #26744912}
+.val-form .btn{align-self:flex-start}
+.review.propia small{display:block}
+@media(max-width:800px){.val-card{grid-template-columns:1fr;padding:22px}}
