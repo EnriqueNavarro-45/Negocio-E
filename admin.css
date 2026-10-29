@@ -957,12 +957,6 @@ textarea.admin-input { resize: vertical; }
     padding: 8px 30px 18px;
 }
 
-.admin-subhead.separado {
-    margin-top: 14px;
-    padding-top: 30px;
-    border-top: 1px solid var(--borde);
-}
-
 .admin-subhead h3 {
     margin: 0 0 3px;
     font-size: 17px;
@@ -978,18 +972,6 @@ textarea.admin-input { resize: vertical; }
 .admin-secondary-btn:disabled {
     opacity: .5;
     cursor: not-allowed;
-}
-
-.admin-emoji-thumb {
-    flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-    display: grid;
-    place-items: center;
-    border: 1px solid var(--borde);
-    border-radius: 11px;
-    background: var(--verde-claro);
-    font-size: 22px;
 }
 
 .admin-puja-fila {

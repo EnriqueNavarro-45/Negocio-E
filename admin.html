@@ -69,7 +69,7 @@
             <button type="button" class="admin-tab" data-tab="ofertas">Ofertas</button>
             <button type="button" class="admin-tab" data-tab="promociones">Promociones</button>
             <button type="button" class="admin-tab" data-tab="pedidos" id="tab-btn-pedidos">Pedidos</button>
-            <button type="button" class="admin-tab" data-tab="feria">Feria y subasta</button>
+            <button type="button" class="admin-tab" data-tab="subasta">Subasta</button>
         </nav>
 
         <!-- INVENTARIO -->
@@ -338,45 +338,19 @@
                 </table>
             </div>
         </section>
-        <!-- FERIA Y SUBASTA -->
-        <section class="admin-panel" id="tab-feria" hidden>
+        <!-- SUBASTA -->
+        <section class="admin-panel" id="tab-subasta" hidden>
             <div class="admin-panel-header">
                 <div>
-                    <span class="admin-tag">Comunidad</span>
-                    <h2>Feria agrícola y subasta</h2>
-                    <p>Revisa lo que publica la comunidad y controla las subastas de la feria.</p>
+                    <span class="admin-tag">Feria agrícola</span>
+                    <h2>Subasta</h2>
+                    <p>Controla las subastas que los clientes ven en la feria.</p>
                 </div>
             </div>
 
             <div class="admin-subhead">
                 <div>
-                    <h3>Publicaciones de la feria</h3>
-                    <p id="feria-resumen"></p>
-                </div>
-                <button type="button" id="feria-vaciar" class="admin-secondary-btn">Eliminar todas</button>
-            </div>
-
-            <div class="admin-table-wrap">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Productor</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Disponible</th>
-                            <th>Zona</th>
-                            <th>Publicado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feria-tabla"></tbody>
-                </table>
-            </div>
-
-            <div class="admin-subhead separado">
-                <div>
-                    <h3>Subastas</h3>
+                    <h3>Subastas de la feria</h3>
                     <p>Tú controlas las subastas: Iniciar → En vivo → Finalizada → Reiniciar. Los clientes solo pueden pujar.</p>
                 </div>
                 <div class="admin-panel-header-actions">

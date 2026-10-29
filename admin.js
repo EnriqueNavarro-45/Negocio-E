@@ -583,12 +583,8 @@ const EJEMPLOS = [
       items: [{ name: 'Chile Habanero', kg: 0.5, price: 80 }, { name: 'Limón', kg: 2, price: 30 }] }
 ];
 
-/* ========== FERIA AGRÍCOLA Y SUBASTA ========== */
-const CLAVE_FERIA    = 'feriaAgricolaSanGerardo';
+/* ========== SUBASTA DE LA FERIA ========== */
 const CLAVE_SUBASTA  = 'subastaFeriaSanGerardo';
-
-const EMOJIS_FERIA = { frutas: '🍊', verduras: '🥕', hierbas: '🌿', otros: '🧺' };
-const CATEGORIAS_FERIA = { frutas: 'Frutas', verduras: 'Verduras', hierbas: 'Hierbas', otros: 'Otros' };
 
 /* Mismas subastas y tiempos que usa feria.html (si cambias una, cambia la otra) */
 const SUBASTAS_META = [
@@ -630,56 +626,6 @@ function formatoTiempoAdmin(ms) {
     const s = Math.floor(ms / 1000);
     return [Math.floor(s / 3600), Math.floor(s % 3600 / 60), s % 60]
         .map(n => String(n).padStart(2, '0')).join(':');
-}
-
-function precioFeria(p) {
-    const n = parseFloat(p.precio);
-    if (Number.isFinite(n)) return dinero(n) + ' / ' + (p.unidad || 'kg');
-    return p.precio ? String(p.precio) : 'A convenir';
-}
-
-function renderFeria() {
-    const lista = leer(CLAVE_FERIA);
-
-    $('feria-resumen').textContent = lista.length
-        ? `${lista.length} ${lista.length === 1 ? 'publicación' : 'publicaciones'} de usuarios (las 6 de ejemplo vienen incluidas en la página).`
-        : 'Aún no hay publicaciones de usuarios (las 6 de ejemplo vienen incluidas en la página).';
-    $('feria-vaciar').disabled = !lista.length;
-
-    if (!lista.length) {
-        $('feria-tabla').innerHTML = '<tr><td colspan="8" class="admin-empty">Nadie ha publicado todavía en la feria.</td></tr>';
-        return;
-    }
-
-    $('feria-tabla').innerHTML = lista.map(p => {
-        const marca = Number(String(p.id || '').replace(/\D/g, ''));
-        const fecha = marca > 1e12 ? fechaCorta(marca) : '—';
-        const foto = p.imagen
-            ? `<img src="${esc(p.imagen)}" alt="${esc(p.producto)}" loading="lazy" onerror="this.style.visibility='hidden'">`
-            : `<span class="admin-emoji-thumb">${EMOJIS_FERIA[p.categoria] || '🧺'}</span>`;
-        return `<tr>
-            <td>
-                <div class="admin-product-cell">
-                    ${foto}
-                    <div>
-                        <strong>${esc(p.producto || 'Sin nombre')}</strong>
-                        <small class="admin-muted-subline">${esc(String(p.descripcion || '').slice(0, 60))}</small>
-                    </div>
-                </div>
-            </td>
-            <td>${esc(p.productor || 'Productor')}</td>
-            <td>${esc(CATEGORIAS_FERIA[p.categoria] || p.categoria || '—')}</td>
-            <td>${esc(precioFeria(p))}</td>
-            <td>${p.cantidad ? esc(p.cantidad) + ' ' + esc(p.unidad || '') : 'Por confirmar'}</td>
-            <td>${esc(p.zona || '—')}</td>
-            <td>${esc(fecha)}</td>
-            <td>
-                <div class="admin-row-actions">
-                    <button type="button" class="btn-eliminar-producto" data-feria-eliminar="${esc(p.id)}">Eliminar</button>
-                </div>
-            </td>
-        </tr>`;
-    }).join('');
 }
 
 function renderSubastas() {
@@ -935,15 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = e.target.closest('.admin-tab');
         if (!btn) return;
         document.querySelectorAll('.admin-tab').forEach(b => b.classList.toggle('activo', b === btn));
-        ['inventario', 'ofertas', 'promociones', 'pedidos', 'feria'].forEach(t => {
+        ['inventario', 'ofertas', 'promociones', 'pedidos', 'subasta'].forEach(t => {
             $('tab-' + t).hidden = t !== btn.dataset.tab;
         });
         if (btn.dataset.tab === 'ofertas') renderOfertas();
         if (btn.dataset.tab === 'promociones') renderPromociones();
-        if (btn.dataset.tab === 'feria') {
-            renderFeria();
-            renderSubastas();
-        }
+        if (btn.dataset.tab === 'subasta') renderSubastas();
         if (btn.dataset.tab === 'pedidos') {
             $('filtro-pedidos').value = 'todos';
             renderPedidos();
@@ -1068,30 +1011,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ----- Feria y subasta ----- */
-    renderFeria();
+    /* ----- Subasta de la feria ----- */
     renderSubastas();
-
-    $('feria-tabla').addEventListener('click', e => {
-        const btn = e.target.closest('[data-feria-eliminar]');
-        if (!btn) return;
-        const lista = leer(CLAVE_FERIA);
-        const p = lista.find(x => String(x.id) === String(btn.dataset.feriaEliminar));
-        if (!p) return;
-        mostrarConfirmacion('Eliminar publicación', `¿Eliminar "${p.producto || 'esta publicación'}" de la feria?`, 'Eliminar', () => {
-            escribir(CLAVE_FERIA, leer(CLAVE_FERIA).filter(x => String(x.id) !== String(p.id)));
-            renderFeria();
-            toast('Publicación eliminada', 'Ya no aparece en la feria.');
-        });
-    });
-
-    $('feria-vaciar').addEventListener('click', () => {
-        mostrarConfirmacion('Eliminar publicaciones', '¿Eliminar todas las publicaciones de usuarios de la feria?', 'Eliminar todas', () => {
-            escribir(CLAVE_FERIA, []);
-            renderFeria();
-            toast('Feria vaciada', 'Se eliminaron las publicaciones de usuarios.');
-        });
-    });
 
     $('subastas-tabla').addEventListener('click', e => {
         const btn = e.target.closest('[data-sub-accion]');
@@ -1154,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* Reloj de las subastas mientras la pestaña está abierta */
     setInterval(() => {
-        if ($('tab-feria').hidden) return;
+        if ($('tab-subasta').hidden) return;
         const estados = leerSubastas();
         let cambio = false;
         SUBASTAS_META.forEach(m => {
@@ -1167,9 +1088,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cambio) renderSubastas();
     }, 1000);
 
-    /* Si la feria cambia en otra pestaña (pujas, publicaciones), se actualiza aquí */
+    /* Si la subasta cambia en otra pestaña (pujas de los clientes), se actualiza aquí */
     window.addEventListener('storage', e => {
-        if (e.key === CLAVE_FERIA) renderFeria();
         if (e.key === CLAVE_SUBASTA) renderSubastas();
     });
 

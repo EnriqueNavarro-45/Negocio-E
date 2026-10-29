@@ -456,16 +456,6 @@
         aviso('Mensaje enviado a ' + nombre + ' (simulación).');
     });
 
-    /* Si el administrador elimina publicaciones, se refleja aquí */
-    window.addEventListener('storage', e => {
-        if (e.key !== CLAVE) return;
-        try {
-            const d = JSON.parse(e.newValue || '[]');
-            propias = Array.isArray(d) ? d : [];
-        } catch (err) { propias = []; }
-        render();
-    });
-
     render();
 })();
 </script>
