@@ -344,17 +344,18 @@
                 <div>
                     <span class="admin-tag">Feria agrícola</span>
                     <h2>Subasta</h2>
-                    <p>Controla las subastas que los clientes ven en la feria.</p>
+                    <p>Crea y controla las subastas que los clientes ven en la feria.</p>
                 </div>
             </div>
 
             <div class="admin-subhead">
                 <div>
                     <h3>Subastas de la feria</h3>
-                    <p>Tú controlas las subastas: Iniciar → En vivo → Finalizada → Reiniciar. Los clientes solo pueden pujar.</p>
+                    <p>Crea, edita y elimina subastas. Cada una sigue el ciclo Iniciar → En vivo → Finalizada → Reiniciar. Los clientes solo pueden pujar.</p>
                 </div>
                 <div class="admin-panel-header-actions">
-                    <button type="button" id="subastas-iniciar" class="admin-primary-btn">Iniciar todas</button>
+                    <button type="button" id="subasta-nueva" class="admin-primary-btn">+ Nueva subasta</button>
+                    <button type="button" id="subastas-iniciar" class="admin-secondary-btn">Iniciar todas</button>
                     <button type="button" id="subastas-reiniciar" class="admin-secondary-btn">Reiniciar todas</button>
                 </div>
             </div>
@@ -443,6 +444,59 @@
                 <button type="button" class="admin-secondary-btn" id="admin-confirm-cancelar">Cancelar</button>
                 <button type="button" class="admin-danger-btn" id="admin-confirm-aceptar">Confirmar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- NUEVA / EDITAR SUBASTA -->
+    <div class="admin-overlay" id="modal-subasta" aria-hidden="true">
+        <div class="admin-modal admin-coupon-modal" role="dialog" aria-modal="true" aria-labelledby="subasta-modal-titulo">
+            <div class="admin-modal-header">
+                <div>
+                    <span class="admin-tag">Subasta</span>
+                    <h2 id="subasta-modal-titulo">Nueva subasta</h2>
+                </div>
+                <button type="button" class="admin-modal-close" id="cerrar-modal-subasta" aria-label="Cerrar">×</button>
+            </div>
+            <p>Todos los campos son opcionales. Si dejas alguno vacío se usa un valor por defecto. La duración empieza a contar cuando inicias la subasta.</p>
+            <form id="form-subasta" class="promocion-form-grid" novalidate>
+                <input type="hidden" id="subasta-id-edicion" value="">
+                <label>
+                    Producto
+                    <input type="text" id="subasta-titulo" class="admin-input" placeholder="Ej. Canasta de frutas de temporada" autocomplete="off">
+                </label>
+                <label>
+                    Vendedor
+                    <input type="text" id="subasta-vendedor" class="admin-input" placeholder="Ej. San Gerardo Mayela" autocomplete="off">
+                </label>
+                <label class="promocion-descripcion-label">
+                    Descripción
+                    <textarea id="subasta-desc" class="admin-input" rows="2" placeholder="Cuéntales qué se subasta"></textarea>
+                </label>
+                <label>
+                    Precio inicial (MXN)
+                    <input type="text" id="subasta-precio" class="admin-input" inputmode="decimal" placeholder="Ej. 99">
+                </label>
+                <label>
+                    Aumento mínimo por puja (MXN)
+                    <input type="text" id="subasta-incremento" class="admin-input" inputmode="decimal" placeholder="Ej. 10">
+                </label>
+                <label>
+                    Duración (minutos)
+                    <input type="text" id="subasta-duracion" class="admin-input" inputmode="numeric" placeholder="Ej. 60">
+                </label>
+                <label>
+                    Foto del producto
+                    <span class="admin-foto">
+                        <span class="admin-foto-preview" id="subasta-foto-preview">📷</span>
+                        <span class="admin-foto-texto" id="subasta-foto-texto">Elegir foto…</span>
+                        <input type="file" id="subasta-foto" accept="image/*">
+                    </span>
+                </label>
+                <div class="promocion-form-actions">
+                    <button type="submit" class="admin-primary-btn" id="guardar-subasta">Crear subasta</button>
+                    <button type="button" class="admin-secondary-btn" id="cancelar-subasta">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 

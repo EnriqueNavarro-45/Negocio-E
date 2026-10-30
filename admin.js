@@ -584,24 +584,52 @@ const EJEMPLOS = [
 ];
 
 /* ========== SUBASTA DE LA FERIA ========== */
-const CLAVE_SUBASTA  = 'subastaFeriaSanGerardo';
+const CLAVE_SUBASTA     = 'subastaFeriaSanGerardo';          // estado: pujas y tiempos
+const CLAVE_SUBASTA_DEF = 'subastasDefinicionesSanGerardo';  // subastas creadas por el admin
 
-/* Mismas subastas y tiempos que usa feria.html (si cambias una, cambia la otra) */
-const SUBASTAS_META = [
-    { id: 's1', titulo: 'Fruta Wumpa · edición limitada', vendedor: 'San Gerardo Mayela', duracion: 150 * 60000,
+/* Subastas de ejemplo (iguales a las de feria.html): se cargan la primera vez */
+const SUBASTAS_SEMILLA = [
+    { id: 's1', titulo: 'Fruta Wumpa · edición limitada', vendedor: 'San Gerardo Mayela', emoji: '🍑',
+      desc: 'La fruta exótica más codiciada. Una sola pieza, jugosa y de sabor dulce.',
+      imagen: 'Imagenes/Img productos/wumpa.jpeg', contener: true,
+      precioInicial: 99, incremento: 10, duracionMin: 150,
       pujasIni: [['Carmen V.', 99], ['Luis M.', 109], ['Sofía R.', 129]] },
-    { id: 's2', titulo: 'Caja de aguacate de patio · 3 kg', vendedor: 'Don Ernesto Ruiz', duracion: 5 * 60000,
+    { id: 's2', titulo: 'Caja de aguacate de patio · 3 kg', vendedor: 'Don Ernesto Ruiz', emoji: '🥑',
+      desc: 'Aguacates del árbol de su patio, cosechados esta semana.',
+      imagen: 'Imagenes/Img productos/Aguacate2.jpg', contener: false,
+      precioInicial: 80, incremento: 5, duracionMin: 5,
       pujasIni: [['Pedro A.', 80], ['Ana L.', 90]] },
-    { id: 's3', titulo: 'Canasta de huerto de temporada', vendedor: 'Familia Rangel', duracion: 80 * 60000,
+    { id: 's3', titulo: 'Canasta de huerto de temporada', vendedor: 'Familia Rangel', emoji: '🧺',
+      desc: 'Jitomate, calabacita, zanahoria y hierbas frescas de su huerto.',
+      imagen: 'Imagenes/Img productos/Jitomate2.jpg', contener: false,
+      precioInicial: 120, incremento: 10, duracionMin: 80,
       pujasIni: [['Luis M.', 120]] }
 ];
 
-function crearSubasta(meta, iniciada = true, ahora = Date.now()) {
+function escribirDefsSubasta(datos) {
+    localStorage.setItem(CLAVE_SUBASTA_DEF, JSON.stringify(datos));
+}
+
+/* Lista de subastas creadas (si nunca se ha guardado nada, se cargan las de ejemplo) */
+function leerDefsSubasta() {
+    try {
+        const d = JSON.parse(localStorage.getItem(CLAVE_SUBASTA_DEF));
+        if (Array.isArray(d)) return d;
+    } catch {}
+    const semilla = structuredClone(SUBASTAS_SEMILLA);
+    escribirDefsSubasta(semilla);
+    return semilla;
+}
+
+const duracionDef = def => (Number(def.duracionMin) > 0 ? Number(def.duracionMin) : 60) * 60000;
+
+function crearSubasta(def, iniciada = true, ahora = Date.now()) {
+    const ini = def.pujasIni || [];
     return {
         iniciada,
-        endsAt: iniciada ? ahora + meta.duracion : 0,
-        pujas: meta.pujasIni.map(([quien, monto], i) => ({
-            quien, monto, t: ahora - (meta.pujasIni.length - i) * 420000
+        endsAt: iniciada ? ahora + duracionDef(def) : 0,
+        pujas: ini.map(([quien, monto], i) => ({
+            quien, monto, t: ahora - (ini.length - i) * 420000
         }))
     };
 }
@@ -610,15 +638,22 @@ function escribirSubastas(datos) {
     localStorage.setItem(CLAVE_SUBASTA, JSON.stringify(datos));
 }
 
+/* Estado de cada subasta; si falta alguna (por ejemplo una recién creada) se agrega "Sin iniciar" */
 function leerSubastas() {
+    let d = {};
     try {
-        const d = JSON.parse(localStorage.getItem(CLAVE_SUBASTA));
-        if (d && typeof d === 'object' && SUBASTAS_META.every(m => d[m.id] && Array.isArray(d[m.id].pujas))) return d;
+        const x = JSON.parse(localStorage.getItem(CLAVE_SUBASTA));
+        if (x && typeof x === 'object') d = x;
     } catch {}
-    const nuevo = {};
-    SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m, false); });
-    escribirSubastas(nuevo);
-    return nuevo;
+    let cambio = false;
+    leerDefsSubasta().forEach(def => {
+        if (!d[def.id] || !Array.isArray(d[def.id].pujas)) {
+            d[def.id] = crearSubasta(def, false);
+            cambio = true;
+        }
+    });
+    if (cambio) escribirSubastas(d);
+    return d;
 }
 
 function formatoTiempoAdmin(ms) {
@@ -629,54 +664,82 @@ function formatoTiempoAdmin(ms) {
 }
 
 function renderSubastas() {
+    const defs = leerDefsSubasta();
     const estados = leerSubastas();
     const ahora = Date.now();
 
-    $('subastas-tabla').innerHTML = SUBASTAS_META.map(m => {
-        const s = estados[m.id];
+    if (!defs.length) {
+        $('subastas-tabla').innerHTML = '<tr><td colspan="7" class="admin-empty">Aún no hay subastas. Crea la primera con el botón "+ Nueva subasta".</td></tr>';
+        return;
+    }
+
+    $('subastas-tabla').innerHTML = defs.map(def => {
+        const s = estados[def.id];
         const arrancada = s.iniciada !== false;
-        const top = s.pujas[s.pujas.length - 1];
+        const top = arrancada && s.pujas.length ? s.pujas[s.pujas.length - 1] : null;
         const ms = s.endsAt - ahora;
         const fin = arrancada && ms <= 0;
 
         let clase, texto, reloj;
-        if (!arrancada) { clase = 'confirmado'; texto = 'Sin iniciar'; reloj = 'Dura ' + formatoTiempoAdmin(m.duracion); }
+        if (!arrancada) { clase = 'confirmado'; texto = 'Sin iniciar'; reloj = 'Dura ' + formatoTiempoAdmin(duracionDef(def)); }
         else if (fin) { clase = 'oculto'; texto = 'Finalizada'; reloj = 'Terminó'; }
         else if (ms < 600000) { clase = 'bajo'; texto = 'Termina pronto'; reloj = formatoTiempoAdmin(ms) + ' restante'; }
         else { clase = 'vigente'; texto = 'En vivo'; reloj = formatoTiempoAdmin(ms) + ' restante'; }
 
-        const botones = !arrancada
-            ? `<button type="button" class="admin-primary-btn admin-small-primary" data-sub-accion="iniciar" data-id="${m.id}">Iniciar</button>`
-            : `<button type="button" class="admin-small-btn" data-sub-accion="ver" data-id="${m.id}">Ver pujas</button>
-               ${fin ? '' : `<button type="button" class="admin-small-btn" data-sub-accion="finalizar" data-id="${m.id}">Finalizar</button>`}
-               <button type="button" class="admin-small-btn" data-sub-accion="reiniciar" data-id="${m.id}">Reiniciar</button>`;
+        const foto = def.imagen
+            ? `<img src="${esc(def.imagen)}" alt="${esc(def.titulo)}" loading="lazy" onerror="this.style.visibility='hidden'">`
+            : `<span class="admin-emoji-thumb">${esc(def.emoji || '🔨')}</span>`;
+
+        const botonesEstado = !arrancada
+            ? `<button type="button" class="admin-primary-btn admin-small-primary" data-sub-accion="iniciar" data-id="${esc(def.id)}">Iniciar</button>`
+            : `<button type="button" class="admin-small-btn" data-sub-accion="ver" data-id="${esc(def.id)}">Ver pujas</button>
+               ${fin ? '' : `<button type="button" class="admin-small-btn" data-sub-accion="finalizar" data-id="${esc(def.id)}">Finalizar</button>`}
+               <button type="button" class="admin-small-btn" data-sub-accion="reiniciar" data-id="${esc(def.id)}">Reiniciar</button>`;
+
+        const actual = top ? top.monto : (Number(def.precioInicial) || 0);
 
         return `<tr>
-            <td><strong>${esc(m.titulo)}</strong></td>
-            <td>${esc(m.vendedor)}</td>
-            <td><strong>${dinero(arrancada ? top.monto : m.pujasIni[0][1])}</strong>${arrancada ? '' : '<small class="admin-muted-subline">precio inicial</small>'}</td>
+            <td>
+                <div class="admin-product-cell">
+                    ${foto}
+                    <div>
+                        <strong>${esc(def.titulo)}</strong>
+                        <small class="admin-muted-subline">Aumento mínimo ${dinero(Number(def.incremento) || 0)}</small>
+                    </div>
+                </div>
+            </td>
+            <td>${esc(def.vendedor)}</td>
+            <td><strong>${dinero(actual)}</strong>${top ? '' : '<small class="admin-muted-subline">precio inicial</small>'}</td>
             <td>${arrancada ? s.pujas.length : '—'}</td>
-            <td>${arrancada ? esc(top.quien) : '—'}</td>
+            <td>${arrancada && top ? esc(top.quien) : '—'}</td>
             <td>
                 <span class="estado estado-${clase}">${texto}</span>
-                <small class="admin-muted-subline" data-reloj-admin="${m.id}">${reloj}</small>
+                <small class="admin-muted-subline" data-reloj-admin="${esc(def.id)}">${reloj}</small>
             </td>
-            <td><div class="admin-row-actions">${botones}</div></td>
+            <td>
+                <div class="admin-row-actions">
+                    ${botonesEstado}
+                    <button type="button" class="admin-small-btn" data-sub-accion="editar" data-id="${esc(def.id)}">Editar</button>
+                    <button type="button" class="btn-eliminar-producto" data-sub-accion="eliminar" data-id="${esc(def.id)}">Eliminar</button>
+                </div>
+            </td>
         </tr>`;
     }).join('');
 }
 
 function abrirPujasAdmin(id) {
-    const m = SUBASTAS_META.find(x => x.id === id);
-    if (!m) return;
+    const def = leerDefsSubasta().find(x => x.id === id);
+    if (!def) return;
     const s = leerSubastas()[id];
-    $('pujas-admin-titulo').textContent = m.titulo;
-    $('pujas-admin-contenido').innerHTML = s.pujas.slice().reverse().map((p, i) => `
+    $('pujas-admin-titulo').textContent = def.titulo;
+    $('pujas-admin-contenido').innerHTML = s.pujas.length
+        ? s.pujas.slice().reverse().map((p, i) => `
         <div class="admin-puja-fila ${i === 0 ? 'ganadora' : ''}">
             <span>${esc(p.quien)}${i === 0 ? ' · mejor puja' : ''}</span>
             <strong>${dinero(p.monto)}</strong>
             <small>${esc(new Date(p.t).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }))}</small>
-        </div>`).join('');
+        </div>`).join('')
+        : '<p class="admin-puja-vacia">Todavía nadie ha pujado por esta subasta.</p>';
     abrirOverlay('modal-pujas-admin');
 }
 const cerrarPujasAdmin = () => cerrarOverlay('modal-pujas-admin');
@@ -697,6 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cerrarFormPromocion();
         cerrarDetallePedido();
         cerrarPujasAdmin();
+        cerrarFormSubasta();
     });
 
     /* ----- Inventario ----- */
@@ -1014,42 +1078,155 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ----- Subasta de la feria ----- */
     renderSubastas();
 
+    /* Foto de la subasta (se reduce para poder guardarla en el navegador) */
+    let fotoSubasta = null;
+    let imagenActualSubasta = '';
+    let urlPreviaSubasta = '';
+
+    function mostrarVistaPreviaSubasta() {
+        const previa = $('subasta-foto-preview');
+        if (urlPreviaSubasta) URL.revokeObjectURL(urlPreviaSubasta);
+        urlPreviaSubasta = '';
+        if (fotoSubasta) {
+            urlPreviaSubasta = URL.createObjectURL(fotoSubasta);
+            previa.style.backgroundImage = `url("${urlPreviaSubasta}")`;
+            previa.textContent = '';
+            $('subasta-foto-texto').textContent = fotoSubasta.name;
+        } else if (imagenActualSubasta) {
+            previa.style.backgroundImage = `url("${imagenActualSubasta}")`;
+            previa.textContent = '';
+            $('subasta-foto-texto').textContent = 'Foto actual (elige otra para cambiarla)';
+        } else {
+            previa.style.backgroundImage = '';
+            previa.textContent = '📷';
+            $('subasta-foto-texto').textContent = 'Elegir foto…';
+        }
+    }
+
+    $('subasta-foto').addEventListener('change', e => {
+        fotoSubasta = e.target.files[0] || null;
+        mostrarVistaPreviaSubasta();
+    });
+
+    function abrirFormSubasta(def = null) {
+        $('form-subasta').reset();
+        $('subasta-id-edicion').value = def ? def.id : '';
+        fotoSubasta = null;
+        imagenActualSubasta = def ? (def.imagen || '') : '';
+        if (def) {
+            $('subasta-titulo').value = def.titulo ?? '';
+            $('subasta-vendedor').value = def.vendedor ?? '';
+            $('subasta-desc').value = def.desc ?? '';
+            $('subasta-precio').value = def.precioInicial ?? '';
+            $('subasta-incremento').value = def.incremento ?? '';
+            $('subasta-duracion').value = def.duracionMin ?? '';
+        }
+        $('subasta-modal-titulo').textContent = def ? 'Editar subasta' : 'Nueva subasta';
+        $('guardar-subasta').textContent = def ? 'Guardar cambios' : 'Crear subasta';
+        mostrarVistaPreviaSubasta();
+        abrirOverlay('modal-subasta');
+        $('subasta-titulo').focus();
+    }
+
+    function cerrarFormSubasta() {
+        cerrarOverlay('modal-subasta');
+    }
+
+    $('subasta-nueva').addEventListener('click', () => abrirFormSubasta());
+    $('cerrar-modal-subasta').addEventListener('click', cerrarFormSubasta);
+    $('cancelar-subasta').addEventListener('click', cerrarFormSubasta);
+    $('modal-subasta').addEventListener('click', e => { if (e.target.id === 'modal-subasta') cerrarFormSubasta(); });
+
+    /* Crear o guardar cambios (sin validaciones: lo vacío usa un valor por defecto) */
+    $('form-subasta').addEventListener('submit', async e => {
+        e.preventDefault();
+        const defs = leerDefsSubasta();
+        const idEdicion = $('subasta-id-edicion').value;
+        const numero = (id, porDefecto) => {
+            const n = parseFloat(String($(id).value).replace(',', '.'));
+            return Number.isFinite(n) && n > 0 ? n : porDefecto;
+        };
+        const nuevaImagen = fotoSubasta ? await reducirImagen(fotoSubasta, 800) : '';
+
+        const datos = {
+            titulo: $('subasta-titulo').value.trim() || 'Producto en subasta',
+            vendedor: $('subasta-vendedor').value.trim() || 'San Gerardo Mayela',
+            desc: $('subasta-desc').value.trim() || 'Producto especial en subasta.',
+            precioInicial: numero('subasta-precio', 50),
+            incremento: numero('subasta-incremento', 5),
+            duracionMin: numero('subasta-duracion', 60)
+        };
+
+        if (idEdicion) {
+            const def = defs.find(x => x.id === idEdicion);
+            if (def) {
+                Object.assign(def, datos);
+                if (nuevaImagen) def.imagen = nuevaImagen;
+            }
+        } else {
+            defs.push({ id: 'S-' + Date.now(), ...datos, imagen: nuevaImagen, emoji: '🔨', contener: false, pujasIni: [] });
+        }
+
+        try {
+            escribirDefsSubasta(defs);
+        } catch (error) {
+            return toast('No se pudo guardar', 'La foto es muy pesada para el navegador. Prueba con una más ligera.');
+        }
+
+        cerrarFormSubasta();
+        renderSubastas();
+        toast(idEdicion ? 'Subasta actualizada' : 'Subasta creada', datos.titulo);
+    });
+
     $('subastas-tabla').addEventListener('click', e => {
         const btn = e.target.closest('[data-sub-accion]');
         if (!btn) return;
-        const meta = SUBASTAS_META.find(m => m.id === btn.dataset.id);
-        if (!meta) return;
+        const def = leerDefsSubasta().find(m => m.id === btn.dataset.id);
+        if (!def) return;
         const accion = btn.dataset.subAccion;
 
-        if (accion === 'ver') return abrirPujasAdmin(meta.id);
+        if (accion === 'ver') return abrirPujasAdmin(def.id);
+        if (accion === 'editar') return abrirFormSubasta(def);
+
+        if (accion === 'eliminar') {
+            return mostrarConfirmacion('Eliminar subasta', `¿Eliminar "${def.titulo}"? También se borrarán sus pujas.`, 'Eliminar', () => {
+                escribirDefsSubasta(leerDefsSubasta().filter(x => x.id !== def.id));
+                const estados = leerSubastas();
+                delete estados[def.id];
+                escribirSubastas(estados);
+                renderSubastas();
+                toast('Subasta eliminada', def.titulo);
+            });
+        }
 
         const estados = leerSubastas();
         if (accion === 'iniciar') {
-            estados[meta.id] = crearSubasta(meta, true);
+            estados[def.id] = crearSubasta(def, true);
             escribirSubastas(estados);
             renderSubastas();
-            return toast('Subasta iniciada', `${meta.titulo} ya está en vivo.`);
+            return toast('Subasta iniciada', `${def.titulo} ya está en vivo.`);
         }
         if (accion === 'finalizar') {
-            estados[meta.id].endsAt = Date.now() - 1;
+            estados[def.id].endsAt = Date.now() - 1;
             escribirSubastas(estados);
             renderSubastas();
-            const top = estados[meta.id].pujas[estados[meta.id].pujas.length - 1];
-            return toast('Subasta finalizada', `Ganó ${top.quien} con ${dinero(top.monto)}.`);
+            const pujas = estados[def.id].pujas;
+            const top = pujas.length ? pujas[pujas.length - 1] : null;
+            return toast('Subasta finalizada', top ? `Ganó ${top.quien} con ${dinero(top.monto)}.` : 'Terminó sin pujas.');
         }
 
-        estados[meta.id] = crearSubasta(meta, false);
+        estados[def.id] = crearSubasta(def, false);
         escribirSubastas(estados);
         renderSubastas();
-        toast('Subasta reiniciada', `${meta.titulo} volvió a "Sin iniciar".`);
+        toast('Subasta reiniciada', `${def.titulo} volvió a "Sin iniciar".`);
     });
 
     $('subastas-iniciar').addEventListener('click', () => {
         const estados = leerSubastas();
         let iniciadas = 0;
-        SUBASTAS_META.forEach(m => {
-            if (estados[m.id].iniciada === false) {
-                estados[m.id] = crearSubasta(m, true);
+        leerDefsSubasta().forEach(def => {
+            if (estados[def.id].iniciada === false) {
+                estados[def.id] = crearSubasta(def, true);
                 iniciadas++;
             }
         });
@@ -1062,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $('subastas-reiniciar').addEventListener('click', () => {
         mostrarConfirmacion('Reiniciar subastas', 'Todas las subastas volverán a "Sin iniciar" y se borrarán las pujas hechas. Después podrás iniciarlas de nuevo.', 'Reiniciar', () => {
             const nuevo = {};
-            SUBASTAS_META.forEach(m => { nuevo[m.id] = crearSubasta(m, false); });
+            leerDefsSubasta().forEach(def => { nuevo[def.id] = crearSubasta(def, false); });
             escribirSubastas(nuevo);
             renderSubastas();
             toast('Subastas reiniciadas', 'Quedaron en "Sin iniciar".');
@@ -1078,19 +1255,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if ($('tab-subasta').hidden) return;
         const estados = leerSubastas();
         let cambio = false;
-        SUBASTAS_META.forEach(m => {
-            const celda = document.querySelector(`[data-reloj-admin="${m.id}"]`);
-            if (!celda || estados[m.id].iniciada === false) return;
-            const ms = estados[m.id].endsAt - Date.now();
+        leerDefsSubasta().forEach(def => {
+            const celda = document.querySelector(`[data-reloj-admin="${def.id}"]`);
+            const s = estados[def.id];
+            if (!celda || !s || s.iniciada === false) return;
+            const ms = s.endsAt - Date.now();
             if (ms <= 0) { if (celda.textContent !== 'Terminó') cambio = true; }
             else celda.textContent = formatoTiempoAdmin(ms) + ' restante';
         });
         if (cambio) renderSubastas();
     }, 1000);
 
-    /* Si la subasta cambia en otra pestaña (pujas de los clientes), se actualiza aquí */
+    /* Si cambian las pujas desde la feria (otra pestaña), se actualiza aquí */
     window.addEventListener('storage', e => {
-        if (e.key === CLAVE_SUBASTA) renderSubastas();
+        if (e.key === CLAVE_SUBASTA || e.key === CLAVE_SUBASTA_DEF) renderSubastas();
     });
 
     /* ----- Pedidos ----- */

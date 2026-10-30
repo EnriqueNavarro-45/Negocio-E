@@ -462,7 +462,8 @@
 <script>
 /* ===================== SUBASTA (simulada) ===================== */
 (() => {
-    const CLAVE = 'subastaFeriaSanGerardo';
+    const CLAVE = 'subastaFeriaSanGerardo';              // estado: pujas y tiempos
+    const CLAVE_DEF = 'subastasDefinicionesSanGerardo';  // subastas que crea el administrador
     const $ = id => document.getElementById(id);
     const esc = t => String(t ?? '').replace(/[&<>"']/g, c =>
         ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -470,58 +471,78 @@
 
     const BOTS = ['Carmen V.', 'Luis M.', 'Sofía R.', 'Pedro A.', 'Ana L.'];
 
-    const ITEMS = [
+    /* Subastas de ejemplo: se usan mientras el administrador no haya creado las suyas */
+    const SEMILLA = [
         { id: 's1', titulo: 'Fruta Wumpa · edición limitada', vendedor: 'San Gerardo Mayela', emoji: '🍑',
           desc: 'La fruta exótica más codiciada. Una sola pieza, jugosa y de sabor dulce.',
           imagen: 'Imagenes/Img productos/wumpa.jpeg', contener: true,
-          incremento: 10, duracion: 150 * 60000,
+          precioInicial: 99, incremento: 10, duracionMin: 150,
           pujasIni: [['Carmen V.', 99], ['Luis M.', 109], ['Sofía R.', 129]] },
         { id: 's2', titulo: 'Caja de aguacate de patio · 3 kg', vendedor: 'Don Ernesto Ruiz', emoji: '🥑',
           desc: 'Aguacates del árbol de su patio, cosechados esta semana.',
           imagen: 'Imagenes/Img productos/Aguacate2.jpg', contener: false,
-          incremento: 5, duracion: 5 * 60000,
+          precioInicial: 80, incremento: 5, duracionMin: 5,
           pujasIni: [['Pedro A.', 80], ['Ana L.', 90]] },
         { id: 's3', titulo: 'Canasta de huerto de temporada', vendedor: 'Familia Rangel', emoji: '🧺',
           desc: 'Jitomate, calabacita, zanahoria y hierbas frescas de su huerto.',
           imagen: 'Imagenes/Img productos/Jitomate2.jpg', contener: false,
-          incremento: 10, duracion: 80 * 60000,
+          precioInicial: 120, incremento: 10, duracionMin: 80,
           pujasIni: [['Luis M.', 120]] }
     ];
 
-    /* ---------- Estado (se guarda en el navegador) ---------- */
-    function crearEstado() {
-        const ahora = Date.now();
-        const e = {};
-        ITEMS.forEach(it => {
-            e[it.id] = {
-                iniciada: false,
-                endsAt: 0,
-                pujas: it.pujasIni.map(([quien, monto], i) => ({
-                    quien, monto, t: ahora - (it.pujasIni.length - i) * 420000
-                }))
-            };
-        });
-        return e;
+    /* ---------- Subastas (las crea y edita el administrador) ---------- */
+    function cargarDefiniciones() {
+        try {
+            const d = JSON.parse(localStorage.getItem(CLAVE_DEF));
+            if (Array.isArray(d)) return d;
+        } catch (e) {}
+        return SEMILLA;
     }
 
-    let estado = (() => {
+    let ITEMS = cargarDefiniciones();
+    const def = id => ITEMS.find(x => x.id === id);
+    const incremento = it => Number(it.incremento) > 0 ? Number(it.incremento) : 10;
+    const precioInicial = it => Number.isFinite(Number(it.precioInicial)) ? Number(it.precioInicial) : 0;
+    const duracionMs = it => (Number(it.duracionMin) > 0 ? Number(it.duracionMin) : 60) * 60000;
+
+    /* ---------- Estado (se guarda en el navegador) ---------- */
+    function pujasIniciales(it, ahora = Date.now()) {
+        const ini = it.pujasIni || [];
+        return ini.map(([quien, monto], i) => ({ quien, monto, t: ahora - (ini.length - i) * 420000 }));
+    }
+
+    const estadoNuevo = it => ({ iniciada: false, endsAt: 0, pujas: pujasIniciales(it) });
+
+    function leerEstado() {
+        let d = {};
         try {
-            const d = JSON.parse(localStorage.getItem(CLAVE));
-            if (d && typeof d === 'object' && ITEMS.every(it => d[it.id] && Array.isArray(d[it.id].pujas))) return d;
+            const x = JSON.parse(localStorage.getItem(CLAVE));
+            if (x && typeof x === 'object') d = x;
         } catch (e) {}
-        return crearEstado();
-    })();
+        ITEMS.forEach(it => {
+            if (!d[it.id] || !Array.isArray(d[it.id].pujas)) d[it.id] = estadoNuevo(it);
+        });
+        return d;
+    }
+
+    let estado = leerEstado();
 
     function guardar() {
         try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {}
     }
     guardar();
 
-    const mejor = id => estado[id].pujas[estado[id].pujas.length - 1];
+    const mejor = id => {
+        const p = estado[id].pujas;
+        return p.length ? p[p.length - 1] : null;
+    };
     const iniciada = id => estado[id].iniciada !== false;
     const terminada = id => iniciada(id) && Date.now() >= estado[id].endsAt;
     const enCurso = id => iniciada(id) && !terminada(id);
-    const minimo = it => mejor(it.id).monto + it.incremento;
+    /* Antes de iniciar la subasta cuenta el precio inicial, aunque existan pujas de ejemplo guardadas */
+    const pujaVigente = it => (iniciada(it.id) ? mejor(it.id) : null);
+    const precioActual = it => { const t = pujaVigente(it); return t ? t.monto : precioInicial(it); };
+    const minimo = it => { const t = pujaVigente(it); return t ? t.monto + incremento(it) : precioInicial(it); };
 
     function claseEstado(it) {
         if (!iniciada(it.id)) return ['proximo', 'PRÓXIMAMENTE'];
@@ -562,16 +583,16 @@
         const arrancada = iniciada(it.id);
         const top = mejor(it.id);
         const fin = terminada(it.id);
-        const mia = arrancada && top.quien === 'Tú';
+        const mia = arrancada && !!top && top.quien === 'Tú';
         const [clase, texto] = claseEstado(it);
 
-        const monto = arrancada ? top.monto : it.pujasIni[0][1];
-        const etiquetaPrecio = !arrancada ? 'Precio inicial' : (fin ? 'Puja ganadora' : 'Puja actual');
+        const etiquetaPrecio = (!arrancada || !top) ? 'Precio inicial' : (fin ? 'Puja ganadora' : 'Puja actual');
         const numPujas = arrancada ? st.pujas.length : 0;
-        const reloj = arrancada ? formatoTiempo(st.endsAt - Date.now()) : 'Dura ' + formatoTiempo(it.duracion);
+        const reloj = arrancada ? formatoTiempo(st.endsAt - Date.now()) : 'Dura ' + formatoTiempo(duracionMs(it));
 
         let lider;
         if (!arrancada) lider = 'Aún no inicia esta subasta';
+        else if (!top) lider = fin ? 'Terminó sin pujas' : 'Sé el primero en pujar';
         else if (fin) lider = mia ? '🏆 ¡Ganaste esta subasta!' : 'Ganador: ' + esc(top.quien);
         else lider = mia ? '✅ Vas ganando' : 'Mejor postor: ' + esc(top.quien);
 
@@ -579,23 +600,23 @@
         const textoBoton = !arrancada ? 'Aún no inicia' : (fin ? 'Subasta finalizada' : 'Pujar');
 
         return `
-        <article class="subasta-card ${fin ? 'terminada' : ''} ${!arrancada ? 'proxima' : ''}" data-id="${it.id}">
+        <article class="subasta-card ${fin ? 'terminada' : ''} ${!arrancada ? 'proxima' : ''}" data-id="${esc(it.id)}">
             <div class="subasta-foto">
-                <div class="subasta-emoji">${it.emoji}</div>
-                <img class="${it.contener ? 'contener' : ''}" src="${esc(it.imagen)}" alt="${esc(it.titulo)}" loading="lazy" onerror="this.remove()">
+                <div class="subasta-emoji">${esc(it.emoji || '🔨')}</div>
+                ${it.imagen ? `<img class="${it.contener ? 'contener' : ''}" src="${esc(it.imagen)}" alt="${esc(it.titulo)}" loading="lazy" onerror="this.remove()">` : ''}
                 <span class="subasta-estado ${clase}">${texto}</span>
-                <span class="subasta-reloj" ${arrancada ? `data-reloj="${it.id}"` : ''}>${reloj}</span>
+                <span class="subasta-reloj" ${arrancada ? `data-reloj="${esc(it.id)}"` : ''}>${reloj}</span>
             </div>
             <div class="subasta-cuerpo">
                 <h3>${esc(it.titulo)}</h3>
                 <p class="subasta-vendedor">Vendedor: <strong>${esc(it.vendedor)}</strong></p>
                 <p class="subasta-desc">${esc(it.desc)}</p>
                 <div class="subasta-precio">
-                    <div><small>${etiquetaPrecio}</small><strong>${dinero(monto)}</strong></div>
+                    <div><small>${etiquetaPrecio}</small><strong>${dinero(precioActual(it))}</strong></div>
                     <div class="subasta-pujas"><strong>${numPujas}</strong><small>pujas</small></div>
                 </div>
                 <p class="subasta-lider ${mia ? 'mia' : ''}">${lider}</p>
-                <button type="button" class="btn primary" data-accion="pujar" data-id="${it.id}" ${bloqueado ? 'disabled' : ''}>
+                <button type="button" class="btn primary" data-accion="pujar" data-id="${esc(it.id)}" ${bloqueado ? 'disabled' : ''}>
                     ${textoBoton}
                 </button>
             </div>
@@ -607,48 +628,50 @@
     }
 
     function renderGrid() {
-        $('subasta-grid').innerHTML = ITEMS.map(tarjetaHTML).join('');
+        $('subasta-grid').innerHTML = ITEMS.length
+            ? ITEMS.map(tarjetaHTML).join('')
+            : '<div class="feria-vacio"><strong>No hay subastas por ahora</strong><br>Vuelve pronto: el administrador publicará nuevas subastas.</div>';
         ITEMS.forEach(it => { finalizadas[it.id] = terminada(it.id); });
         actualizarStat();
     }
 
     /* ---------- Modal de puja ---------- */
-    let itemModal = null;
+    let idModal = null;
 
     function refrescarModal() {
-        if (!itemModal) return;
-        const it = itemModal;
+        const it = idModal ? def(idModal) : null;
+        if (!it) return;
         const st = estado[it.id];
-        $('puja-actual').textContent = dinero(mejor(it.id).monto);
+        $('puja-actual').textContent = dinero(precioActual(it));
         $('puja-reloj').textContent = formatoTiempo(st.endsAt - Date.now());
-        $('puja-historial').innerHTML = st.pujas.slice(-5).reverse().map(p => `
+        $('puja-historial').innerHTML = st.pujas.length
+            ? st.pujas.slice(-5).reverse().map(p => `
             <div class="puja-fila">
                 <span class="avatar">${esc(p.quien.charAt(0))}</span>
                 <span class="puja-quien">${esc(p.quien)}</span>
                 <strong>${dinero(p.monto)}</strong>
                 <small>${hace(p.t)}</small>
-            </div>`).join('');
+            </div>`).join('')
+            : '<p class="puja-vacia">Aún no hay pujas. ¡Sé el primero en pujar!</p>';
     }
 
     function abrirPuja(id) {
-        const it = ITEMS.find(x => x.id === id);
+        const it = def(id);
         if (!it || !enCurso(id)) return;
-        itemModal = it;
+        idModal = id;
+        const min = minimo(it);
         $('puja-titulo').textContent = it.titulo;
         $('puja-sub').textContent = 'Vendedor: ' + it.vendedor;
-        $('puja-monto').value = minimo(it).toFixed(2);
-        const actual = mejor(id).monto;
-        $('puja-chips').innerHTML = [1, 2, 5].map(k => {
-            const v = actual + it.incremento * k;
-            return `<button type="button" class="feria-chip" data-valor="${v}">${dinero(v)}</button>`;
-        }).join('');
+        $('puja-monto').value = min.toFixed(2);
+        $('puja-chips').innerHTML = [min, min + incremento(it), min + incremento(it) * 4]
+            .map(v => `<button type="button" class="feria-chip" data-valor="${v}">${dinero(v)}</button>`).join('');
         refrescarModal();
         $('modal-puja').hidden = false;
     }
 
     function cerrarPuja() {
         $('modal-puja').hidden = true;
-        itemModal = null;
+        idModal = null;
     }
 
     $('subasta-grid').addEventListener('click', e => {
@@ -667,7 +690,7 @@
 
     /* Confirmar puja (sin validaciones: si el monto no alcanza se ajusta al mínimo) */
     $('puja-confirmar').addEventListener('click', () => {
-        const it = itemModal;
+        const it = idModal ? def(idModal) : null;
         if (!it) return;
         if (!enCurso(it.id)) {
             cerrarPuja();
@@ -700,10 +723,12 @@
                 finalizadas[it.id] = true;
                 rehacer = true;
                 const top = mejor(it.id);
-                aviso(top.quien === 'Tú'
-                    ? '¡Ganaste la subasta de ' + it.titulo + '!'
-                    : 'La subasta de ' + it.titulo + ' terminó. Ganó ' + top.quien + '.');
-                if (itemModal && itemModal.id === it.id) cerrarPuja();
+                aviso(!top
+                    ? 'La subasta de ' + it.titulo + ' terminó sin pujas.'
+                    : top.quien === 'Tú'
+                        ? '¡Ganaste la subasta de ' + it.titulo + '!'
+                        : 'La subasta de ' + it.titulo + ' terminó. Ganó ' + top.quien + '.');
+                if (idModal === it.id) cerrarPuja();
             } else if (ms > 0) {
                 const insignia = document.querySelector('[data-id="' + it.id + '"] .subasta-estado');
                 if (insignia && !insignia.classList.contains(claseEstado(it)[0])) rehacer = true;
@@ -712,8 +737,8 @@
 
         if (rehacer) renderGrid();
         actualizarStat();
-        if (itemModal) {
-            $('puja-reloj').textContent = formatoTiempo(estado[itemModal.id].endsAt - Date.now());
+        if (idModal && def(idModal)) {
+            $('puja-reloj').textContent = formatoTiempo(estado[idModal].endsAt - Date.now());
         }
     }, 1000);
 
@@ -723,12 +748,14 @@
         ITEMS.forEach(it => {
             if (!enCurso(it.id) || Math.random() > 0.3) return;
             const top = mejor(it.id);
-            const candidatos = BOTS.filter(b => b !== top.quien);
+            const candidatos = BOTS.filter(b => !top || b !== top.quien);
             const quien = candidatos[Math.floor(Math.random() * candidatos.length)];
-            const monto = top.monto + it.incremento * (1 + Math.floor(Math.random() * 2));
+            const monto = top
+                ? top.monto + incremento(it) * (1 + Math.floor(Math.random() * 2))
+                : precioInicial(it);
             estado[it.id].pujas.push({ quien, monto, t: Date.now() });
             hubo = true;
-            if (top.quien === 'Tú') {
+            if (top && top.quien === 'Tú') {
                 aviso(quien + ' superó tu puja en ' + it.titulo + ' (' + dinero(monto) + ').', 'error');
             }
         });
@@ -739,14 +766,23 @@
         }
     }, 9000);
 
-    /* Si el administrador cambia una subasta, se refleja aquí */
+    /* Si el administrador crea, edita, elimina o cambia una subasta, se refleja aquí */
     window.addEventListener('storage', e => {
+        if (e.key === CLAVE_DEF) {
+            ITEMS = cargarDefiniciones();
+            estado = leerEstado();
+            if (idModal && !def(idModal)) cerrarPuja();
+            renderGrid();
+            refrescarModal();
+            return;
+        }
         if (e.key !== CLAVE || !e.newValue) return;
         try {
             const d = JSON.parse(e.newValue);
-            if (d && typeof d === 'object' && ITEMS.every(it => d[it.id] && Array.isArray(d[it.id].pujas))) {
+            if (d && typeof d === 'object') {
                 estado = d;
-                if (itemModal && !enCurso(itemModal.id)) cerrarPuja();
+                ITEMS.forEach(it => { if (!estado[it.id]) estado[it.id] = estadoNuevo(it); });
+                if (idModal && !enCurso(idModal)) cerrarPuja();
                 renderGrid();
                 refrescarModal();
             }

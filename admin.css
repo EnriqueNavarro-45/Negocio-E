@@ -1006,3 +1006,22 @@ textarea.admin-input { resize: vertical; }
     padding: 7px 14px;
     font-size: 12px;
 }
+
+.admin-emoji-thumb {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--borde);
+    border-radius: 11px;
+    background: var(--verde-claro);
+    font-size: 22px;
+}
+
+.admin-puja-vacia {
+    margin: 0;
+    padding: 18px 4px;
+    color: var(--gris);
+    font-size: 13.5px;
+}

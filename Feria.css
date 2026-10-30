@@ -776,3 +776,11 @@
         display: none;
     }
 }
+
+.puja-vacia {
+    margin: 0;
+    padding: 16px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--muted);
+}
