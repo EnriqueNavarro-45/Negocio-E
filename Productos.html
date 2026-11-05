@@ -32,7 +32,7 @@
             <a href="#nosotros">Nosotros</a>
             <a href="#beneficios">Beneficios</a>
             <a href="marketing.html">Promociones y comunidad</a>
-            <a href="feria.html">Feria agrícola</a>
+            <a href="Feria.html">Feria agrícola</a>
             <a href="MisPedidos.html" class="navbar-pedidos solo-sesion"
     id="navbar-pedidos">Mis pedidos</a>
         
@@ -1057,7 +1057,7 @@
                         <li><a href="#nosotros">Nosotros</a></li>
                         <li><a href="#beneficios">Beneficios</a></li>
                         <li><a href="marketing.html">Promociones y comunidad</a></li>
-                        <li><a href="feria.html">Feria agrícola</a></li>
+                        <li><a href="Feria.html">Feria agrícola</a></li>
                         <li><a href="#contacto">Contacto</a></li>
                     </ul>
                 </nav>
@@ -2858,10 +2858,16 @@
             }
             const todas = leerValoraciones();
             const lista = Array.isArray(todas[nombre]) ? todas[nombre] : [];
+            let idUsuario = '';
+            if (sessionStorage.getItem('sesionActiva') === 'true') {
+                idUsuario = (sessionStorage.getItem('usuario') || '').trim().toLowerCase() || 'usuario_sin_correo';
+            }
             lista.push({
+                id: 'V-' + Date.now(),
                 estrellas: valorSeleccionado,
                 comentario: document.getElementById('val-comentario').value.trim(),
                 usuario: (usuario || '').trim() || 'Cliente',
+                idUsuario: idUsuario,
                 fecha: new Date().toLocaleDateString('es-MX')
             });
             todas[nombre] = lista;

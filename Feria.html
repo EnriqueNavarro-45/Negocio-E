@@ -34,8 +34,7 @@
         <div>
             <span class="eyebrow">FERIA AGRÍCOLA · DE HUERTO A HUERTO</span>
             <h1>Del huerto de tu vecino, <em>directo a tu mesa.</em></h1>
-            <p>Un espacio para que las personas vendan lo que cosechan en sus huertos 
-                personales a otras personas de la comunidad. Publica tus productos o encuentra lo que otros cultivan cerca de ti.</p>
+            <p>Un espacio para que las personas vendan lo que cosechan en sus huertos personales a otras personas de la comunidad. Publica tus productos o encuentra lo que otros cultivan cerca de ti.</p>
             <div class="actions">
                 <a class="btn primary" href="#publicar">Publicar mi producto</a>
                 <a class="btn light" href="#feria">Ver la feria</a>
@@ -48,7 +47,7 @@
             <span class="feria-aviso">Pantalla demostrativa: las publicaciones se guardan solo en este navegador.</span>
         </div>
         <div class="hero-image">
-            <img src="Imagenes/Feria.png" alt="Verduras de huerto">
+            <img src="Imagenes/Verduras.avif" alt="Verduras de huerto">
             <div class="floating">
                 <strong>Cosecha de la comunidad</strong>
                 <span>Vendedores y compradores, sin intermediarios</span>
@@ -96,6 +95,9 @@
 
         <div class="feria-publicar-layout">
             <form class="feria-form" id="feria-form" novalidate>
+                <div class="feria-editando" id="feria-editando" hidden>
+                    Estás editando tu publicación: <strong id="feria-editando-nombre"></strong>
+                </div>
                 <div class="feria-form-grid">
                     <label class="feria-campo">
                         Tu nombre
@@ -147,7 +149,8 @@
                     </label>
                 </div>
                 <div class="feria-form-acciones">
-                    <button class="btn primary" type="submit">Publicar en la feria</button>
+                    <button class="btn primary" type="submit" id="f-guardar">Publicar en la feria</button>
+                    <button class="btn light" type="button" id="f-cancelar" hidden>Cancelar edición</button>
                     <small>No se realiza ninguna validación de campos.</small>
                 </div>
             </form>
@@ -308,8 +311,20 @@
         return p.precio ? esc(p.precio) : 'Precio a convenir';
     }
 
+    /* Cada publicación guarda el correo de quien la hizo (si había iniciado sesión) */
+    function usuarioActual() {
+        if (sessionStorage.getItem('sesionActiva') !== 'true') return '';
+        const u = (sessionStorage.getItem('usuario') || '').trim().toLowerCase();
+        return u || 'usuario_sin_correo';
+    }
+
+    /* Es tuya si la hiciste con tu cuenta, o si se publicó sin sesión en este navegador */
+    function puedeEditar(p) {
+        return !p.usuario || String(p.usuario).trim().toLowerCase() === usuarioActual();
+    }
+
     function render() {
-        const todas = [...propias.map(p => ({ ...p, propia: true })), ...SEMILLAS];
+        const todas = [...propias.map(p => ({ ...p, propia: puedeEditar(p) })), ...SEMILLAS];
 
         $('stat-publicaciones').textContent = todas.length;
         $('stat-productores').textContent = new Set(todas.map(p => p.productor)).size;
@@ -341,6 +356,7 @@
                 <div class="feria-card-datos">
                     <span>${p.cantidad ? 'Disponible: ' + esc(p.cantidad) + ' ' + esc(p.unidad) : 'Cantidad por confirmar'}</span>
                     <span>${esc(p.zona)}</span>
+                    ${p.editado ? '<span>Editado</span>' : ''}
                 </div>
                 <div class="feria-productor">
                     <div class="avatar">${esc(p.productor.charAt(0).toUpperCase())}</div>
@@ -348,7 +364,8 @@
                 </div>
                 <div class="feria-card-acciones">
                     <button type="button" class="btn primary" data-accion="contactar" data-id="${esc(p.id)}">Contactar</button>
-                    ${p.propia ? `<button type="button" class="btn feria-eliminar" data-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>` : ''}
+                    ${p.propia ? `<button type="button" class="btn light" data-accion="editar" data-id="${esc(p.id)}">Editar</button>
+                    <button type="button" class="btn feria-eliminar" data-accion="eliminar" data-id="${esc(p.id)}">Eliminar</button>` : ''}
                 </div>
             </div>
         </article>`).join('');
@@ -392,14 +409,49 @@
         $('f-foto-texto').textContent = fotoSeleccionada ? fotoSeleccionada.name : 'Elegir una foto';
     });
 
-    /* ---------- Publicar (sin validaciones) ---------- */
+    /* ---------- Modo edición (la misma forma sirve para publicar y para editar) ---------- */
+    let editandoId = null;
+
+    function salirEdicion() {
+        editandoId = null;
+        $('feria-form').reset();
+        fotoSeleccionada = null;
+        $('f-foto').value = '';
+        $('f-foto-texto').textContent = 'Elegir una foto';
+        $('feria-editando').hidden = true;
+        $('f-guardar').textContent = 'Publicar en la feria';
+        $('f-cancelar').hidden = true;
+    }
+
+    function entrarEdicion(p) {
+        editandoId = p.id;
+        $('f-nombre').value = p.productor || '';
+        $('f-producto').value = p.producto || '';
+        $('f-categoria').value = p.categoria || 'frutas';
+        $('f-precio').value = p.precio || '';
+        $('f-unidad').value = p.unidad || 'kg';
+        $('f-cantidad').value = p.cantidad || '';
+        $('f-zona').value = p.zona || '';
+        $('f-descripcion').value = p.descripcion || '';
+        fotoSeleccionada = null;
+        $('f-foto').value = '';
+        $('f-foto-texto').textContent = p.imagen ? 'Foto actual (elige otra para cambiarla)' : 'Elegir una foto';
+        $('feria-editando-nombre').textContent = p.producto || 'Publicación';
+        $('feria-editando').hidden = false;
+        $('f-guardar').textContent = 'Guardar cambios';
+        $('f-cancelar').hidden = false;
+        $('publicar').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    $('f-cancelar').addEventListener('click', salirEdicion);
+
+    /* ---------- Publicar o guardar cambios (sin validaciones) ---------- */
     $('feria-form').addEventListener('submit', async e => {
         e.preventDefault();
         const val = id => $(id).value.trim();
-        const imagen = await reducirImagen(fotoSeleccionada);
+        const nuevaImagen = await reducirImagen(fotoSeleccionada);
 
-        propias.unshift({
-            id: 'F-' + Date.now(),
+        const datos = {
             productor: val('f-nombre') || 'Productor de la comunidad',
             producto: val('f-producto') || 'Producto de mi huerto',
             categoria: $('f-categoria').value,
@@ -407,20 +459,27 @@
             unidad: $('f-unidad').value,
             cantidad: val('f-cantidad'),
             zona: val('f-zona') || 'Aguascalientes',
-            descripcion: val('f-descripcion') || 'Cosechado en mi huerto personal.',
-            imagen
-        });
+            descripcion: val('f-descripcion') || 'Cosechado en mi huerto personal.'
+        };
+
+        const editando = editandoId ? propias.find(x => x.id === editandoId) : null;
+        if (editando) {
+            Object.assign(editando, datos, { editado: true });
+            if (nuevaImagen) editando.imagen = nuevaImagen;
+        } else {
+            propias.unshift({ id: 'F-' + Date.now(), usuario: usuarioActual(), ...datos, imagen: nuevaImagen });
+        }
 
         const ok = guardar();
-        $('feria-form').reset();
-        fotoSeleccionada = null;
-        $('f-foto-texto').textContent = 'Elegir una foto';
+        salirEdicion();
         categoria = 'todos';
         busqueda = '';
         $('feria-buscar').value = '';
         document.querySelectorAll('.feria-chip').forEach(c => c.classList.toggle('activo', c.dataset.cat === 'todos'));
         render();
-        aviso(ok ? '¡Tu producto ya está publicado en la feria!' : 'Publicado (no se pudo guardar en el navegador).');
+        aviso(!ok
+            ? 'Listo (no se pudo guardar en el navegador).'
+            : editando ? 'Tu publicación se actualizó.' : '¡Tu producto ya está publicado en la feria!');
         $('feria').scrollIntoView({ behavior: 'smooth' });
     });
 
@@ -432,7 +491,13 @@
         const p = todas.find(x => x.id === btn.dataset.id);
         if (!p) return;
 
+        if (btn.dataset.accion === 'editar') {
+            if (puedeEditar(p)) entrarEdicion(p);
+            return;
+        }
+
         if (btn.dataset.accion === 'eliminar') {
+            if (editandoId === p.id) salirEdicion();
             propias = propias.filter(x => x.id !== p.id);
             guardar();
             render();
@@ -455,6 +520,17 @@
         const nombre = contactoActual ? contactoActual.productor : 'el productor';
         cerrarContacto();
         aviso('Mensaje enviado a ' + nombre + ' (simulación).');
+    });
+
+    /* Si desde el perfil (otra pestaña) se edita o elimina una publicación, se refleja aquí */
+    window.addEventListener('storage', e => {
+        if (e.key !== CLAVE) return;
+        try {
+            const d = JSON.parse(e.newValue || '[]');
+            propias = Array.isArray(d) ? d : [];
+        } catch (err) { propias = []; }
+        if (editandoId && !propias.some(x => x.id === editandoId)) salirEdicion();
+        render();
     });
 
     render();

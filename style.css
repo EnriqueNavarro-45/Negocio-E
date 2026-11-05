@@ -7226,3 +7226,358 @@ body {
     color: #98a29a;
     font-size: 0.7rem;
 }
+
+/* =========================================================
+   PERFIL: MIS PRODUCTOS Y MIS COMENTARIOS
+========================================================= */
+
+.mis-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mi-item {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #fbfdfb;
+    transition: var(--transition);
+}
+
+.mi-item:hover {
+    border-color: rgba(40, 115, 72, .28);
+    box-shadow: var(--shadow-sm);
+}
+
+.mi-item-foto {
+    width: 86px;
+    height: 86px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--green-soft);
+    font-size: 34px;
+}
+
+.mi-item-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mi-item-info {
+    min-width: 0;
+}
+
+.mi-item-etiqueta {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--text-light);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .65px;
+}
+
+.mi-item-info h3 {
+    margin: 0 0 4px;
+    color: var(--green-dark);
+    font-size: 17px;
+}
+
+.mi-item-precio {
+    margin: 0 0 6px;
+    color: var(--green);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.mi-item-datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.mi-item-texto {
+    margin: 6px 0 0;
+    color: var(--text);
+    font-size: 13.5px;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.mi-item-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 118px;
+}
+
+.mi-btn {
+    padding: 8px 14px;
+    color: var(--green);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+.mi-btn:hover {
+    background: var(--green-soft);
+    border-color: rgba(40, 115, 72, .35);
+}
+
+.mi-btn.peligro {
+    color: #9b1c1c;
+    border-color: #efd5d5;
+}
+
+.mi-btn.peligro:hover {
+    background: #fdecea;
+    border-color: #e7bcbc;
+}
+
+.mi-comentario {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+}
+
+.mi-avatar {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    color: var(--green);
+    font-size: 18px;
+    font-weight: 700;
+    background: var(--green-soft);
+    border-radius: 50%;
+}
+
+.perfil-aviso {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 14px 18px;
+    background: var(--orange-light);
+    border: 1px solid #f3dcb8;
+    border-radius: 16px;
+}
+
+.perfil-aviso[hidden] {
+    display: none;
+}
+
+.perfil-aviso p {
+    margin: 0;
+    color: #7a5222;
+    font-size: 13px;
+}
+
+/* ----- Ventanas del perfil ----- */
+.perfil-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(10, 35, 23, .5);
+    backdrop-filter: blur(3px);
+}
+
+.perfil-overlay.activo {
+    display: flex;
+}
+
+.perfil-modal {
+    width: min(580px, 100%);
+    max-height: 92vh;
+    overflow: auto;
+    padding: 28px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: var(--shadow-lg);
+}
+
+.perfil-modal-chico {
+    width: min(440px, 100%);
+    text-align: center;
+}
+
+.perfil-modal h3 {
+    margin: 0 0 4px;
+    color: var(--green-dark);
+    font-size: 20px;
+}
+
+.perfil-modal > p {
+    margin: 0 0 18px;
+    color: var(--text-light);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.perfil-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.perfil-modal-grid label,
+.completo-doble label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #456050;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.perfil-modal-grid .completo {
+    grid-column: 1 / -1;
+}
+
+.completo-doble {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 10px;
+}
+
+.perfil-modal input[type="text"],
+.perfil-modal select,
+.perfil-modal textarea {
+    width: 100%;
+    padding: 11px 13px;
+    color: var(--text);
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 400;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    outline: none;
+}
+
+.perfil-modal textarea {
+    resize: vertical;
+}
+
+.perfil-modal input:focus,
+.perfil-modal select:focus,
+.perfil-modal textarea:focus {
+    border-color: var(--green-light);
+    box-shadow: 0 0 0 3px rgba(40, 115, 72, .12);
+}
+
+.perfil-foto {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: var(--green);
+    font-weight: 500;
+    background: #f7faf6;
+    border: 1px dashed #b8cdb8;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.perfil-foto input {
+    display: none;
+}
+
+.perfil-foto-icono {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    background: var(--green-soft);
+    border-radius: 10px;
+}
+
+.perfil-modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.perfil-modal-chico .perfil-modal-acciones {
+    justify-content: center;
+}
+
+.btn-peligro {
+    padding: 12px 22px;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    background: #c93636;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.btn-peligro:hover {
+    background: #aa2929;
+}
+
+@media (max-width: 700px) {
+    .mi-item,
+    .mi-comentario {
+        grid-template-columns: 64px minmax(0, 1fr);
+    }
+
+    .mi-item-foto {
+        width: 64px;
+        height: 64px;
+        font-size: 26px;
+    }
+
+    .mi-item-acciones {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: 0;
+    }
+
+    .mi-item-acciones .mi-btn {
+        flex: 1;
+    }
+
+    .perfil-modal {
+        padding: 22px;
+    }
+
+    .perfil-modal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-modal-acciones {
+        flex-direction: column-reverse;
+    }
+
+    .perfil-modal-acciones .btn,
+    .perfil-modal-acciones .btn-peligro {
+        width: 100%;
+    }
+}

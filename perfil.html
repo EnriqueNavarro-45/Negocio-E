@@ -8,6 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        #modal-editar-valoracion .val-label { display:block; margin-bottom:6px; font-size:0.78rem; font-weight:600; color:#456050; }
+        #modal-editar-valoracion .val-selector { margin:4px 0 2px; }
+        #modal-editar-valoracion #ev-estrellas-texto { display:block; color:#8a948c; font-size:0.78rem; margin-bottom:4px; }
+        .mi-item-etiqueta .val-estrellas-perfil { color:#e0a82e; letter-spacing:1px; }
+    </style>
 </head>
 <body class="productos-body">
 
@@ -68,6 +74,53 @@
             <div id="historial-lista" class="historial-lista"></div>
         </section>
 
+       
+
+        <!-- MIS PRODUCTOS PUBLICADOS (feria agrícola) -->
+        <section class="perfil-card historial-card" id="mis-productos">
+            <div class="perfil-section-title historial-titulo">
+                <div>
+                    <span class="section-tag">Feria agrícola</span>
+                    <h2>Mis productos publicados</h2>
+                    <p>Los productos de tu huerto que pusiste en la feria. Puedes editarlos o eliminarlos.</p>
+                </div>
+                <span class="config-icon historial-icon">
+                    <span class="icono-local" data-icon="leaf"></span>
+                </span>
+            </div>
+            <div id="mis-productos-lista" class="mis-lista"></div>
+        </section>
+
+        <!-- MIS COMENTARIOS (comunidad) -->
+        <section class="perfil-card historial-card" id="mis-comentarios">
+            <div class="perfil-section-title historial-titulo">
+                <div>
+                    <span class="section-tag">Comunidad</span>
+                    <h2>Mis comentarios</h2>
+                    <p>Los comentarios que publicaste en la comunidad. Puedes editarlos o eliminarlos.</p>
+                </div>
+                <span class="config-icon historial-icon">
+                    <span class="icono-local" data-icon="message-square"></span>
+                </span>
+            </div>
+            <div id="mis-comentarios-lista" class="mis-lista"></div>
+        </section>
+
+        <!-- MIS VALORACIONES DE PRODUCTOS -->
+        <section class="perfil-card historial-card" id="mis-valoraciones">
+            <div class="perfil-section-title historial-titulo">
+                <div>
+                    <span class="section-tag">Catálogo</span>
+                    <h2>Mis valoraciones de productos</h2>
+                    <p>Los productos que calificaste y el comentario que dejaste. Puedes editarlos o eliminarlos.</p>
+                </div>
+                <span class="config-icon historial-icon">
+                    <span class="icono-local" data-icon="star"></span>
+                </span>
+            </div>
+            <div id="mis-valoraciones-lista" class="mis-lista"></div>
+        </section>
+
         <section class="perfil-card" id="configuracion">
             <div class="perfil-section-title">
                 <div>
@@ -115,6 +168,111 @@
     </div>
 </main>
 
+<!-- EDITAR PRODUCTO PUBLICADO -->
+<div class="perfil-overlay" id="modal-editar-producto" aria-hidden="true">
+    <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="ep-titulo">
+        <h3 id="ep-titulo">Editar producto</h3>
+        <p>Cambia lo que necesites. Los campos vacíos usan un valor por defecto.</p>
+        <form id="form-editar-producto" novalidate>
+            <div class="perfil-modal-grid">
+                <label>Tu nombre<input type="text" id="ep-nombre"></label>
+                <label>Producto<input type="text" id="ep-producto"></label>
+                <label>Categoría
+                    <select id="ep-categoria">
+                        <option value="frutas">Frutas</option>
+                        <option value="verduras">Verduras</option>
+                        <option value="hierbas">Hierbas y aromáticas</option>
+                        <option value="otros">Otros productos del huerto</option>
+                    </select>
+                </label>
+                <div class="completo-doble">
+                    <label>Precio<input type="text" id="ep-precio" inputmode="decimal"></label>
+                    <label>Unidad
+                        <select id="ep-unidad">
+                            <option value="kg">por kg</option>
+                            <option value="pieza">por pieza</option>
+                            <option value="manojo">por manojo</option>
+                        </select>
+                    </label>
+                </div>
+                <label>Cantidad disponible<input type="text" id="ep-cantidad" inputmode="decimal"></label>
+                <label>Colonia o zona<input type="text" id="ep-zona"></label>
+                <label class="completo">Descripción<textarea id="ep-descripcion" rows="3"></textarea></label>
+                <label class="completo">Foto del producto
+                    <span class="perfil-foto">
+                        <span class="perfil-foto-icono">📷</span>
+                        <span id="ep-foto-texto">Elegir una foto</span>
+                        <input type="file" id="ep-foto" accept="image/*">
+                    </span>
+                </label>
+            </div>
+            <div class="perfil-modal-acciones">
+                <button type="button" class="btn btn-outline" id="ep-cancelar">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDITAR COMENTARIO -->
+<div class="perfil-overlay" id="modal-editar-comentario" aria-hidden="true">
+    <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="ec-titulo">
+        <h3 id="ec-titulo">Editar comentario</h3>
+        <p>Se actualizará en la sección de comunidad.</p>
+        <form id="form-editar-comentario" novalidate>
+            <div class="perfil-modal-grid">
+                <label class="completo">Tu nombre<input type="text" id="ec-nombre"></label>
+                <label class="completo">Comentario<textarea id="ec-texto" rows="4"></textarea></label>
+            </div>
+            <div class="perfil-modal-acciones">
+                <button type="button" class="btn btn-outline" id="ec-cancelar">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDITAR VALORACIÓN DE PRODUCTO -->
+<div class="perfil-overlay" id="modal-editar-valoracion" aria-hidden="true">
+    <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="ev-titulo">
+        <h3 id="ev-titulo">Editar valoración</h3>
+        <p id="ev-producto-nombre">Producto</p>
+        <form id="form-editar-valoracion" novalidate>
+            <div class="perfil-modal-grid">
+                <div class="completo">
+                    <span class="val-label">Tu valoración</span>
+                    <div class="val-selector" id="ev-selector" role="radiogroup" aria-label="Calificación en estrellas">
+                        <button type="button" class="val-estrella" data-valor="1" aria-label="1 estrella">★</button>
+                        <button type="button" class="val-estrella" data-valor="2" aria-label="2 estrellas">★</button>
+                        <button type="button" class="val-estrella" data-valor="3" aria-label="3 estrellas">★</button>
+                        <button type="button" class="val-estrella" data-valor="4" aria-label="4 estrellas">★</button>
+                        <button type="button" class="val-estrella" data-valor="5" aria-label="5 estrellas">★</button>
+                    </div>
+                    <small id="ev-estrellas-texto">5 de 5 estrellas</small>
+                    <input type="hidden" id="ev-estrellas" value="5">
+                </div>
+                <label class="completo">Comentario<textarea id="ev-comentario" rows="4" maxlength="140" placeholder="Opcional"></textarea></label>
+            </div>
+            <div class="perfil-modal-acciones">
+                <button type="button" class="btn btn-outline" id="ev-cancelar">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CONFIRMAR ELIMINACIÓN -->
+<div class="perfil-overlay" id="perfil-confirmacion" aria-hidden="true">
+    <div class="perfil-modal perfil-modal-chico" role="dialog" aria-modal="true" aria-labelledby="pc-titulo">
+        <h3 id="pc-titulo">Confirmar</h3>
+        <p id="pc-mensaje"></p>
+        <div class="perfil-modal-acciones">
+            <button type="button" class="btn btn-outline" id="pc-cancelar">Cancelar</button>
+            <button type="button" class="btn btn-peligro" id="pc-aceptar">Eliminar</button>
+        </div>
+    </div>
+</div>
+
 <div id="notificacion-personalizada" class="notificacion-overlay" role="dialog" aria-modal="true" aria-labelledby="notificacion-titulo">
     <div class="notificacion-card">
         <div class="notificacion-icono exito" id="notificacion-icono">✓</div>
@@ -126,6 +284,9 @@
 
 <script>
 const ICONOS = {
+    star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1L12 2z"></path></svg>',
+    leaf: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>',
+    'message-square': '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
     user: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>',
     settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
     logout: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="m14 8 4 4-4 4"></path><path d="M18 12H8"></path></svg>',
@@ -199,6 +360,499 @@ function cargarHistorialCompras() {
     `).join('');
 }
 
+/* ===== MIS PRODUCTOS Y COMENTARIOS ===== */
+const CLAVE_FERIA = 'feriaAgricolaSanGerardo';
+const CLAVE_COMENTARIOS = 'comentariosMarketingSanGerardo';
+const CATEGORIAS_FERIA = { frutas: 'Frutas', verduras: 'Verduras', hierbas: 'Hierbas y aromáticas', otros: 'Otros del huerto' };
+const EMOJIS_FERIA = { frutas: '🍊', verduras: '🥕', hierbas: '🌿', otros: '🧺' };
+
+const escHTML = t => String(t ?? '').replace(/[&<>"']/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const ID_SIN_CORREO = 'usuario_sin_correo';
+const CLAVE_VALORACIONES = 'valoracionesProductosSanGerardo';
+const correoActual = () => {
+    if (sessionStorage.getItem('sesionActiva') !== 'true') return '';
+    const u = (sessionStorage.getItem('usuario') || '').trim().toLowerCase();
+    return u || ID_SIN_CORREO;
+};
+/* Coincide con la identidad de la sesión actual */
+const esMio = x => {
+    const yo = correoActual();
+    if (!yo) return false;
+    return String(x.usuario || '').trim().toLowerCase() === yo;
+};
+const esMiValoracion = v => {
+    const yo = correoActual();
+    if (!yo) return false;
+    return String(v.idUsuario || '').trim().toLowerCase() === yo;
+};
+function leerValoracionesProductos() {
+    try {
+        const d = JSON.parse(localStorage.getItem(CLAVE_VALORACIONES) || '{}');
+        return d && typeof d === 'object' && !Array.isArray(d) ? d : {};
+    } catch (e) { return {}; }
+}
+function guardarValoracionesProductos(obj) {
+    try { localStorage.setItem(CLAVE_VALORACIONES, JSON.stringify(obj)); return true; }
+    catch (e) { return false; }
+}
+function estrellasTexto(valor) {
+    const n = Math.max(0, Math.min(5, Math.round(Number(valor) || 0)));
+    return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+function listarMisValoraciones() {
+    const todas = leerValoracionesProductos();
+    const out = [];
+    Object.keys(todas).forEach(producto => {
+        const lista = Array.isArray(todas[producto]) ? todas[producto] : [];
+        lista.forEach((v, idx) => {
+            if (!esMiValoracion(v)) return;
+            out.push({
+                producto,
+                idx,
+                id: v.id || (producto + '|' + idx),
+                estrellas: v.estrellas,
+                comentario: v.comentario || '',
+                fecha: v.fecha || '',
+                usuario: v.usuario || ''
+            });
+        });
+    });
+    return out.reverse();
+}
+
+function leerLista(clave) {
+    try {
+        const d = JSON.parse(localStorage.getItem(clave) || '[]');
+        return Array.isArray(d) ? d : [];
+    } catch (e) { return []; }
+}
+
+function guardarLista(clave, lista) {
+    try { localStorage.setItem(clave, JSON.stringify(lista)); return true; }
+    catch (e) { return false; }
+}
+
+function precioFeria(p) {
+    const n = parseFloat(p.precio);
+    if (Number.isFinite(n)) return '$' + n.toFixed(2) + ' / ' + (p.unidad || 'kg');
+    return p.precio ? String(p.precio) : 'Precio a convenir';
+}
+
+function fechaDeId(id) {
+    const n = Number(String(id || '').replace(/\D/g, ''));
+    return n > 1e12 ? new Date(n).toLocaleDateString('es-MX') : '';
+}
+
+function abrirOverlayPerfil(id) {
+    const el = document.getElementById(id);
+    el.classList.add('activo');
+    el.setAttribute('aria-hidden', 'false');
+}
+
+function cerrarOverlayPerfil(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('activo');
+    el.setAttribute('aria-hidden', 'true');
+}
+
+/* ----- Confirmación para eliminar ----- */
+let accionConfirmada = null;
+
+function confirmarPerfil(titulo, mensaje, textoBoton, callback) {
+    document.getElementById('pc-titulo').textContent = titulo;
+    document.getElementById('pc-mensaje').textContent = mensaje;
+    document.getElementById('pc-aceptar').textContent = textoBoton;
+    accionConfirmada = callback;
+    abrirOverlayPerfil('perfil-confirmacion');
+}
+
+function cerrarConfirmacionPerfil() {
+    cerrarOverlayPerfil('perfil-confirmacion');
+    accionConfirmada = null;
+}
+
+/* ----- Listas ----- */
+function renderMisProductos() {
+    const lista = leerLista(CLAVE_FERIA).filter(esMio);
+    const cont = document.getElementById('mis-productos-lista');
+
+    if (!lista.length) {
+        cont.innerHTML = `
+            <div class="historial-vacio">
+                <div class="historial-vacio-icon">${ICONOS.leaf}</div>
+                <h3>Aún no has publicado productos</h3>
+                <p>Vende lo que cultivas en tu huerto. Tus publicaciones aparecerán aquí.</p>
+                <a href="Feria.html#publicar" class="btn btn-outline">Publicar en la feria</a>
+            </div>`;
+        return;
+    }
+
+    cont.innerHTML = lista.map(p => {
+        const fecha = fechaDeId(p.id);
+        return `
+        <article class="mi-item">
+            <div class="mi-item-foto">
+                ${p.imagen ? `<img src="${escHTML(p.imagen)}" alt="${escHTML(p.producto)}">` : (EMOJIS_FERIA[p.categoria] || '🧺')}
+            </div>
+            <div class="mi-item-info">
+                <span class="mi-item-etiqueta">${escHTML(CATEGORIAS_FERIA[p.categoria] || 'Huerto')}${p.editado ? ' · editado' : ''}</span>
+                <h3>${escHTML(p.producto)}</h3>
+                <p class="mi-item-precio">${escHTML(precioFeria(p))}</p>
+                <div class="mi-item-datos">
+                    <span>${p.cantidad ? 'Disponible: ' + escHTML(p.cantidad) + ' ' + escHTML(p.unidad || '') : 'Cantidad por confirmar'}</span>
+                    <span>${escHTML(p.zona || '')}</span>
+                    ${fecha ? `<span>Publicado: ${escHTML(fecha)}</span>` : ''}
+                </div>
+            </div>
+            <div class="mi-item-acciones">
+                <button type="button" class="mi-btn" data-mi-accion="editar-producto" data-id="${escHTML(p.id)}">Editar</button>
+                <button type="button" class="mi-btn peligro" data-mi-accion="eliminar-producto" data-id="${escHTML(p.id)}">Eliminar</button>
+                <a class="mi-btn" href="Feria.html#feria">Ver en la feria</a>
+            </div>
+        </article>`;
+    }).join('');
+}
+
+function renderMisComentarios() {
+    const lista = leerLista(CLAVE_COMENTARIOS).filter(esMio).reverse();
+    const cont = document.getElementById('mis-comentarios-lista');
+
+    if (!lista.length) {
+        cont.innerHTML = `
+            <div class="historial-vacio">
+                <div class="historial-vacio-icon">${ICONOS['message-square']}</div>
+                <h3>Aún no has comentado</h3>
+                <p>Comparte tu experiencia con la comunidad. Tus comentarios aparecerán aquí.</p>
+                <a href="marketing.html#comunidad" class="btn btn-outline">Ir a la comunidad</a>
+            </div>`;
+        return;
+    }
+
+    cont.innerHTML = lista.map(c => `
+        <article class="mi-item mi-comentario">
+            <div class="mi-avatar">${escHTML((c.nombre || 'V').trim().charAt(0).toUpperCase() || 'V')}</div>
+            <div class="mi-item-info">
+                <h3>${escHTML(c.nombre || 'Visitante')}</h3>
+                <span class="mi-item-etiqueta">${escHTML(c.fecha || '')}${c.editado ? ' · editado' : ''}</span>
+                <p class="mi-item-texto">${escHTML(c.texto)}</p>
+            </div>
+            <div class="mi-item-acciones">
+                <button type="button" class="mi-btn" data-mi-accion="editar-comentario" data-id="${escHTML(c.id)}">Editar</button>
+                <button type="button" class="mi-btn peligro" data-mi-accion="eliminar-comentario" data-id="${escHTML(c.id)}">Eliminar</button>
+            </div>
+        </article>`).join('');
+}
+
+/* ----- Publicaciones y comentarios hechos sin iniciar sesión en este navegador ----- */
+function renderMisValoraciones() {
+    const lista = listarMisValoraciones();
+    const cont = document.getElementById('mis-valoraciones-lista');
+    if (!cont) return;
+
+    if (!lista.length) {
+        cont.innerHTML = `
+            <div class="historial-vacio">
+                <div class="historial-vacio-icon">${ICONOS.star || '★'}</div>
+                <h3>Aún no has valorado productos</h3>
+                <p>Califica productos desde el catálogo. Tus valoraciones aparecerán aquí.</p>
+                <a href="Productos.html" class="btn btn-outline">Ir al catálogo</a>
+            </div>`;
+        return;
+    }
+
+    cont.innerHTML = lista.map(v => `
+        <article class="mi-item mi-comentario">
+            <div class="mi-avatar">${estrellasTexto(v.estrellas).charAt(0)}</div>
+            <div class="mi-item-info">
+                <h3>${escHTML(v.producto)}</h3>
+                <span class="mi-item-etiqueta"><span class="val-estrellas-perfil">${estrellasTexto(v.estrellas)}</span> · ${escHTML(v.fecha || '')}</span>
+                <p class="mi-item-texto">${escHTML(v.comentario || 'Sin comentario')}</p>
+            </div>
+            <div class="mi-item-acciones">
+                <button type="button" class="mi-btn" data-mi-accion="editar-valoracion" data-producto="${escHTML(v.producto)}" data-id="${escHTML(v.id)}">Editar</button>
+                <button type="button" class="mi-btn peligro" data-mi-accion="eliminar-valoracion" data-producto="${escHTML(v.producto)}" data-id="${escHTML(v.id)}">Eliminar</button>
+            </div>
+        </article>`).join('');
+}
+
+function actualizarMisListas() {
+    renderMisProductos();
+    renderMisComentarios();
+    renderMisValoraciones();
+}
+
+/* ----- Foto (se reduce para poder guardarla en el navegador) ----- */
+function reducirImagen(archivo, maxLado = 640) {
+    return new Promise(resolver => {
+        if (!archivo) return resolver('');
+        const lector = new FileReader();
+        lector.onload = () => {
+            const img = new Image();
+            img.onload = () => {
+                const escala = Math.min(1, maxLado / Math.max(img.width, img.height));
+                const lienzo = document.createElement('canvas');
+                lienzo.width = Math.round(img.width * escala);
+                lienzo.height = Math.round(img.height * escala);
+                const ctx = lienzo.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, lienzo.width, lienzo.height);
+                ctx.drawImage(img, 0, 0, lienzo.width, lienzo.height);
+                resolver(lienzo.toDataURL('image/jpeg', 0.72));
+            };
+            img.onerror = () => resolver('');
+            img.src = lector.result;
+        };
+        lector.onerror = () => resolver('');
+        lector.readAsDataURL(archivo);
+    });
+}
+
+/* ----- Editar producto ----- */
+let productoEnEdicion = null;
+let fotoEdicion = null;
+
+function abrirEditarProducto(id) {
+    const p = leerLista(CLAVE_FERIA).find(x => x.id === id && esMio(x));
+    if (!p) return;
+    productoEnEdicion = id;
+    fotoEdicion = null;
+    const poner = (campo, valor) => { document.getElementById(campo).value = valor ?? ''; };
+    poner('ep-nombre', p.productor);
+    poner('ep-producto', p.producto);
+    poner('ep-categoria', p.categoria || 'frutas');
+    poner('ep-precio', p.precio);
+    poner('ep-unidad', p.unidad || 'kg');
+    poner('ep-cantidad', p.cantidad);
+    poner('ep-zona', p.zona);
+    poner('ep-descripcion', p.descripcion);
+    document.getElementById('ep-foto').value = '';
+    document.getElementById('ep-foto-texto').textContent = p.imagen ? 'Foto actual (elige otra para cambiarla)' : 'Elegir una foto';
+    abrirOverlayPerfil('modal-editar-producto');
+}
+
+async function guardarProductoEditado() {
+    const lista = leerLista(CLAVE_FERIA);
+    const p = lista.find(x => x.id === productoEnEdicion && esMio(x));
+    if (!p) { cerrarOverlayPerfil('modal-editar-producto'); return; }
+
+    const val = id => document.getElementById(id).value.trim();
+    const nuevaImagen = await reducirImagen(fotoEdicion);
+
+    Object.assign(p, {
+        productor: val('ep-nombre') || 'Productor de la comunidad',
+        producto: val('ep-producto') || 'Producto de mi huerto',
+        categoria: document.getElementById('ep-categoria').value,
+        precio: val('ep-precio'),
+        unidad: document.getElementById('ep-unidad').value,
+        cantidad: val('ep-cantidad'),
+        zona: val('ep-zona') || 'Aguascalientes',
+        descripcion: val('ep-descripcion') || 'Cosechado en mi huerto personal.',
+        editado: true
+    });
+    if (nuevaImagen) p.imagen = nuevaImagen;
+
+    const ok = guardarLista(CLAVE_FERIA, lista);
+    cerrarOverlayPerfil('modal-editar-producto');
+    productoEnEdicion = null;
+    actualizarMisListas();
+    if (ok) mostrarNotificacion('Producto actualizado', 'Los cambios ya se ven en la feria agrícola.');
+    else mostrarNotificacion('No se pudo guardar', 'La foto es muy pesada para el navegador. Prueba con una más ligera.', 'error');
+}
+
+/* ----- Editar comentario ----- */
+let comentarioEnEdicion = null;
+
+function abrirEditarComentario(id) {
+    const c = leerLista(CLAVE_COMENTARIOS).find(x => x.id === id && esMio(x));
+    if (!c) return;
+    comentarioEnEdicion = id;
+    document.getElementById('ec-nombre').value = c.nombre || '';
+    document.getElementById('ec-texto').value = c.texto || '';
+    abrirOverlayPerfil('modal-editar-comentario');
+}
+
+function guardarComentarioEditado() {
+    const lista = leerLista(CLAVE_COMENTARIOS);
+    const c = lista.find(x => x.id === comentarioEnEdicion && esMio(x));
+    if (!c) { cerrarOverlayPerfil('modal-editar-comentario'); return; }
+    c.nombre = document.getElementById('ec-nombre').value.trim() || 'Visitante';
+    c.texto = document.getElementById('ec-texto').value.trim() || 'El usuario publicó un comentario sin texto.';
+    c.editado = true;
+    guardarLista(CLAVE_COMENTARIOS, lista);
+    cerrarOverlayPerfil('modal-editar-comentario');
+    comentarioEnEdicion = null;
+    actualizarMisListas();
+    mostrarNotificacion('Comentario actualizado', 'Los cambios ya se ven en la comunidad.');
+}
+
+/* ----- Eventos ----- */
+let valoracionEnEdicion = null; /* { producto, id } */
+
+function encontrarValoracion(producto, id) {
+    const todas = leerValoracionesProductos();
+    const lista = Array.isArray(todas[producto]) ? todas[producto] : [];
+    let idx = lista.findIndex(v => String(v.id) === String(id));
+    if (idx < 0) {
+        /* respaldo por índice embebido producto|idx */
+        const parts = String(id).split('|');
+        if (parts.length === 2 && parts[0] === producto) idx = Number(parts[1]);
+    }
+    if (idx < 0 || !lista[idx] || !esMiValoracion(lista[idx])) return null;
+    return { todas, lista, idx, item: lista[idx] };
+}
+
+function pintarSelectorEv(n) {
+    const valor = Math.max(1, Math.min(5, Number(n) || 5));
+    document.getElementById('ev-estrellas').value = String(valor);
+    const texto = document.getElementById('ev-estrellas-texto');
+    if (texto) texto.textContent = valor + (valor === 1 ? ' de 5 estrella' : ' de 5 estrellas');
+    document.querySelectorAll('#ev-selector .val-estrella').forEach(b => {
+        b.classList.toggle('activa', Number(b.dataset.valor) <= valor);
+    });
+}
+
+function abrirEditarValoracion(producto, id) {
+    const found = encontrarValoracion(producto, id);
+    if (!found) return;
+    valoracionEnEdicion = { producto, id };
+    document.getElementById('ev-producto-nombre').textContent = producto;
+    pintarSelectorEv(found.item.estrellas);
+    document.getElementById('ev-comentario').value = found.item.comentario || '';
+    abrirOverlayPerfil('modal-editar-valoracion');
+}
+
+function guardarValoracionEditada() {
+    if (!valoracionEnEdicion) return;
+    const { producto, id } = valoracionEnEdicion;
+    const found = encontrarValoracion(producto, id);
+    if (!found) { cerrarOverlayPerfil('modal-editar-valoracion'); return; }
+    found.item.estrellas = Number(document.getElementById('ev-estrellas').value) || 5;
+    found.item.comentario = document.getElementById('ev-comentario').value.trim();
+    found.item.editado = true;
+    found.todas[producto] = found.lista;
+    guardarValoracionesProductos(found.todas);
+    cerrarOverlayPerfil('modal-editar-valoracion');
+    valoracionEnEdicion = null;
+    actualizarMisListas();
+    mostrarNotificacion('Valoración actualizada', 'Los cambios ya se ven en el catálogo de productos.');
+}
+
+function eliminarValoracion(producto, id) {
+    const found = encontrarValoracion(producto, id);
+    if (!found) return;
+    found.lista.splice(found.idx, 1);
+    if (found.lista.length) found.todas[producto] = found.lista;
+    else delete found.todas[producto];
+    guardarValoracionesProductos(found.todas);
+    actualizarMisListas();
+    mostrarNotificacion('Valoración eliminada', 'Ya no aparece en el producto.');
+}
+
+function iniciarMisPublicaciones() {
+    actualizarMisListas();
+
+    const manejar = e => {
+        const b = e.target.closest('[data-mi-accion]');
+        if (!b) return;
+        const id = b.dataset.id;
+        const accion = b.dataset.miAccion;
+
+        if (accion === 'editar-producto') return abrirEditarProducto(id);
+        if (accion === 'editar-comentario') return abrirEditarComentario(id);
+
+        if (accion === 'eliminar-producto') {
+            const p = leerLista(CLAVE_FERIA).find(x => x.id === id && esMio(x));
+            if (!p) return;
+            confirmarPerfil('Eliminar producto', `¿Seguro que quieres eliminar "${p.producto}" de la feria?`, 'Eliminar', () => {
+                guardarLista(CLAVE_FERIA, leerLista(CLAVE_FERIA).filter(x => !(x.id === id && esMio(x))));
+                actualizarMisListas();
+                mostrarNotificacion('Producto eliminado', 'Ya no aparece en la feria agrícola.');
+            });
+        }
+
+        if (accion === 'eliminar-comentario') {
+            confirmarPerfil('Eliminar comentario', '¿Seguro que quieres eliminar este comentario?', 'Eliminar', () => {
+                guardarLista(CLAVE_COMENTARIOS, leerLista(CLAVE_COMENTARIOS).filter(x => !(x.id === id && esMio(x))));
+                actualizarMisListas();
+                mostrarNotificacion('Comentario eliminado', 'Ya no aparece en la comunidad.');
+            });
+        }
+
+        if (accion === 'editar-valoracion') {
+            return abrirEditarValoracion(b.dataset.producto, id);
+        }
+        if (accion === 'eliminar-valoracion') {
+            const prod = b.dataset.producto;
+            confirmarPerfil('Eliminar valoración', `¿Seguro que quieres eliminar tu valoración de "${prod}"?`, 'Eliminar', () => {
+                eliminarValoracion(prod, id);
+            });
+        }
+    };
+
+    document.getElementById('mis-productos-lista').addEventListener('click', manejar);
+    document.getElementById('mis-comentarios-lista').addEventListener('click', manejar);
+    const listaVal = document.getElementById('mis-valoraciones-lista');
+    if (listaVal) listaVal.addEventListener('click', manejar);
+
+    document.getElementById('ep-foto').addEventListener('change', e => {
+        fotoEdicion = e.target.files[0] || null;
+        if (fotoEdicion) document.getElementById('ep-foto-texto').textContent = fotoEdicion.name;
+    });
+    document.getElementById('form-editar-producto').addEventListener('submit', e => {
+        e.preventDefault();
+        guardarProductoEditado();
+    });
+    document.getElementById('ep-cancelar').addEventListener('click', () => cerrarOverlayPerfil('modal-editar-producto'));
+
+    document.getElementById('form-editar-comentario').addEventListener('submit', e => {
+        e.preventDefault();
+        guardarComentarioEditado();
+    });
+    document.getElementById('ec-cancelar').addEventListener('click', () => cerrarOverlayPerfil('modal-editar-comentario'));
+
+    document.getElementById('form-editar-valoracion').addEventListener('submit', e => {
+        e.preventDefault();
+        guardarValoracionEditada();
+    });
+    document.getElementById('ev-cancelar').addEventListener('click', () => cerrarOverlayPerfil('modal-editar-valoracion'));
+    document.getElementById('ev-selector').addEventListener('click', e => {
+        const b = e.target.closest('.val-estrella');
+        if (!b) return;
+        pintarSelectorEv(b.dataset.valor);
+    });
+
+    document.getElementById('pc-cancelar').addEventListener('click', cerrarConfirmacionPerfil);
+    document.getElementById('pc-aceptar').addEventListener('click', () => {
+        const accion = accionConfirmada;
+        cerrarConfirmacionPerfil();
+        if (typeof accion === 'function') accion();
+    });
+
+    ['modal-editar-producto', 'modal-editar-comentario', 'modal-editar-valoracion', 'perfil-confirmacion'].forEach(id => {
+        document.getElementById(id).addEventListener('click', e => {
+            if (e.target.id !== id) return;
+            if (id === 'perfil-confirmacion') cerrarConfirmacionPerfil();
+            else cerrarOverlayPerfil(id);
+        });
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        cerrarOverlayPerfil('modal-editar-producto');
+        cerrarOverlayPerfil('modal-editar-comentario');
+        cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarConfirmacionPerfil();
+    });
+
+    /* Si se publica o edita desde la feria o la comunidad en otra pestaña, se actualiza aquí */
+    window.addEventListener('storage', e => {
+        if (e.key === CLAVE_FERIA || e.key === CLAVE_COMENTARIOS || e.key === CLAVE_VALORACIONES) actualizarMisListas();
+    });
+}
+/* ===== FIN MIS PRODUCTOS Y COMENTARIOS ===== */
+
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('notificacion-cerrar').addEventListener('click', cerrarNotificacion);
     document.getElementById('notificacion-personalizada').addEventListener('click', e => {
@@ -221,6 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('perfil-nombre-resumen').textContent = nombre;
     document.getElementById('perfil-email-resumen').textContent = email;
     cargarHistorialCompras();
+    iniciarMisPublicaciones();
 
     const menu = document.getElementById('productos-menu');
     const botonMenu = document.getElementById('menu-hamburguesa');
