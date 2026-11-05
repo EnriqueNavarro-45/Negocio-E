@@ -13,6 +13,24 @@
         #modal-editar-valoracion .val-selector { margin:4px 0 2px; }
         #modal-editar-valoracion #ev-estrellas-texto { display:block; color:#8a948c; font-size:0.78rem; margin-bottom:4px; }
         .mi-item-etiqueta .val-estrellas-perfil { color:#e0a82e; letter-spacing:1px; }
+        .perfil-publicar-bloque { margin: 0 0 1.25rem; padding: 1rem 1.1rem; border: 1px solid #e2ebe4; border-radius: 16px; background: #f8fbf7; }
+        .perfil-publicar-cabecera { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom: 0.85rem; }
+        .perfil-publicar-cabecera h3 { margin:0; font-size:1.05rem; color:#1f2937; }
+        .perfil-publicar-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+        .perfil-publicar-form { display:flex; flex-direction:column; gap:8px; padding: 12px; background:#fff; border:1px solid #e2ebe4; border-radius:14px; }
+        .perfil-publicar-form h4 { margin:0; font-size:0.95rem; color:#234c34; }
+        .perfil-publicar-ayuda { margin:0 0 4px; font-size:0.8rem; color:#6b7a70; }
+        .perfil-publicar-form label { display:flex; flex-direction:column; gap:4px; font-size:0.8rem; font-weight:600; color:#456050; }
+        .perfil-publicar-form input, .perfil-publicar-form textarea { font:inherit; font-weight:400; padding:9px 11px; border:1px solid #cfdcd2; border-radius:10px; }
+        .perfil-publicar-form .val-label { font-size:0.78rem; font-weight:600; color:#456050; }
+        .perfil-publicar-form .val-selector { display:flex; gap:2px; }
+        .perfil-publicar-form #nr-estrellas-texto { color:#8a948c; font-size:0.78rem; }
+        .perfil-publicar-nota { margin: 12px 0 0; font-size:0.82rem; color:#6b7a70; }
+        .perfil-publicar-nota a { color:#267449; font-weight:600; }
+        .perfil-publicar-campos { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:10px; }
+        .perfil-publicar-campos .campo-ancho { grid-column: 1 / -1; }
+        .perfil-publicar-form select { font:inherit; font-weight:400; padding:9px 11px; border:1px solid #cfdcd2; border-radius:10px; background:#fff; }
+        .perfil-publicar-form input[type="file"] { font:inherit; font-weight:400; padding:6px 0; }
     </style>
 </head>
 <body class="productos-body">
@@ -82,43 +100,112 @@
                 <div>
                     <span class="section-tag">Feria agrícola</span>
                     <h2>Mis productos publicados</h2>
-                    <p>Los productos de tu huerto que pusiste en la feria. Puedes editarlos o eliminarlos.</p>
+                    <p>Los productos de tu huerto que pusiste en la feria. Puedes publicarlos, editarlos o eliminarlos desde aquí.</p>
                 </div>
                 <span class="config-icon historial-icon">
                     <span class="icono-local" data-icon="leaf"></span>
                 </span>
             </div>
+
+            <div class="perfil-publicar-bloque">
+                <div class="perfil-publicar-cabecera">
+                    <h3>Publicar producto en la feria</h3>
+                    <a href="Feria.html#publicar" class="btn btn-outline">Ir a la feria</a>
+                </div>
+                <form id="form-nuevo-producto" class="perfil-publicar-form" novalidate>
+                    <p class="perfil-publicar-ayuda">Todos los campos son opcionales. Se publica en la feria agrícola.</p>
+                    <div class="perfil-publicar-campos">
+                        <label>Tu nombre<input type="text" id="np-nombre" placeholder="Productor de la comunidad"></label>
+                        <label>Producto<input type="text" id="np-producto" placeholder="Producto de mi huerto"></label>
+                        <label>Categoría
+                            <select id="np-categoria">
+                                <option value="frutas">Frutas</option>
+                                <option value="verduras">Verduras</option>
+                                <option value="hierbas">Hierbas y aromáticas</option>
+                                <option value="otros">Otros del huerto</option>
+                            </select>
+                        </label>
+                        <label>Precio<input type="text" id="np-precio" inputmode="decimal" placeholder="Ej. 25"></label>
+                        <label>Unidad
+                            <select id="np-unidad">
+                                <option value="kg">por kg</option>
+                                <option value="pieza">por pieza</option>
+                                <option value="manojo">por manojo</option>
+                            </select>
+                        </label>
+                        <label>Cantidad disponible<input type="text" id="np-cantidad" inputmode="decimal" placeholder="Ej. 10"></label>
+                        <label>Colonia o zona<input type="text" id="np-zona" placeholder="Aguascalientes"></label>
+                        <label class="campo-ancho">Descripción<textarea id="np-descripcion" rows="2" placeholder="Cosechado en mi huerto personal."></textarea></label>
+                        <label class="campo-ancho">Foto del producto
+                            <input type="file" id="np-foto" accept="image/*">
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Publicar en la feria</button>
+                </form>
+            </div>
+
             <div id="mis-productos-lista" class="mis-lista"></div>
         </section>
 
-        <!-- MIS COMENTARIOS (comunidad) -->
-        <section class="perfil-card historial-card" id="mis-comentarios">
+        <!-- RESEÑAS Y VALORACIONES (comunidad + estrellas marketing + productos) -->
+        <section class="perfil-card historial-card" id="mis-reseñas">
             <div class="perfil-section-title historial-titulo">
                 <div>
-                    <span class="section-tag">Comunidad</span>
-                    <h2>Mis comentarios</h2>
-                    <p>Los comentarios que publicaste en la comunidad. Puedes editarlos o eliminarlos.</p>
-                </div>
-                <span class="config-icon historial-icon">
-                    <span class="icono-local" data-icon="message-square"></span>
-                </span>
-            </div>
-            <div id="mis-comentarios-lista" class="mis-lista"></div>
-        </section>
-
-        <!-- MIS VALORACIONES DE PRODUCTOS -->
-        <section class="perfil-card historial-card" id="mis-valoraciones">
-            <div class="perfil-section-title historial-titulo">
-                <div>
-                    <span class="section-tag">Catálogo</span>
-                    <h2>Mis valoraciones de productos</h2>
-                    <p>Los productos que calificaste y el comentario que dejaste. Puedes editarlos o eliminarlos.</p>
+                    <span class="section-tag">Comunidad y catálogo</span>
+                    <h2>Mis reseñas y valoraciones</h2>
+                    <p>Comentarios de la comunidad, reseñas con estrellas y valoraciones de productos. Puedes publicarlos, editarlos o eliminarlos desde aquí.</p>
                 </div>
                 <span class="config-icon historial-icon">
                     <span class="icono-local" data-icon="star"></span>
                 </span>
             </div>
-            <div id="mis-valoraciones-lista" class="mis-lista"></div>
+
+            <div class="perfil-publicar-bloque">
+                <div class="perfil-publicar-cabecera">
+                    <h3>Publicar desde el perfil</h3>
+                    <a href="marketing.html#comunidad" class="btn btn-outline">Ir a la comunidad</a>
+                </div>
+
+                <div class="perfil-publicar-grid">
+                    <form id="form-nuevo-comentario" class="perfil-publicar-form" novalidate>
+                        <h4>Nuevo comentario</h4>
+                        <p class="perfil-publicar-ayuda">Se publica en la sección de comunidad.</p>
+                        <label>Tu nombre
+                            <input type="text" id="nc-nombre" placeholder="Opcional">
+                        </label>
+                        <label>Comentario
+                            <textarea id="nc-texto" rows="3" placeholder="Escribe tu comentario (opcional)"></textarea>
+                        </label>
+                        <button type="submit" class="btn btn-primary">Publicar comentario</button>
+                    </form>
+
+                    <form id="form-nueva-reseña" class="perfil-publicar-form" novalidate>
+                        <h4>Nueva reseña con estrellas</h4>
+                        <p class="perfil-publicar-ayuda">Se publica junto a las valoraciones de marketing.</p>
+                        <span class="val-label">Tu valoración</span>
+                        <div class="val-selector" id="nr-selector" role="radiogroup" aria-label="Calificación en estrellas">
+                            <button type="button" class="val-estrella activa" data-valor="1" aria-label="1 estrella">★</button>
+                            <button type="button" class="val-estrella activa" data-valor="2" aria-label="2 estrellas">★</button>
+                            <button type="button" class="val-estrella activa" data-valor="3" aria-label="3 estrellas">★</button>
+                            <button type="button" class="val-estrella activa" data-valor="4" aria-label="4 estrellas">★</button>
+                            <button type="button" class="val-estrella activa" data-valor="5" aria-label="5 estrellas">★</button>
+                        </div>
+                        <small id="nr-estrellas-texto">5 de 5 estrellas</small>
+                        <input type="hidden" id="nr-estrellas" value="5">
+                        <label>Tu nombre
+                            <input type="text" id="nr-nombre" placeholder="Opcional">
+                        </label>
+                        <label>Comentario
+                            <textarea id="nr-texto" rows="2" maxlength="140" placeholder="Opcional"></textarea>
+                        </label>
+                        <button type="submit" class="btn btn-primary">Publicar reseña</button>
+                    </form>
+                </div>
+
+                <p class="perfil-publicar-nota">Para valorar un producto del catálogo, <a href="Productos.html">abre el producto</a> y envía tu valoración ahí.</p>
+            </div>
+
+            <div id="mis-reseñas-lista" class="mis-lista"></div>
         </section>
 
         <section class="perfil-card" id="configuracion">
@@ -371,6 +458,7 @@ const escHTML = t => String(t ?? '').replace(/[&<>"']/g, c =>
 
 const ID_SIN_CORREO = 'usuario_sin_correo';
 const CLAVE_VALORACIONES = 'valoracionesProductosSanGerardo';
+const CLAVE_RESEÑAS_MK = 'valoracionesMarketingSanGerardo';
 const correoActual = () => {
     if (sessionStorage.getItem('sesionActiva') !== 'true') return '';
     const u = (sessionStorage.getItem('usuario') || '').trim().toLowerCase();
@@ -515,72 +603,94 @@ function renderMisProductos() {
     }).join('');
 }
 
-function renderMisComentarios() {
-    const lista = leerLista(CLAVE_COMENTARIOS).filter(esMio).reverse();
-    const cont = document.getElementById('mis-comentarios-lista');
-
-    if (!lista.length) {
-        cont.innerHTML = `
-            <div class="historial-vacio">
-                <div class="historial-vacio-icon">${ICONOS['message-square']}</div>
-                <h3>Aún no has comentado</h3>
-                <p>Comparte tu experiencia con la comunidad. Tus comentarios aparecerán aquí.</p>
-                <a href="marketing.html#comunidad" class="btn btn-outline">Ir a la comunidad</a>
-            </div>`;
-        return;
-    }
-
-    cont.innerHTML = lista.map(c => `
-        <article class="mi-item mi-comentario">
-            <div class="mi-avatar">${escHTML((c.nombre || 'V').trim().charAt(0).toUpperCase() || 'V')}</div>
-            <div class="mi-item-info">
-                <h3>${escHTML(c.nombre || 'Visitante')}</h3>
-                <span class="mi-item-etiqueta">${escHTML(c.fecha || '')}${c.editado ? ' · editado' : ''}</span>
-                <p class="mi-item-texto">${escHTML(c.texto)}</p>
-            </div>
-            <div class="mi-item-acciones">
-                <button type="button" class="mi-btn" data-mi-accion="editar-comentario" data-id="${escHTML(c.id)}">Editar</button>
-                <button type="button" class="mi-btn peligro" data-mi-accion="eliminar-comentario" data-id="${escHTML(c.id)}">Eliminar</button>
-            </div>
-        </article>`).join('');
+function listarMisReseñasMk() {
+    return leerLista(CLAVE_RESEÑAS_MK)
+        .map((v, idx) => ({ ...v, _idx: idx }))
+        .filter(v => {
+            const yo = correoActual();
+            if (!yo) return false;
+            return String(v.idUsuario || '').trim().toLowerCase() === yo;
+        })
+        .reverse();
 }
 
-/* ----- Publicaciones y comentarios hechos sin iniciar sesión en este navegador ----- */
-function renderMisValoraciones() {
-    const lista = listarMisValoraciones();
-    const cont = document.getElementById('mis-valoraciones-lista');
+function renderMisReseñas() {
+    const cont = document.getElementById('mis-reseñas-lista');
     if (!cont) return;
+
+    const comentarios = leerLista(CLAVE_COMENTARIOS).filter(esMio).reverse().map(c => ({
+        tipo: 'comentario',
+        id: c.id,
+        titulo: c.nombre || 'Visitante',
+        etiqueta: 'Comunidad' + (c.fecha ? ' · ' + c.fecha : '') + (c.editado ? ' · editado' : ''),
+        texto: c.texto || '',
+        estrellas: 0
+    }));
+
+    const reseñasMk = listarMisReseñasMk().map(v => ({
+        tipo: 'reseña',
+        id: v.id || ('Ridx-' + v._idx),
+        titulo: v.nombre || 'Visitante',
+        etiqueta: 'Reseña con estrellas' + (v.fecha ? ' · ' + v.fecha : '') + (v.editado ? ' · editado' : ''),
+        texto: v.texto || '',
+        estrellas: Number(v.estrellas) || 0
+    }));
+
+    const productos = listarMisValoraciones().map(v => ({
+        tipo: 'producto',
+        id: v.id,
+        producto: v.producto,
+        titulo: v.producto,
+        etiqueta: 'Producto del catálogo' + (v.fecha ? ' · ' + v.fecha : ''),
+        texto: v.comentario || 'Sin comentario',
+        estrellas: Number(v.estrellas) || 0
+    }));
+
+    const lista = [...comentarios, ...reseñasMk, ...productos];
 
     if (!lista.length) {
         cont.innerHTML = `
             <div class="historial-vacio">
-                <div class="historial-vacio-icon">${ICONOS.star || '★'}</div>
-                <h3>Aún no has valorado productos</h3>
-                <p>Califica productos desde el catálogo. Tus valoraciones aparecerán aquí.</p>
-                <a href="Productos.html" class="btn btn-outline">Ir al catálogo</a>
+                <div class="historial-vacio-icon">${ICONOS.star || ICONOS['message-square'] || '★'}</div>
+                <h3>Aún no tienes reseñas ni valoraciones</h3>
+                <p>Comenta en la comunidad, deja una reseña con estrellas o valora productos del catálogo.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+                    <a href="marketing.html#comunidad" class="btn btn-outline">Ir a la comunidad</a>
+                    <a href="Productos.html" class="btn btn-outline">Ir al catálogo</a>
+                </div>
             </div>`;
         return;
     }
 
-    cont.innerHTML = lista.map(v => `
+    cont.innerHTML = lista.map(item => {
+        const stars = item.estrellas
+            ? `<span class="val-estrellas-perfil">${estrellasTexto(item.estrellas)}</span> · `
+            : '';
+        const avatar = item.estrellas
+            ? estrellasTexto(item.estrellas).charAt(0)
+            : escHTML((item.titulo || 'V').trim().charAt(0).toUpperCase() || 'V');
+        const dataExtra = item.tipo === 'producto'
+            ? ` data-producto="${escHTML(item.producto)}"`
+            : '';
+        return `
         <article class="mi-item mi-comentario">
-            <div class="mi-avatar">${estrellasTexto(v.estrellas).charAt(0)}</div>
+            <div class="mi-avatar">${avatar}</div>
             <div class="mi-item-info">
-                <h3>${escHTML(v.producto)}</h3>
-                <span class="mi-item-etiqueta"><span class="val-estrellas-perfil">${estrellasTexto(v.estrellas)}</span> · ${escHTML(v.fecha || '')}</span>
-                <p class="mi-item-texto">${escHTML(v.comentario || 'Sin comentario')}</p>
+                <h3>${escHTML(item.titulo)}</h3>
+                <span class="mi-item-etiqueta">${stars}${escHTML(item.etiqueta)}</span>
+                <p class="mi-item-texto">${escHTML(item.texto || (item.estrellas ? ('Valoró con ' + item.estrellas + ' estrellas') : 'Sin texto'))}</p>
             </div>
             <div class="mi-item-acciones">
-                <button type="button" class="mi-btn" data-mi-accion="editar-valoracion" data-producto="${escHTML(v.producto)}" data-id="${escHTML(v.id)}">Editar</button>
-                <button type="button" class="mi-btn peligro" data-mi-accion="eliminar-valoracion" data-producto="${escHTML(v.producto)}" data-id="${escHTML(v.id)}">Eliminar</button>
+                <button type="button" class="mi-btn" data-mi-accion="${item.tipo === 'producto' ? 'editar-valoracion' : 'editar-' + item.tipo}" data-id="${escHTML(item.id)}"${dataExtra}>Editar</button>
+                <button type="button" class="mi-btn peligro" data-mi-accion="${item.tipo === 'producto' ? 'eliminar-valoracion' : 'eliminar-' + item.tipo}" data-id="${escHTML(item.id)}"${dataExtra}>Eliminar</button>
             </div>
-        </article>`).join('');
+        </article>`;
+    }).join('');
 }
 
 function actualizarMisListas() {
     renderMisProductos();
-    renderMisComentarios();
-    renderMisValoraciones();
+    renderMisReseñas();
 }
 
 /* ----- Foto (se reduce para poder guardarla en el navegador) ----- */
@@ -716,15 +826,72 @@ function pintarSelectorEv(n) {
 function abrirEditarValoracion(producto, id) {
     const found = encontrarValoracion(producto, id);
     if (!found) return;
-    valoracionEnEdicion = { producto, id };
+    valoracionEnEdicion = { tipo: 'producto', producto, id };
     document.getElementById('ev-producto-nombre').textContent = producto;
     pintarSelectorEv(found.item.estrellas);
     document.getElementById('ev-comentario').value = found.item.comentario || '';
     abrirOverlayPerfil('modal-editar-valoracion');
 }
 
+
+function abrirEditarReseña(id) {
+    const lista = leerLista(CLAVE_RESEÑAS_MK);
+    const yo = correoActual();
+    const c = lista.find(x => String(x.id) === String(id) && String(x.idUsuario || '').toLowerCase() === yo)
+        || lista.find((x, i) => String(id) === ('Ridx-' + i) && String(x.idUsuario || '').toLowerCase() === yo);
+    if (!c) return;
+    valoracionEnEdicion = { tipo: 'reseña', id: c.id || id };
+    document.getElementById('ev-producto-nombre').textContent = 'Reseña de la comunidad';
+    pintarSelectorEv(c.estrellas);
+    document.getElementById('ev-comentario').value = c.texto || '';
+    abrirOverlayPerfil('modal-editar-valoracion');
+}
+
+function guardarReseñaEditada() {
+    const lista = leerLista(CLAVE_RESEÑAS_MK);
+    const yo = correoActual();
+    const id = valoracionEnEdicion && valoracionEnEdicion.id;
+    let idx = lista.findIndex(x => String(x.id) === String(id) && String(x.idUsuario || '').toLowerCase() === yo);
+    if (idx < 0) {
+        const m = String(id).match(/^Ridx-(\d+)$/);
+        if (m) idx = Number(m[1]);
+    }
+    if (idx < 0 || !lista[idx]) {
+        cerrarOverlayPerfil('modal-editar-valoracion');
+        return;
+    }
+    lista[idx].estrellas = Number(document.getElementById('ev-estrellas').value) || 5;
+    lista[idx].texto = document.getElementById('ev-comentario').value.trim();
+    lista[idx].editado = true;
+    if (!lista[idx].id) lista[idx].id = 'R-' + Date.now();
+    guardarLista(CLAVE_RESEÑAS_MK, lista);
+    cerrarOverlayPerfil('modal-editar-valoracion');
+    valoracionEnEdicion = null;
+    actualizarMisListas();
+    mostrarNotificacion('Reseña actualizada', 'Los cambios ya se ven en marketing.');
+}
+
+function eliminarReseña(id) {
+    const yo = correoActual();
+    let lista = leerLista(CLAVE_RESEÑAS_MK);
+    const antes = lista.length;
+    lista = lista.filter((x, i) => {
+        const matchId = String(x.id) === String(id) || String(id) === ('Ridx-' + i);
+        const mío = String(x.idUsuario || '').toLowerCase() === yo;
+        return !(matchId && mío);
+    });
+    if (lista.length === antes) return;
+    guardarLista(CLAVE_RESEÑAS_MK, lista);
+    actualizarMisListas();
+    mostrarNotificacion('Reseña eliminada', 'Ya no aparece en la comunidad.');
+}
+
 function guardarValoracionEditada() {
     if (!valoracionEnEdicion) return;
+    if (valoracionEnEdicion.tipo === 'reseña') {
+        guardarReseñaEditada();
+        return;
+    }
     const { producto, id } = valoracionEnEdicion;
     const found = encontrarValoracion(producto, id);
     if (!found) { cerrarOverlayPerfil('modal-editar-valoracion'); return; }
@@ -789,12 +956,115 @@ function iniciarMisPublicaciones() {
                 eliminarValoracion(prod, id);
             });
         }
+        if (accion === 'editar-reseña') {
+            return abrirEditarReseña(id);
+        }
+        if (accion === 'eliminar-reseña') {
+            confirmarPerfil('Eliminar reseña', '¿Seguro que quieres eliminar esta reseña con estrellas?', 'Eliminar', () => {
+                eliminarReseña(id);
+            });
+        }
     };
 
     document.getElementById('mis-productos-lista').addEventListener('click', manejar);
-    document.getElementById('mis-comentarios-lista').addEventListener('click', manejar);
-    const listaVal = document.getElementById('mis-valoraciones-lista');
-    if (listaVal) listaVal.addEventListener('click', manejar);
+    const listaRes = document.getElementById('mis-reseñas-lista');
+    if (listaRes) listaRes.addEventListener('click', manejar);
+
+    /* Publicar comentario / reseña desde el perfil */
+    let nrEstrellas = 5;
+    function pintarNr(n) {
+        nrEstrellas = Math.max(1, Math.min(5, Number(n) || 5));
+        const hidden = document.getElementById('nr-estrellas');
+        if (hidden) hidden.value = String(nrEstrellas);
+        const texto = document.getElementById('nr-estrellas-texto');
+        if (texto) texto.textContent = nrEstrellas + (nrEstrellas === 1 ? ' de 5 estrella' : ' de 5 estrellas');
+        document.querySelectorAll('#nr-selector .val-estrella').forEach(b => {
+            b.classList.toggle('activa', Number(b.dataset.valor) <= nrEstrellas);
+        });
+    }
+    const nrSelector = document.getElementById('nr-selector');
+    if (nrSelector) {
+        nrSelector.addEventListener('click', e => {
+            const b = e.target.closest('.val-estrella');
+            if (!b) return;
+            pintarNr(b.dataset.valor);
+        });
+        pintarNr(5);
+    }
+
+    const formNc = document.getElementById('form-nuevo-comentario');
+    if (formNc) {
+        formNc.addEventListener('submit', e => {
+            e.preventDefault();
+            const yo = correoActual();
+            const lista = leerLista(CLAVE_COMENTARIOS);
+            lista.push({
+                id: 'C-' + Date.now(),
+                usuario: yo,
+                nombre: document.getElementById('nc-nombre').value.trim() || 'Visitante',
+                texto: document.getElementById('nc-texto').value.trim() || 'El usuario publicó un comentario sin texto.',
+                fecha: new Date().toLocaleString('es-MX')
+            });
+            guardarLista(CLAVE_COMENTARIOS, lista);
+            formNc.reset();
+            actualizarMisListas();
+            mostrarNotificacion('Comentario publicado', 'Ya aparece en la comunidad y en tu perfil.');
+        });
+    }
+
+    const formNr = document.getElementById('form-nueva-reseña');
+    if (formNr) {
+        formNr.addEventListener('submit', e => {
+            e.preventDefault();
+            const yo = correoActual();
+            const lista = leerLista(CLAVE_RESEÑAS_MK);
+            lista.push({
+                id: 'R-' + Date.now(),
+                estrellas: Number(document.getElementById('nr-estrellas').value) || nrEstrellas || 5,
+                nombre: document.getElementById('nr-nombre').value.trim() || 'Visitante',
+                texto: document.getElementById('nr-texto').value.trim(),
+                idUsuario: yo,
+                fecha: new Date().toLocaleDateString('es-MX')
+            });
+            guardarLista(CLAVE_RESEÑAS_MK, lista);
+            formNr.reset();
+            pintarNr(5);
+            actualizarMisListas();
+            mostrarNotificacion('Reseña publicada', 'Ya aparece en marketing y en tu perfil.');
+        });
+    }
+
+    const formNp = document.getElementById('form-nuevo-producto');
+    if (formNp) {
+        formNp.addEventListener('submit', async e => {
+            e.preventDefault();
+            const yo = correoActual();
+            const val = id => (document.getElementById(id)?.value || '').trim();
+            const archivo = document.getElementById('np-foto')?.files?.[0] || null;
+            const imagen = await reducirImagen(archivo);
+            const lista = leerLista(CLAVE_FERIA);
+            lista.unshift({
+                id: 'F-' + Date.now(),
+                usuario: yo,
+                productor: val('np-nombre') || 'Productor de la comunidad',
+                producto: val('np-producto') || 'Producto de mi huerto',
+                categoria: document.getElementById('np-categoria')?.value || 'frutas',
+                precio: val('np-precio'),
+                unidad: document.getElementById('np-unidad')?.value || 'kg',
+                cantidad: val('np-cantidad'),
+                zona: val('np-zona') || 'Aguascalientes',
+                descripcion: val('np-descripcion') || 'Cosechado en mi huerto personal.',
+                imagen: imagen || ''
+            });
+            const ok = guardarLista(CLAVE_FERIA, lista);
+            formNp.reset();
+            actualizarMisListas();
+            mostrarNotificacion(
+                ok ? 'Producto publicado' : 'Publicado (sin guardar en el navegador)',
+                'Ya aparece en la feria agrícola y en tu perfil.'
+            );
+        });
+    }
 
     document.getElementById('ep-foto').addEventListener('change', e => {
         fotoEdicion = e.target.files[0] || null;
@@ -848,7 +1118,7 @@ function iniciarMisPublicaciones() {
 
     /* Si se publica o edita desde la feria o la comunidad en otra pestaña, se actualiza aquí */
     window.addEventListener('storage', e => {
-        if (e.key === CLAVE_FERIA || e.key === CLAVE_COMENTARIOS || e.key === CLAVE_VALORACIONES) actualizarMisListas();
+        if (e.key === CLAVE_FERIA || e.key === CLAVE_COMENTARIOS || e.key === CLAVE_VALORACIONES || e.key === CLAVE_RESEÑAS_MK) actualizarMisListas();
     });
 }
 /* ===== FIN MIS PRODUCTOS Y COMENTARIOS ===== */

@@ -6,7 +6,22 @@
 <link rel="stylesheet" href="marketing.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>.promo-benefit{font-weight:600;color:#267449!important;margin-top:-8px!important}.promo-empty{padding:25px;color:#718075}.promo-card>p{min-height:0}</style>
+<style>
+.promo-benefit{font-weight:600;color:#267449!important;margin-top:-8px!important}
+.promo-empty{padding:25px;color:#718075}
+.promo-card>p{min-height:0}
+.mk-acciones{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.mk-acciones button{font:inherit;font-size:.78rem;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid #c5d6c8;background:#fff;color:#2f5d3f;cursor:pointer}
+.mk-acciones button:hover{background:#eef6f0}
+.mk-acciones button.peligro{border-color:#e8b4b4;color:#a33}
+.mk-acciones button.peligro:hover{background:#fdf2f2}
+.mk-edit-box{display:flex;flex-direction:column;gap:8px;margin-top:8px;width:100%}
+.mk-edit-box input,.mk-edit-box textarea{font:inherit;padding:8px 10px;border:1px solid #c5d6c8;border-radius:10px;width:100%;box-sizing:border-box}
+.mk-edit-box .val-selector{display:flex;gap:2px}
+.mk-edit-box .val-estrella{padding:0 2px;font:inherit;font-size:1.5rem;line-height:1;color:#d3dcd3;background:none;border:0;cursor:pointer}
+.mk-edit-box .val-estrella.activa{color:#e0a82e}
+.review.propia .mk-acciones{margin-top:10px}
+</style>
 </head>
 <body>
 <header class="mk-nav"><a class="mk-brand" href="Productos.html"><img src="Imagenes/LogoFrut.jpg" alt="Logo"><span>San Gerardo Mayela<small>Frutas y verduras frescas</small></span></a><nav><a href="#promociones">Promociones</a><a href="#escaparate">Escaparate</a><a href="#campana">Campaña</a><a href="#comunidad">Comunidad</a><a href="Feria.html">Feria agrícola</a><a class="mk-nav-cta" href="Productos.html">Ver productos</a></nav></header>
@@ -109,13 +124,119 @@
  document.getElementById('apply-code').addEventListener('click',()=>aplicar(document.getElementById('code-input').value));
  document.getElementById('code-input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();aplicar(e.currentTarget.value)}});
  const base=[{nombre:'María G.',texto:'Me gustó encontrar varias opciones para preparar las comidas de la semana.',fecha:'Comentario de ejemplo'},{nombre:'Daniel R.',texto:'La página es sencilla de recorrer y las categorías ayudan a encontrar productos.',fecha:'Comentario de ejemplo'},{nombre:'Andrea M.',texto:'Las promociones hacen que sea fácil descubrir productos diferentes.',fecha:'Comentario de ejemplo'}];const key='comentariosMarketingSanGerardo';let comentarios=[];try{comentarios=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(comentarios))comentarios=[]}catch(e){comentarios=[]}
- function render(){const lista=document.getElementById('comments-list');lista.innerHTML='';[...base,...comentarios].slice().reverse().forEach(c=>{const article=document.createElement('article');article.className='comment';const avatar=document.createElement('span');avatar.className='avatar';avatar.textContent=(c.nombre||'Visitante').trim().charAt(0).toUpperCase()||'V';const body=document.createElement('div');const name=document.createElement('strong');name.textContent=c.nombre||'Visitante';const date=document.createElement('small');date.textContent=(c.fecha||'Publicado ahora')+(c.editado?' · editado':'');const p=document.createElement('p');p.textContent=c.texto||'El usuario publicó un comentario sin texto.';body.append(name,date,p);article.append(avatar,body);lista.append(article)});document.getElementById('comment-count').textContent=(base.length+comentarios.length)+' comentarios'}
  function usuarioComentario(){
   if(sessionStorage.getItem('sesionActiva')!=='true') return '';
   const u=(sessionStorage.getItem('usuario')||'').trim().toLowerCase();
   return u || 'usuario_sin_correo';
  }
- document.getElementById('comment-form').addEventListener('submit',e=>{e.preventDefault();comentarios.push({id:'C-'+Date.now(),usuario:usuarioComentario(),nombre:document.getElementById('comment-name').value.trim()||'Visitante',texto:document.getElementById('comment-text').value.trim()||'El usuario publicó un comentario sin texto.',fecha:new Date().toLocaleString('es-MX')});try{localStorage.setItem(key,JSON.stringify(comentarios))}catch(e){}render();e.currentTarget.reset();aviso('Comentario publicado (simulado).')});window.addEventListener('storage',e=>{if(e.key===key){try{const d=JSON.parse(e.newValue||'[]');comentarios=Array.isArray(d)?d:[]}catch(err){comentarios=[]}render()}});render();
+ function esMioComentario(c){
+  const yo=usuarioComentario();
+  if(!yo||!c||!c.id) return false;
+  return String(c.usuario||'').trim().toLowerCase()===yo;
+ }
+ function guardarComentarios(){try{localStorage.setItem(key,JSON.stringify(comentarios))}catch(e){}}
+ function render(){
+  const lista=document.getElementById('comments-list');
+  lista.innerHTML='';
+  const yo=usuarioComentario();
+  [...base,...comentarios].slice().reverse().forEach(c=>{
+   const article=document.createElement('article');
+   article.className='comment';
+   const avatar=document.createElement('span');
+   avatar.className='avatar';
+   avatar.textContent=(c.nombre||'Visitante').trim().charAt(0).toUpperCase()||'V';
+   const body=document.createElement('div');
+   const name=document.createElement('strong');
+   name.textContent=c.nombre||'Visitante';
+   const date=document.createElement('small');
+   date.textContent=(c.fecha||'Publicado ahora')+(c.editado?' · editado':'');
+   const p=document.createElement('p');
+   p.textContent=c.texto||'El usuario publicó un comentario sin texto.';
+   body.append(name,date,p);
+   if(esMioComentario(c)){
+    const acciones=document.createElement('div');
+    acciones.className='mk-acciones';
+    const btnE=document.createElement('button');
+    btnE.type='button';
+    btnE.textContent='Editar';
+    btnE.addEventListener('click',()=>iniciarEdicionComentario(c.id,body,p,name,date));
+    const btnX=document.createElement('button');
+    btnX.type='button';
+    btnX.className='peligro';
+    btnX.textContent='Eliminar';
+    btnX.addEventListener('click',()=>{
+     if(!confirm('¿Eliminar este comentario?')) return;
+     comentarios=comentarios.filter(x=>x.id!==c.id);
+     guardarComentarios();
+     render();
+     aviso('Comentario eliminado.');
+    });
+    acciones.append(btnE,btnX);
+    body.append(acciones);
+   }
+   article.append(avatar,body);
+   lista.append(article);
+  });
+  document.getElementById('comment-count').textContent=(base.length+comentarios.length)+' comentarios';
+ }
+ function iniciarEdicionComentario(id,body,p,name,date){
+  const c=comentarios.find(x=>x.id===id);
+  if(!c) return;
+  body.querySelector('.mk-acciones')?.remove();
+  p.hidden=true;
+  name.hidden=true;
+  const box=document.createElement('div');
+  box.className='mk-edit-box';
+  const inp=document.createElement('input');
+  inp.type='text';
+  inp.value=c.nombre||'';
+  inp.placeholder='Tu nombre';
+  const ta=document.createElement('textarea');
+  ta.rows=3;
+  ta.value=c.texto||'';
+  ta.placeholder='Comentario';
+  const acciones=document.createElement('div');
+  acciones.className='mk-acciones';
+  const guardar=document.createElement('button');
+  guardar.type='button';
+  guardar.textContent='Guardar';
+  guardar.addEventListener('click',()=>{
+   c.nombre=inp.value.trim()||'Visitante';
+   c.texto=ta.value.trim()||'El usuario publicó un comentario sin texto.';
+   c.editado=true;
+   guardarComentarios();
+   render();
+   aviso('Comentario actualizado.');
+  });
+  const cancelar=document.createElement('button');
+  cancelar.type='button';
+  cancelar.textContent='Cancelar';
+  cancelar.addEventListener('click',()=>render());
+  acciones.append(guardar,cancelar);
+  box.append(inp,ta,acciones);
+  body.append(box);
+ }
+ document.getElementById('comment-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  comentarios.push({
+   id:'C-'+Date.now(),
+   usuario:usuarioComentario(),
+   nombre:document.getElementById('comment-name').value.trim()||'Visitante',
+   texto:document.getElementById('comment-text').value.trim()||'El usuario publicó un comentario sin texto.',
+   fecha:new Date().toLocaleString('es-MX')
+  });
+  guardarComentarios();
+  render();
+  e.currentTarget.reset();
+  aviso('Comentario publicado (simulado).');
+ });
+ window.addEventListener('storage',e=>{
+  if(e.key===key){
+   try{const d=JSON.parse(e.newValue||'[]');comentarios=Array.isArray(d)?d:[]}catch(err){comentarios=[]}
+   render();
+  }
+ });
+ render();
 })();
 </script>
 <script>
@@ -151,12 +272,26 @@
         pintarSelector();
     });
 
+    function yoResena() {
+        if (sessionStorage.getItem('sesionActiva') !== 'true') return '';
+        const u = (sessionStorage.getItem('usuario') || '').trim().toLowerCase();
+        return u || 'usuario_sin_correo';
+    }
+    function esMiaResena(v) {
+        const yo = yoResena();
+        if (!yo || !v) return false;
+        return String(v.idUsuario || '').trim().toLowerCase() === yo;
+    }
+    function guardarResenas() {
+        try { localStorage.setItem(CLAVE, JSON.stringify(propias)); } catch (err) {}
+    }
     function renderPropias() {
         grid.querySelectorAll('.review.propia').forEach(n => n.remove());
-        propias.forEach(v => {
+        propias.forEach((v, idx) => {
             const n = Math.max(0, Math.min(5, Number(v.estrellas) || 0));
             const art = document.createElement('article');
             art.className = 'review propia';
+            if (!v.id) v.id = 'R-' + Date.now() + '-' + idx;
 
             const st = document.createElement('div');
             st.className = 'stars';
@@ -169,19 +304,107 @@
             nombre.textContent = v.nombre || 'Visitante';
 
             const small = document.createElement('small');
-            small.textContent = 'Valoración de usuario · ' + (v.fecha || '');
+            small.textContent = 'Valoración de usuario · ' + (v.fecha || '') + (v.editado ? ' · editado' : '');
 
             art.append(st, p, nombre, small);
+
+            if (esMiaResena(v)) {
+                const acciones = document.createElement('div');
+                acciones.className = 'mk-acciones';
+                const btnE = document.createElement('button');
+                btnE.type = 'button';
+                btnE.textContent = 'Editar';
+                btnE.addEventListener('click', () => iniciarEdicionResena(v.id, art));
+                const btnX = document.createElement('button');
+                btnX.type = 'button';
+                btnX.className = 'peligro';
+                btnX.textContent = 'Eliminar';
+                btnX.addEventListener('click', () => {
+                    if (!confirm('¿Eliminar esta valoración?')) return;
+                    propias = propias.filter(x => x.id !== v.id);
+                    guardarResenas();
+                    renderPropias();
+                    aviso('Valoración eliminada.');
+                });
+                acciones.append(btnE, btnX);
+                art.append(acciones);
+            }
+
             grid.append(art);
         });
+    }
+    function iniciarEdicionResena(id, art) {
+        const v = propias.find(x => x.id === id);
+        if (!v) return;
+        const n0 = Math.max(1, Math.min(5, Number(v.estrellas) || 5));
+        art.innerHTML = '';
+        const box = document.createElement('div');
+        box.className = 'mk-edit-box';
+        const label = document.createElement('span');
+        label.textContent = 'Editar valoración';
+        label.style.fontWeight = '600';
+        const sel = document.createElement('div');
+        sel.className = 'val-selector';
+        let valor = n0;
+        function pintar() {
+            sel.querySelectorAll('.val-estrella').forEach(b => {
+                b.classList.toggle('activa', Number(b.dataset.valor) <= valor);
+            });
+        }
+        for (let i = 1; i <= 5; i++) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'val-estrella';
+            b.dataset.valor = String(i);
+            b.textContent = '★';
+            b.setAttribute('aria-label', i + ' estrellas');
+            b.addEventListener('click', () => { valor = i; pintar(); });
+            sel.append(b);
+        }
+        pintar();
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.value = v.nombre || '';
+        inp.placeholder = 'Tu nombre';
+        const ta = document.createElement('textarea');
+        ta.rows = 2;
+        ta.value = v.texto || '';
+        ta.placeholder = 'Comentario (opcional)';
+        const acciones = document.createElement('div');
+        acciones.className = 'mk-acciones';
+        const guardar = document.createElement('button');
+        guardar.type = 'button';
+        guardar.textContent = 'Guardar';
+        guardar.addEventListener('click', () => {
+            v.estrellas = valor;
+            v.nombre = inp.value.trim() || 'Visitante';
+            v.texto = ta.value.trim();
+            v.editado = true;
+            guardarResenas();
+            renderPropias();
+            aviso('Valoración actualizada.');
+        });
+        const cancelar = document.createElement('button');
+        cancelar.type = 'button';
+        cancelar.textContent = 'Cancelar';
+        cancelar.addEventListener('click', () => renderPropias());
+        acciones.append(guardar, cancelar);
+        box.append(label, sel, inp, ta, acciones);
+        art.append(box);
     }
 
     document.getElementById('valoracion-form').addEventListener('submit', e => {
         e.preventDefault();
+        let idUsuario = '';
+        if (sessionStorage.getItem('sesionActiva') === 'true') {
+            idUsuario = (sessionStorage.getItem('usuario') || '').trim().toLowerCase() || 'usuario_sin_correo';
+        }
         propias.push({
+            id: 'R-' + Date.now(),
             estrellas,
             nombre: document.getElementById('valoracion-nombre').value.trim() || 'Visitante',
             texto: '',
+            idUsuario: idUsuario,
             fecha: new Date().toLocaleDateString('es-MX')
         });
         try { localStorage.setItem(CLAVE, JSON.stringify(propias)); } catch (err) {}
