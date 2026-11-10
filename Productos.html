@@ -2437,7 +2437,13 @@
 
 }
         function finalizarCompraCarrito() {
-            abrirTerminos();
+            const carrito = obtenerCarrito();
+            if (!carrito.length) {
+                mostrarNotificacion('Carrito vacío', 'Agrega productos antes de ir a pagar.', 'error');
+                return;
+            }
+            /* Bloque 4: checkout con métodos de pago */
+            window.location.href = 'checkout.html';
         }
 
         function obtenerImagenes(card) {

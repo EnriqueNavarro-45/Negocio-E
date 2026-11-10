@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | San Gerardo Mayela</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --ck-green: #267449;
+            --ck-green-dark: #1e5a38;
+            --ck-soft: #f4faf5;
+            --ck-border: #d7e5db;
+            --ck-text: #1f2d22;
+            --ck-muted: #6b7a70;
+        }
+        body.checkout-body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #f7fbf8 0%, #eef5ef 100%);
+            font-family: 'Poppins', system-ui, sans-serif;
+            color: var(--ck-text);
+        }
+        .ck-wrap {
+            width: min(980px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 60px;
+        }
+        .ck-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+        }
+        .ck-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--ck-text);
+            font-weight: 700;
+        }
+        .ck-brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .ck-back {
+            color: var(--ck-green);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: .9rem;
+        }
+        .ck-card {
+            background: #fff;
+            border: 1px solid var(--ck-border);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(38, 116, 73, .06);
+        }
+        .ck-title {
+            margin: 0 0 6px;
+            font-size: 1.55rem;
+        }
+        .ck-sub {
+            margin: 0 0 20px;
+            color: var(--ck-muted);
+            font-size: .92rem;
+        }
+        .ck-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .ck-step {
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--ck-border);
+            background: #fff;
+            text-align: center;
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--ck-muted);
+        }
+        .ck-step span {
+            display: block;
+            font-size: .72rem;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .ck-step.activo {
+            background: var(--ck-soft);
+            border-color: #b9d6c2;
+            color: var(--ck-green-dark);
+        }
+        .ck-step.hecho {
+            background: #e8f5ec;
+            border-color: #a9d4b5;
+            color: var(--ck-green);
+        }
+        .ck-layout {
+            display: grid;
+            grid-template-columns: 1.35fr .85fr;
+            gap: 18px;
+        }
+        @media (max-width: 820px) {
+            .ck-layout, .ck-steps { grid-template-columns: 1fr; }
+        }
+        .ck-panel { display: none; }
+        .ck-panel.activo { display: block; }
+        .ck-panel h3 {
+            margin: 0 0 14px;
+            font-size: 1.05rem;
+        }
+        .ck-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 640px) {
+            .ck-grid { grid-template-columns: 1fr; }
+        }
+        .ck-grid label, .ck-form label {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: .8rem;
+            font-weight: 600;
+            color: #456050;
+        }
+        .ck-grid .full { grid-column: 1 / -1; }
+        .ck-grid input, .ck-grid select, .ck-grid textarea,
+        .ck-form input, .ck-form select, .ck-form textarea {
+            font: inherit;
+            font-weight: 400;
+            padding: 11px 12px;
+            border: 1px solid #cfdcd2;
+            border-radius: 11px;
+            background: #fff;
+            color: var(--ck-text);
+        }
+        .ck-metodos {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .ck-metodo {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px;
+            border: 1px solid var(--ck-border);
+            border-radius: 14px;
+            cursor: pointer;
+            background: #fff;
+            transition: border-color .15s, background .15s;
+        }
+        .ck-metodo:hover { border-color: #9fc8ab; }
+        .ck-metodo.activo {
+            border-color: var(--ck-green);
+            background: var(--ck-soft);
+        }
+        .ck-metodo input { margin-top: 3px; }
+        .ck-metodo strong { display: block; font-size: .92rem; }
+        .ck-metodo small { color: var(--ck-muted); font-size: .78rem; }
+        .ck-pago-form {
+            display: none;
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px dashed #b9d0bf;
+            background: #fbfefc;
+        }
+        .ck-pago-form.visible { display: block; }
+        .ck-transfer {
+            background: #f3f8f4;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: .88rem;
+            line-height: 1.6;
+        }
+        .ck-transfer code {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid var(--ck-border);
+            font-family: ui-monospace, monospace;
+        }
+        .ck-wallet {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e8f6ec, #f7fcf8);
+            border: 1px solid #c5e2cf;
+            margin-bottom: 12px;
+        }
+        .ck-wallet strong { font-size: 1.2rem; color: var(--ck-green); }
+        .ck-acciones {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .ck-btn {
+            appearance: none;
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .ck-btn.primary {
+            background: var(--ck-green);
+            color: #fff;
+        }
+        .ck-btn.primary:hover { background: var(--ck-green-dark); }
+        .ck-btn.light {
+            background: #fff;
+            color: var(--ck-green-dark);
+            border: 1px solid var(--ck-border);
+        }
+        .ck-resumen h3 { margin: 0 0 12px; font-size: 1rem; }
+        .ck-items { display: grid; gap: 10px; margin-bottom: 14px; max-height: 280px; overflow: auto; }
+        .ck-item {
+            display: grid;
+            grid-template-columns: 52px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eef3ef;
+        }
+        .ck-item img, .ck-item .ph {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #eef5ef;
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+        }
+        .ck-item strong { display: block; font-size: .86rem; }
+        .ck-item small { color: var(--ck-muted); font-size: .75rem; }
+        .ck-totales {
+            display: grid;
+            gap: 6px;
+            font-size: .9rem;
+        }
+        .ck-totales div {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .ck-totales .total {
+            margin-top: 6px;
+            padding-top: 10px;
+            border-top: 1px solid var(--ck-border);
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--ck-green-dark);
+        }
+        .ck-vacio {
+            text-align: center;
+            padding: 40px 16px;
+        }
+        .ck-vacio a { color: var(--ck-green); font-weight: 600; }
+        .ck-ok {
+            text-align: center;
+            padding: 10px 6px 6px;
+        }
+        .ck-ok-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background: #e7f6eb;
+            color: var(--ck-green);
+            display: grid;
+            place-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .ck-ok h2 { margin: 0 0 8px; }
+        .ck-ok p { color: var(--ck-muted); margin: 0 0 8px; }
+        .ck-folio {
+            display: inline-block;
+            margin: 8px 0 16px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--ck-soft);
+            border: 1px solid #c5e0cc;
+            font-weight: 700;
+            color: var(--ck-green-dark);
+        }
+        .ck-ticket {
+            text-align: left;
+            border: 1px solid var(--ck-border);
+            border-radius: 16px;
+            padding: 16px;
+            background: #fff;
+            margin: 16px 0;
+        }
+        .ck-ticket h4 {
+            margin: 0 0 10px;
+            font-size: .95rem;
+        }
+        .ck-ticket-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            font-size: .84rem;
+            margin-bottom: 12px;
+        }
+        @media (max-width: 560px) {
+            .ck-ticket-grid { grid-template-columns: 1fr; }
+        }
+        .ck-ticket-grid span { color: var(--ck-muted); display: block; font-size: .72rem; }
+        .ck-ticket-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: .84rem;
+            padding: 6px 0;
+            border-bottom: 1px dashed #e5eee7;
+        }
+        .ck-ticket-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .ck-note {
+            font-size: .78rem;
+            color: var(--ck-muted);
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body class="checkout-body">
+    <div class="ck-wrap">
+        <div class="ck-top">
+            <a class="ck-brand" href="Productos.html">
+                <img src="Imagenes/LogoFrut.jpg" alt="Logo" onerror="this.style.display='none'">
+                <span>San Gerardo Mayela</span>
+            </a>
+            <a class="ck-back" href="Productos.html">← Volver al catálogo</a>
+        </div>
+
+        <div class="ck-card" id="ck-root">
+            <h1 class="ck-title">Checkout</h1>
+            <p class="ck-sub">Completa tu compra en 3 pasos. Puedes continuar aunque dejes campos vacíos (simulación).</p>
+
+            <div class="ck-steps" id="ck-steps">
+                <div class="ck-step activo" data-step="1"><span>Paso 1</span>Dirección</div>
+                <div class="ck-step" data-step="2"><span>Paso 2</span>Método de pago</div>
+                <div class="ck-step" data-step="3"><span>Paso 3</span>Confirmación</div>
+            </div>
+
+            <div class="ck-layout" id="ck-compra">
+                <div>
+                    <!-- PASO 1 -->
+                    <section class="ck-panel activo" id="panel-1">
+                        <h3>Datos de entrega</h3>
+                        <div class="ck-grid">
+                            <label>Nombre completo
+                                <input type="text" id="dir-nombre" placeholder="Tu nombre">
+                            </label>
+                            <label>Teléfono
+                                <input type="tel" id="dir-telefono" placeholder="Opcional">
+                            </label>
+                            <label class="full">Correo
+                                <input type="email" id="dir-correo" placeholder="Opcional">
+                            </label>
+                            <label class="full">Calle y número
+                                <input type="text" id="dir-calle" placeholder="Calle, número">
+                            </label>
+                            <label>Colonia
+                                <input type="text" id="dir-colonia" placeholder="Colonia">
+                            </label>
+                            <label>Ciudad
+                                <input type="text" id="dir-ciudad" placeholder="Aguascalientes">
+                            </label>
+                            <label>Estado
+                                <input type="text" id="dir-estado" placeholder="Aguascalientes">
+                            </label>
+                            <label>C.P.
+                                <input type="text" id="dir-cp" placeholder="00000">
+                            </label>
+                            <label class="full">Referencias
+                                <textarea id="dir-refs" rows="2" placeholder="Entre calles, color de fachada, etc."></textarea>
+                            </label>
+                        </div>
+                        <div class="ck-acciones">
+                            <a class="ck-btn light" href="Productos.html">Seguir comprando</a>
+                            <button type="button" class="ck-btn primary" id="btn-paso1">Continuar al pago</button>
+                        </div>
+                    </section>
+
+                    <!-- PASO 2 -->
+                    <section class="ck-panel" id="panel-2">
+                        <h3>Elige método de pago</h3>
+                        <div class="ck-metodos">
+                            <label class="ck-metodo activo">
+                                <input type="radio" name="metodo" value="tarjeta" checked>
+                                <div>
+                                    <strong>Tarjeta de crédito o débito</strong>
+                                    <small>Visa, Mastercard u otras (simulado)</small>
+                                </div>
+                            </label>
+                            <label class="ck-metodo">
+                                <input type="radio" name="metodo" value="transferencia">
+                                <div>
+                                    <strong>Transferencia bancaria</strong>
+                                    <small>SPEI / depósito a cuenta (simulado)</small>
+                                </div>
+                            </label>
+                            <label class="ck-metodo">
+                                <input type="radio" name="metodo" value="monedero">
+                                <div>
+                                    <strong>Monedero electrónico</strong>
+                                    <small>Saldo digital simulado</small>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="ck-pago-form visible" id="form-tarjeta">
+                            <div class="ck-grid">
+                                <label class="full">Nombre en la tarjeta
+                                    <input type="text" id="tar-nombre" placeholder="Como aparece en la tarjeta">
+                                </label>
+                                <label class="full">Número de tarjeta
+                                    <input type="text" id="tar-numero" placeholder="0000 0000 0000 0000" inputmode="numeric">
+                                </label>
+                                <label>Vencimiento
+                                    <input type="text" id="tar-venc" placeholder="MM/AA">
+                                </label>
+                                <label>CVV
+                                    <input type="text" id="tar-cvv" placeholder="123" inputmode="numeric">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="ck-pago-form" id="form-transferencia">
+                            <div class="ck-transfer">
+                                <div><strong>Banco:</strong> Banco Demo San Gerardo</div>
+                                <div><strong>Beneficiario:</strong> San Gerardo Mayela S.A. de C.V.</div>
+                                <div><strong>CLABE:</strong> <code>012 180 001234567890</code></div>
+                                <div><strong>Cuenta:</strong> <code>1234567890</code></div>
+                                <div><strong>Concepto:</strong> Tu número de pedido (se asigna al pagar)</div>
+                            </div>
+                            <div class="ck-grid" style="margin-top:12px">
+                                <label class="full">Nombre de quien transfiere
+                                    <input type="text" id="tr-nombre" placeholder="Opcional">
+                                </label>
+                                <label class="full">Referencia o folio de transferencia
+                                    <input type="text" id="tr-folio" placeholder="Opcional">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="ck-pago-form" id="form-monedero">
+                            <div class="ck-wallet">
+                                <div>
+                                    <div style="font-size:.8rem;color:#6b7a70">Saldo disponible (simulado)</div>
+                                    <strong id="wallet-saldo">$1,500.00</strong>
+                                </div>
+                                <div style="font-size:.8rem;color:#6b7a70;text-align:right">Monedero<br>San Gerardo Pay</div>
+                            </div>
+                            <div class="ck-grid">
+                                <label class="full">Correo o ID del monedero
+                                    <input type="text" id="mw-id" placeholder="Opcional">
+                                </label>
+                                <label class="full">PIN o clave (simulado)
+                                    <input type="password" id="mw-pin" placeholder="Opcional">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="ck-acciones">
+                            <button type="button" class="ck-btn light" id="btn-atras2">Atrás</button>
+                            <button type="button" class="ck-btn primary" id="btn-paso2">Revisar pedido</button>
+                        </div>
+                    </section>
+
+                    <!-- PASO 3 -->
+                    <section class="ck-panel" id="panel-3">
+                        <h3>Confirma tu compra</h3>
+                        <div class="ck-ticket" id="preview-confirmacion">
+                            <h4>Resumen antes de pagar</h4>
+                            <div class="ck-ticket-grid">
+                                <div><span>Cliente</span><strong id="prev-cliente">—</strong></div>
+                                <div><span>Método de pago</span><strong id="prev-metodo">—</strong></div>
+                                <div><span>Entrega</span><strong id="prev-dir">—</strong></div>
+                                <div><span>Contacto</span><strong id="prev-contacto">—</strong></div>
+                            </div>
+                            <div id="prev-items"></div>
+                            <div class="ck-ticket-total">
+                                <span>Total a pagar</span>
+                                <span id="prev-total">$0.00</span>
+                            </div>
+                            <p class="ck-note">Al pulsar “Pagar ahora” se registra el pedido de forma simulada. No se cobra dinero real.</p>
+                        </div>
+                        <div class="ck-acciones">
+                            <button type="button" class="ck-btn light" id="btn-atras3">Atrás</button>
+                            <button type="button" class="ck-btn primary" id="btn-pagar">Pagar ahora</button>
+                        </div>
+                    </section>
+                </div>
+
+                <aside class="ck-card" style="padding:16px;box-shadow:none;height:fit-content">
+                    <div class="ck-resumen">
+                        <h3>Tu pedido</h3>
+                        <div class="ck-items" id="ck-items"></div>
+                        <div class="ck-totales">
+                            <div><span>Subtotal</span><span id="ck-subtotal">$0.00</span></div>
+                            <div><span>Envío</span><span>Gratis</span></div>
+                            <div class="total"><span>Total</span><span id="ck-total">$0.00</span></div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- RESULTADO -->
+            <div id="ck-exito" style="display:none">
+                <div class="ck-ok">
+                    <div class="ck-ok-icon">✓</div>
+                    <h2>Pago aprobado</h2>
+                    <p>Tu compra se registró correctamente (simulación).</p>
+                    <div class="ck-folio" id="exito-folio">Pedido P-0000</div>
+                </div>
+                <div class="ck-ticket" id="ticket-final">
+                    <h4>Comprobante / ticket</h4>
+                    <div class="ck-ticket-grid">
+                        <div><span>Negocio</span><strong>San Gerardo Mayela</strong></div>
+                        <div><span>Folio</span><strong id="t-folio">—</strong></div>
+                        <div><span>Fecha</span><strong id="t-fecha">—</strong></div>
+                        <div><span>Método de pago</span><strong id="t-metodo">—</strong></div>
+                        <div><span>Cliente</span><strong id="t-cliente">—</strong></div>
+                        <div><span>Teléfono</span><strong id="t-tel">—</strong></div>
+                        <div style="grid-column:1/-1"><span>Dirección de entrega</span><strong id="t-dir">—</strong></div>
+                    </div>
+                    <div id="t-items"></div>
+                    <div class="ck-ticket-total">
+                        <span>Total pagado</span>
+                        <span id="t-total">$0.00</span>
+                    </div>
+                    <p class="ck-note">Documento visual de demostración. No es una factura fiscal real.</p>
+                </div>
+                <div class="ck-acciones" style="justify-content:center">
+                    <button type="button" class="ck-btn light" id="btn-descargar">Descargar PDF (simulado)</button>
+                    <a class="ck-btn light" href="MisPedidos.html">Ver mis compras</a>
+                    <a class="ck-btn primary" href="Productos.html">Seguir comprando</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+(() => {
+    const $ = id => document.getElementById(id);
+    const money = n => '$' + (Number(n) || 0).toFixed(2);
+    const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    function claveCarrito() {
+        const u = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
+        return 'carrito_' + u;
+    }
+    function leerCarrito() {
+        try {
+            const d = JSON.parse(sessionStorage.getItem(claveCarrito()) || '[]');
+            return Array.isArray(d) ? d : [];
+        } catch (e) { return []; }
+    }
+    function guardarCarrito(c) {
+        try { sessionStorage.setItem(claveCarrito(), JSON.stringify(c)); } catch (e) {}
+    }
+    function totalItem(item) {
+        const cant = Number(item.cantidad) || 0;
+        const precio = Number(item.precioKg) || 0;
+        return item.unidad === 'kg' ? cant * precio : (cant / 1000) * precio;
+    }
+    function etiquetaCantidad(item) {
+        const c = Number(item.cantidad) || 0;
+        return item.unidad === 'kg' ? c + ' kg' : c + ' g';
+    }
+
+    let paso = 1;
+    let carrito = leerCarrito();
+    let pedidoActual = null;
+
+    const labelsMetodo = {
+        tarjeta: 'Tarjeta',
+        transferencia: 'Transferencia bancaria',
+        monedero: 'Monedero electrónico'
+    };
+
+    function subtotal() {
+        return carrito.reduce((s, i) => s + totalItem(i), 0);
+    }
+
+    function renderResumen() {
+        const cont = $('ck-items');
+        if (!carrito.length) {
+            $('ck-compra').style.display = 'none';
+            $('ck-steps').style.display = 'none';
+            document.querySelector('.ck-title').textContent = 'Tu carrito está vacío';
+            document.querySelector('.ck-sub').innerHTML = 'Agrega productos desde el <a href="Productos.html">catálogo</a> para continuar.';
+            return;
+        }
+        cont.innerHTML = carrito.map(item => `
+            <div class="ck-item">
+                ${item.imagen ? `<img src="${esc(item.imagen)}" alt="">` : `<div class="ph">🛒</div>`}
+                <div>
+                    <strong>${esc(item.producto)}</strong>
+                    <small>${esc(etiquetaCantidad(item))} · ${money(item.precioKg)}/kg</small>
+                </div>
+                <strong>${money(totalItem(item))}</strong>
+            </div>
+        `).join('');
+        $('ck-subtotal').textContent = money(subtotal());
+        $('ck-total').textContent = money(subtotal());
+    }
+
+    function setPaso(n) {
+        paso = n;
+        document.querySelectorAll('.ck-panel').forEach(p => p.classList.remove('activo'));
+        const panel = document.getElementById('panel-' + n);
+        if (panel) panel.classList.add('activo');
+        document.querySelectorAll('.ck-step').forEach(s => {
+            const num = Number(s.dataset.step);
+            s.classList.toggle('activo', num === n);
+            s.classList.toggle('hecho', num < n);
+        });
+        if (n === 3) pintarPreview();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function metodoActual() {
+        return document.querySelector('input[name="metodo"]:checked')?.value || 'tarjeta';
+    }
+
+    function pintarMetodos() {
+        const m = metodoActual();
+        document.querySelectorAll('.ck-metodo').forEach(el => {
+            const input = el.querySelector('input');
+            el.classList.toggle('activo', input && input.checked);
+        });
+        $('form-tarjeta').classList.toggle('visible', m === 'tarjeta');
+        $('form-transferencia').classList.toggle('visible', m === 'transferencia');
+        $('form-monedero').classList.toggle('visible', m === 'monedero');
+    }
+
+    function datosDireccion() {
+        return {
+            nombre: $('dir-nombre').value.trim() || 'Cliente',
+            telefono: $('dir-telefono').value.trim() || 'No indicado',
+            correo: $('dir-correo').value.trim() || (sessionStorage.getItem('usuario') || 'sin-correo'),
+            calle: $('dir-calle').value.trim() || 'Sin calle',
+            colonia: $('dir-colonia').value.trim() || 'Sin colonia',
+            ciudad: $('dir-ciudad').value.trim() || 'Aguascalientes',
+            estado: $('dir-estado').value.trim() || 'Aguascalientes',
+            cp: $('dir-cp').value.trim() || '00000',
+            refs: $('dir-refs').value.trim() || ''
+        };
+    }
+
+    function datosPago() {
+        const metodo = metodoActual();
+        if (metodo === 'tarjeta') {
+            return {
+                metodo,
+                detalle: {
+                    nombre: $('tar-nombre').value.trim() || 'Titular no indicado',
+                    numero: $('tar-numero').value.trim() || '****',
+                    venc: $('tar-venc').value.trim() || '--/--',
+                    cvv: $('tar-cvv').value.trim() || '***'
+                }
+            };
+        }
+        if (metodo === 'transferencia') {
+            return {
+                metodo,
+                detalle: {
+                    nombre: $('tr-nombre').value.trim() || 'No indicado',
+                    folio: $('tr-folio').value.trim() || 'Sin referencia'
+                }
+            };
+        }
+        return {
+            metodo,
+            detalle: {
+                id: $('mw-id').value.trim() || 'Monedero demo',
+                pin: $('mw-pin').value.trim() ? '***' : ''
+            }
+        };
+    }
+
+    function pintarPreview() {
+        const dir = datosDireccion();
+        const pago = datosPago();
+        $('prev-cliente').textContent = dir.nombre;
+        $('prev-metodo').textContent = labelsMetodo[pago.metodo] || pago.metodo;
+        $('prev-dir').textContent = `${dir.calle}, ${dir.colonia}, ${dir.ciudad}, ${dir.estado} CP ${dir.cp}`;
+        $('prev-contacto').textContent = `${dir.telefono} · ${dir.correo}`;
+        $('prev-items').innerHTML = carrito.map(item => `
+            <div class="ck-ticket-line">
+                <span>${esc(item.producto)} (${esc(etiquetaCantidad(item))})</span>
+                <strong>${money(totalItem(item))}</strong>
+            </div>
+        `).join('');
+        $('prev-total').textContent = money(subtotal());
+    }
+
+    function prefill() {
+        try {
+            const datos = JSON.parse(sessionStorage.getItem('datosPerfil') || '{}');
+            const email = sessionStorage.getItem('usuario') || '';
+            if (datos.nombre) $('dir-nombre').value = datos.nombre;
+            if (datos.telefono) $('dir-telefono').value = datos.telefono;
+            if (datos.direccion) $('dir-calle').value = datos.direccion;
+            if (datos.ciudad) $('dir-ciudad').value = datos.ciudad;
+            if (email && email !== 'usuario_sin_correo') $('dir-correo').value = email;
+        } catch (e) {}
+    }
+
+    function registrarPedido() {
+        const dir = datosDireccion();
+        const pago = datosPago();
+        const total = subtotal();
+        const ahora = new Date();
+        const fecha = ahora.toLocaleDateString('es-MX');
+        const hora = ahora.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+
+        let pedidos = [];
+        try {
+            pedidos = JSON.parse(localStorage.getItem('pedidosSanGerardo') || '[]');
+            if (!Array.isArray(pedidos)) pedidos = [];
+        } catch (e) { pedidos = []; }
+
+        const numero = 1001 + pedidos.length;
+        const idPedido = 'P-' + numero;
+        const usuario = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
+
+        const productos = carrito.map(item => ({
+            producto: item.producto,
+            cantidad: Number(item.cantidad),
+            unidad: item.unidad,
+            precioKg: Number(item.precioKg),
+            total: Number(totalItem(item).toFixed(2)),
+            imagen: item.imagen || ''
+        }));
+
+        const nuevo = {
+            id: idPedido,
+            cliente: dir.nombre,
+            nombreCliente: dir.nombre,
+            usuario,
+            correo: dir.correo,
+            telefono: dir.telefono,
+            direccion: `${dir.calle}, ${dir.colonia}, ${dir.ciudad}, ${dir.estado} CP ${dir.cp}`,
+            referencias: dir.refs,
+            items: productos,
+            productos,
+            cantidadProductos: carrito.length,
+            subtotal: Number(total.toFixed(2)),
+            descuento: 0,
+            total: Number(total.toFixed(2)),
+            fecha,
+            hora,
+            estado: 'Pagado',
+            metodoPago: labelsMetodo[pago.metodo] || pago.metodo,
+            detallePago: pago.detalle,
+            terminosAceptados: true
+        };
+
+        pedidos.unshift(nuevo);
+        try { localStorage.setItem('pedidosSanGerardo', JSON.stringify(pedidos)); } catch (e) {}
+
+        /* Historial por usuario (compatible con perfil) */
+        const claveHistorial = 'historialCompras_' + usuario;
+        let historial = [];
+        try {
+            historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
+            if (!Array.isArray(historial)) historial = [];
+        } catch (e) { historial = []; }
+
+        carrito.forEach(item => {
+            historial.unshift({
+                id: Date.now() + Math.random(),
+                pedidoId: idPedido,
+                fecha: `${fecha} ${hora}`,
+                producto: item.producto,
+                cantidad: item.cantidad,
+                unidad: item.unidad,
+                cantidadTexto: etiquetaCantidad(item),
+                precioKg: item.precioKg,
+                total: money(totalItem(item)),
+                imagen: item.imagen,
+                estado: 'Compra realizada',
+                metodoPago: nuevo.metodoPago,
+                terminosAceptados: true
+            });
+        });
+        try { sessionStorage.setItem(claveHistorial, JSON.stringify(historial)); } catch (e) {}
+
+        /* Último pedido para ticket / nota */
+        try { sessionStorage.setItem('ultimoPedidoSanGerardo', JSON.stringify(nuevo)); } catch (e) {}
+
+        guardarCarrito([]);
+        carrito = [];
+        return nuevo;
+    }
+
+    function mostrarExito(pedido) {
+        pedidoActual = pedido;
+        $('ck-compra').style.display = 'none';
+        $('ck-steps').style.display = 'none';
+        document.querySelector('.ck-title').textContent = 'Compra completada';
+        document.querySelector('.ck-sub').textContent = 'Guarda tu comprobante. También queda en Mis compras.';
+        $('ck-exito').style.display = 'block';
+        $('exito-folio').textContent = 'Pedido ' + pedido.id;
+        $('t-folio').textContent = pedido.id;
+        $('t-fecha').textContent = `${pedido.fecha} ${pedido.hora}`;
+        $('t-metodo').textContent = pedido.metodoPago;
+        $('t-cliente').textContent = pedido.cliente;
+        $('t-tel').textContent = pedido.telefono;
+        $('t-dir').textContent = pedido.direccion;
+        $('t-items').innerHTML = (pedido.items || []).map(item => `
+            <div class="ck-ticket-line">
+                <span>${esc(item.producto)} (${esc(item.unidad === 'kg' ? item.cantidad + ' kg' : item.cantidad + ' g')})</span>
+                <strong>${money(item.total)}</strong>
+            </div>
+        `).join('');
+        $('t-total').textContent = money(pedido.total);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* Eventos */
+    document.querySelectorAll('input[name="metodo"]').forEach(r => {
+        r.addEventListener('change', pintarMetodos);
+    });
+    document.querySelectorAll('.ck-metodo').forEach(lab => {
+        lab.addEventListener('click', () => setTimeout(pintarMetodos, 0));
+    });
+
+    $('btn-paso1').addEventListener('click', () => setPaso(2));
+    $('btn-atras2').addEventListener('click', () => setPaso(1));
+    $('btn-paso2').addEventListener('click', () => setPaso(3));
+    $('btn-atras3').addEventListener('click', () => setPaso(2));
+    $('btn-pagar').addEventListener('click', () => {
+        if (!carrito.length) {
+            alert('El carrito está vacío.');
+            return;
+        }
+        const pedido = registrarPedido();
+        mostrarExito(pedido);
+    });
+    $('btn-descargar').addEventListener('click', () => {
+        alert('Descarga de PDF simulada. En un sistema real se generaría el archivo del ticket ' + (pedidoActual?.id || '') + '.');
+    });
+
+    prefill();
+    renderResumen();
+    pintarMetodos();
+})();
+</script>
+</body>
+</html>
