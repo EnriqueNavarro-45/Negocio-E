@@ -31,6 +31,35 @@
         .perfil-publicar-campos .campo-ancho { grid-column: 1 / -1; }
         .perfil-publicar-form select { font:inherit; font-weight:400; padding:9px 11px; border:1px solid #cfdcd2; border-radius:10px; background:#fff; }
         .perfil-publicar-form input[type="file"] { font:inherit; font-weight:400; padding:6px 0; }
+        .historial-acciones { margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap; }
+        .historial-folio {
+            display:inline-block; margin-left:6px; padding:2px 8px; border-radius:999px;
+            background:#eef6f0; color:#267449; font-size:.72rem; font-weight:700;
+        }
+        .historial-producto-placeholder {
+            width:100%; height:100%; min-height:64px; display:grid; place-items:center;
+            background:#eef5ef; border-radius:12px; font-size:1.4rem;
+        }
+        #modal-recibo .perfil-modal { max-width: 520px; }
+        .recibo-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:10px 14px;
+            margin: 8px 0 14px; font-size:.88rem;
+        }
+        .recibo-grid span { display:block; color:#6b7a70; font-size:.72rem; margin-bottom:2px; }
+        .recibo-grid .recibo-full { grid-column: 1 / -1; }
+        .recibo-productos h4 { margin:0 0 8px; font-size:.92rem; }
+        .recibo-linea {
+            display:flex; justify-content:space-between; gap:10px;
+            padding:7px 0; border-bottom:1px dashed #e5eee7; font-size:.86rem;
+        }
+        .recibo-total {
+            display:flex; justify-content:space-between; margin-top:12px;
+            padding-top:10px; border-top:1px solid #dfe9e2; font-size:1.05rem;
+        }
+        .recibo-nota { margin:12px 0 0; font-size:.78rem; color:#6b7a70; }
+        @media (max-width: 560px) {
+            .recibo-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body class="productos-body">
@@ -82,7 +111,7 @@
                 <div>
                     <span class="section-tag">Mis compras</span>
                     <h2>Historial de compras</h2>
-                    <p>Consulta las compras realizadas desde esta cuenta.</p>
+                    <p>Consulta tus compras y abre el recibo de cada una. Para pagar: carrito → <strong>Ir a pagar</strong> → elige método de pago.</p>
                 </div>
                 <span class="config-icon historial-icon">
                     <span class="icono-local" data-icon="shopping-cart"></span>
@@ -348,6 +377,18 @@
     </div>
 </div>
 
+<!-- RECIBO / COMPROBANTE -->
+<div class="perfil-overlay" id="modal-recibo" aria-hidden="true">
+    <div class="perfil-modal" role="dialog" aria-modal="true" aria-labelledby="recibo-titulo">
+        <h3 id="recibo-titulo">Recibo</h3>
+        <div id="recibo-cuerpo"></div>
+        <div class="perfil-modal-acciones">
+            <button type="button" class="btn btn-outline" id="recibo-cerrar">Cerrar</button>
+            <button type="button" class="btn btn-primary" id="recibo-descargar">Descargar (simulado)</button>
+        </div>
+    </div>
+</div>
+
 <!-- CONFIRMAR ELIMINACIÓN -->
 <div class="perfil-overlay" id="perfil-confirmacion" aria-hidden="true">
     <div class="perfil-modal perfil-modal-chico" role="dialog" aria-modal="true" aria-labelledby="pc-titulo">
@@ -403,48 +444,143 @@ function cerrarNotificacion() {
     if (overlay) overlay.classList.remove('activo');
 }
 
+function leerPedidosGuardados() {
+    try {
+        const d = JSON.parse(localStorage.getItem('pedidosSanGerardo') || '[]');
+        return Array.isArray(d) ? d : [];
+    } catch (e) { return []; }
+}
+
+function encontrarPedido(compra) {
+    const pedidos = leerPedidosGuardados();
+    if (compra.pedidoId) {
+        const p = pedidos.find(x => String(x.id) === String(compra.pedidoId));
+        if (p) return p;
+    }
+    /* respaldo: buscar por producto + fecha aproximada */
+    return pedidos.find(p =>
+        Array.isArray(p.items) && p.items.some(i => i.producto === compra.producto)
+    ) || null;
+}
+
+function abrirReciboCompra(compra) {
+    const pedido = encontrarPedido(compra);
+    const titulo = document.getElementById('recibo-titulo');
+    const cuerpo = document.getElementById('recibo-cuerpo');
+    if (!titulo || !cuerpo) return;
+
+    const folio = compra.pedidoId || (pedido && pedido.id) || ('Compra');
+    titulo.textContent = 'Recibo · ' + folio;
+
+    const metodo = compra.metodoPago || (pedido && pedido.metodoPago) || 'No registrado';
+    const cliente = (pedido && (pedido.cliente || pedido.nombreCliente)) || 'Cliente';
+    const telefono = (pedido && pedido.telefono) || '—';
+    const correo = (pedido && pedido.correo) || sessionStorage.getItem('usuario') || '—';
+    const direccion = (pedido && pedido.direccion) || '—';
+    const fecha = (pedido && (pedido.fecha + ' ' + (pedido.hora || ''))) || compra.fecha || '—';
+
+    let lineas = '';
+    if (pedido && Array.isArray(pedido.items) && pedido.items.length) {
+        lineas = pedido.items.map(item => {
+            const cant = item.unidad === 'kg' ? (item.cantidad + ' kg') : (item.cantidad + ' g');
+            const total = typeof item.total === 'number' ? ('$' + item.total.toFixed(2)) : (item.total || '—');
+            return `<div class="recibo-linea"><span>${escHTML(item.producto)} <small>(${escHTML(cant)})</small></span><strong>${escHTML(String(total))}</strong></div>`;
+        }).join('');
+    } else {
+        lineas = `<div class="recibo-linea"><span>${escHTML(compra.producto)} <small>(${escHTML(compra.cantidadTexto || '')})</small></span><strong>${escHTML(String(compra.total || '—'))}</strong></div>`;
+    }
+
+    const totalPedido = pedido
+        ? ('$' + Number(pedido.total || 0).toFixed(2) + ' MXN')
+        : (String(compra.total || '—') + (String(compra.total || '').includes('MXN') ? '' : ' MXN'));
+
+    cuerpo.innerHTML = `
+        <div class="recibo-grid">
+            <div><span>Negocio</span><strong>San Gerardo Mayela</strong></div>
+            <div><span>Folio</span><strong>${escHTML(folio)}</strong></div>
+            <div><span>Fecha</span><strong>${escHTML(fecha)}</strong></div>
+            <div><span>Estado</span><strong>${escHTML(compra.estado || (pedido && pedido.estado) || 'Compra realizada')}</strong></div>
+            <div><span>Cliente</span><strong>${escHTML(cliente)}</strong></div>
+            <div><span>Teléfono</span><strong>${escHTML(telefono)}</strong></div>
+            <div><span>Correo</span><strong>${escHTML(correo)}</strong></div>
+            <div><span>Método de pago</span><strong>${escHTML(metodo)}</strong></div>
+            <div class="recibo-full"><span>Dirección de entrega</span><strong>${escHTML(direccion)}</strong></div>
+        </div>
+        <div class="recibo-productos">
+            <h4>Productos</h4>
+            ${lineas}
+        </div>
+        <div class="recibo-total">
+            <span>Total</span>
+            <strong>${escHTML(totalPedido)}</strong>
+        </div>
+        <p class="recibo-nota">Comprobante visual de demostración. No es una factura fiscal real.</p>
+    `;
+
+    abrirOverlayPerfil('modal-recibo');
+}
+
 function cargarHistorialCompras() {
     const lista = document.getElementById('historial-lista');
     if (!lista) return;
 
     const usuarioActual = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
     const claveHistorial = `historialCompras_${usuarioActual}`;
-    const historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
+    let historial = [];
+    try {
+        historial = JSON.parse(sessionStorage.getItem(claveHistorial) || '[]');
+        if (!Array.isArray(historial)) historial = [];
+    } catch (e) { historial = []; }
 
     if (!historial.length) {
         lista.innerHTML = `
             <div class="historial-vacio">
                 <div class="historial-vacio-icon">${ICONOS['shopping-cart']}</div>
                 <h3>Aún no tienes compras</h3>
-                <p>Cuando realices una compra, aparecerá aquí con su fecha, cantidad y total.</p>
-                <a href="Productos.html" class="btn btn-outline">Ver productos</a>
+                <p>Agrega productos al carrito, pulsa <strong>Ir a pagar</strong> y elige el método de pago. Luego verás aquí el recibo.</p>
+                <a href="Productos.html" class="btn btn-outline">Ir al catálogo</a>
             </div>
         `;
         return;
     }
 
-    lista.innerHTML = historial.map((compra, indice) => `
+    lista.innerHTML = historial.map((compra, indice) => {
+        const img = compra.imagen
+            ? `<img src="${escHTML(compra.imagen)}" alt="${escHTML(compra.producto || '')}">`
+            : `<div class="historial-producto-placeholder">🛒</div>`;
+        const metodo = compra.metodoPago ? `<span><strong>Pago:</strong> ${escHTML(compra.metodoPago)}</span>` : '';
+        const folio = compra.pedidoId ? `<span class="historial-folio">${escHTML(compra.pedidoId)}</span>` : '';
+        return `
         <article class="historial-item">
-            <div class="historial-producto-imagen">
-                <img src="${compra.imagen}" alt="${compra.producto}">
-            </div>
+            <div class="historial-producto-imagen">${img}</div>
             <div class="historial-producto-info">
                 <div class="historial-producto-cabecera">
                     <div>
-                        <span class="historial-numero">Compra #${historial.length - indice}</span>
-                        <h3>${compra.producto}</h3>
+                        <span class="historial-numero">Compra #${historial.length - indice} ${folio}</span>
+                        <h3>${escHTML(compra.producto || 'Producto')}</h3>
                     </div>
-                    <span class="historial-estado">${compra.estado || 'Compra realizada'}</span>
+                    <span class="historial-estado">${escHTML(compra.estado || 'Compra realizada')}</span>
                 </div>
-                <p class="historial-fecha">${compra.fecha}</p>
+                <p class="historial-fecha">${escHTML(compra.fecha || '')}</p>
                 <div class="historial-detalles">
-                    <span><strong>Cantidad:</strong> ${compra.cantidadTexto}</span>
-                    <span><strong>Precio:</strong> $${Number(compra.precioKg).toFixed(2)} MXN/kg</span>
-                    <span><strong>Total:</strong> ${compra.total} MXN</span>
+                    <span><strong>Cantidad:</strong> ${escHTML(compra.cantidadTexto || String(compra.cantidad || ''))}</span>
+                    <span><strong>Precio:</strong> $${Number(compra.precioKg || 0).toFixed(2)} MXN/kg</span>
+                    <span><strong>Total:</strong> ${escHTML(String(compra.total || '—'))} MXN</span>
+                    ${metodo}
+                </div>
+                <div class="historial-acciones">
+                    <button type="button" class="mi-btn" data-historial-recibo="${indice}">Ver recibo</button>
                 </div>
             </div>
-        </article>
-    `).join('');
+        </article>`;
+    }).join('');
+
+    lista.querySelectorAll('[data-historial-recibo]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const i = Number(btn.getAttribute('data-historial-recibo'));
+            if (historial[i]) abrirReciboCompra(historial[i]);
+        });
+    });
 }
 
 /* ===== MIS PRODUCTOS Y COMENTARIOS ===== */
@@ -858,6 +994,7 @@ function guardarReseñaEditada() {
     }
     if (idx < 0 || !lista[idx]) {
         cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarOverlayPerfil('modal-recibo');
         return;
     }
     lista[idx].estrellas = Number(document.getElementById('ev-estrellas').value) || 5;
@@ -866,6 +1003,7 @@ function guardarReseñaEditada() {
     if (!lista[idx].id) lista[idx].id = 'R-' + Date.now();
     guardarLista(CLAVE_RESEÑAS_MK, lista);
     cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarOverlayPerfil('modal-recibo');
     valoracionEnEdicion = null;
     actualizarMisListas();
     mostrarNotificacion('Reseña actualizada', 'Los cambios ya se ven en marketing.');
@@ -894,13 +1032,15 @@ function guardarValoracionEditada() {
     }
     const { producto, id } = valoracionEnEdicion;
     const found = encontrarValoracion(producto, id);
-    if (!found) { cerrarOverlayPerfil('modal-editar-valoracion'); return; }
+    if (!found) { cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarOverlayPerfil('modal-recibo'); return; }
     found.item.estrellas = Number(document.getElementById('ev-estrellas').value) || 5;
     found.item.comentario = document.getElementById('ev-comentario').value.trim();
     found.item.editado = true;
     found.todas[producto] = found.lista;
     guardarValoracionesProductos(found.todas);
     cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarOverlayPerfil('modal-recibo');
     valoracionEnEdicion = null;
     actualizarMisListas();
     mostrarNotificacion('Valoración actualizada', 'Los cambios ya se ven en el catálogo de productos.');
@@ -1100,7 +1240,7 @@ function iniciarMisPublicaciones() {
         if (typeof accion === 'function') accion();
     });
 
-    ['modal-editar-producto', 'modal-editar-comentario', 'modal-editar-valoracion', 'perfil-confirmacion'].forEach(id => {
+    ['modal-editar-producto', 'modal-editar-comentario', 'modal-editar-valoracion', 'modal-recibo', 'perfil-confirmacion'].forEach(id => {
         document.getElementById(id).addEventListener('click', e => {
             if (e.target.id !== id) return;
             if (id === 'perfil-confirmacion') cerrarConfirmacionPerfil();
@@ -1113,6 +1253,7 @@ function iniciarMisPublicaciones() {
         cerrarOverlayPerfil('modal-editar-producto');
         cerrarOverlayPerfil('modal-editar-comentario');
         cerrarOverlayPerfil('modal-editar-valoracion');
+        cerrarOverlayPerfil('modal-recibo');
         cerrarConfirmacionPerfil();
     });
 
@@ -1125,6 +1266,13 @@ function iniciarMisPublicaciones() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('notificacion-cerrar').addEventListener('click', cerrarNotificacion);
+    const reciboCerrar = document.getElementById('recibo-cerrar');
+    if (reciboCerrar) reciboCerrar.addEventListener('click', () => cerrarOverlayPerfil('modal-recibo'));
+    const reciboDesc = document.getElementById('recibo-descargar');
+    if (reciboDesc) reciboDesc.addEventListener('click', () => {
+        mostrarNotificacion('Descarga simulada', 'En un sistema real se descargaría el PDF del recibo.');
+    });
+
     document.getElementById('notificacion-personalizada').addEventListener('click', e => {
         if (e.target.id === 'notificacion-personalizada') cerrarNotificacion();
     });
