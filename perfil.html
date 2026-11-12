@@ -31,6 +31,38 @@
         .perfil-publicar-campos .campo-ancho { grid-column: 1 / -1; }
         .perfil-publicar-form select { font:inherit; font-weight:400; padding:9px 11px; border:1px solid #cfdcd2; border-radius:10px; background:#fff; }
         .perfil-publicar-form input[type="file"] { font:inherit; font-weight:400; padding:6px 0; }
+        .perfil-file-box { position: relative; }
+        .perfil-file-input {
+            position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%;
+            cursor: pointer; z-index: 2; margin: 0; padding: 0;
+        }
+        .perfil-file-ui {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 14px; border: 1.5px dashed #b7d0bd; border-radius: 12px;
+            background: #f7fbf8; transition: border-color .15s, background .15s;
+        }
+        .perfil-file-box:hover .perfil-file-ui {
+            border-color: #6fa17a; background: #eef7f0;
+        }
+        .perfil-file-btn {
+            flex-shrink: 0; padding: 7px 14px; border-radius: 999px;
+            background: #fff; border: 1px solid #c5d6c8; color: #2f5d3f;
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .perfil-file-name {
+            color: #6b7a70; font-size: 0.8rem; font-weight: 400;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .btn-publicar-feria {
+            width: 100%; margin-top: 6px; padding: 14px 20px !important;
+            font-size: 1rem !important; font-weight: 700 !important;
+            border-radius: 999px !important; letter-spacing: 0.02em;
+            box-shadow: 0 8px 18px rgba(38, 116, 73, 0.22);
+        }
+        .btn-publicar-feria:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(38, 116, 73, 0.28);
+        }
         .historial-acciones { margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap; }
         .historial-folio {
             display:inline-block; margin-left:6px; padding:2px 8px; border-radius:999px;
@@ -166,10 +198,16 @@
                         <label>Colonia o zona<input type="text" id="np-zona" placeholder="Aguascalientes"></label>
                         <label class="campo-ancho">Descripción<textarea id="np-descripcion" rows="2" placeholder="Cosechado en mi huerto personal."></textarea></label>
                         <label class="campo-ancho">Foto del producto
-                            <input type="file" id="np-foto" accept="image/*">
+                            <div class="perfil-file-box">
+                                <input type="file" id="np-foto" accept="image/*" class="perfil-file-input">
+                                <div class="perfil-file-ui">
+                                    <span class="perfil-file-btn">Elegir foto</span>
+                                    <span class="perfil-file-name" id="np-foto-nombre">Ningún archivo seleccionado</span>
+                                </div>
+                            </div>
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Publicar en la feria</button>
+                    <button type="submit" class="btn btn-primary btn-publicar-feria">Publicar en la feria</button>
                 </form>
             </div>
 
@@ -1174,6 +1212,15 @@ function iniciarMisPublicaciones() {
         });
     }
 
+    const npFoto = document.getElementById('np-foto');
+    const npFotoNombre = document.getElementById('np-foto-nombre');
+    if (npFoto && npFotoNombre) {
+        npFoto.addEventListener('change', () => {
+            const f = npFoto.files && npFoto.files[0];
+            npFotoNombre.textContent = f ? f.name : 'Ningún archivo seleccionado';
+        });
+    }
+
     const formNp = document.getElementById('form-nuevo-producto');
     if (formNp) {
         formNp.addEventListener('submit', async e => {
@@ -1198,6 +1245,7 @@ function iniciarMisPublicaciones() {
             });
             const ok = guardarLista(CLAVE_FERIA, lista);
             formNp.reset();
+            if (npFotoNombre) npFotoNombre.textContent = 'Ningún archivo seleccionado';
             actualizarMisListas();
             mostrarNotificacion(
                 ok ? 'Producto publicado' : 'Publicado (sin guardar en el navegador)',

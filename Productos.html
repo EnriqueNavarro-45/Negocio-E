@@ -3559,9 +3559,12 @@ window.addEventListener(
                 categoria: categoriaModal.textContent.trim() || 'PRODUCTO'
             };
 
-            // La compra directa también debe aceptar los términos antes de registrarse.
+            /* Bloque 4: compra directa también va a checkout (métodos de pago) */
+            try {
+                sessionStorage.setItem('checkoutPendiente', JSON.stringify([compraDirecta]));
+            } catch (e) {}
             cerrarModal();
-            abrirTerminos(compraDirecta);
+            window.location.href = 'checkout.html';
         });
     });
 </script>

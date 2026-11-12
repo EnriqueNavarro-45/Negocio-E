@@ -348,6 +348,48 @@
             color: var(--ck-muted);
             margin-top: 8px;
         }
+        .notificacion-overlay {
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(15, 30, 20, .45);
+            opacity: 0; pointer-events: none;
+            transition: opacity .2s ease;
+            padding: 20px;
+        }
+        .notificacion-overlay.activo {
+            opacity: 1; pointer-events: auto;
+        }
+        .notificacion-card {
+            width: min(380px, 100%);
+            background: #fff;
+            border-radius: 18px;
+            padding: 26px 24px 22px;
+            text-align: center;
+            box-shadow: 0 18px 40px rgba(0,0,0,.18);
+            transform: translateY(8px);
+            transition: transform .2s ease;
+        }
+        .notificacion-overlay.activo .notificacion-card { transform: translateY(0); }
+        .notificacion-icono {
+            width: 54px; height: 54px; margin: 0 auto 12px;
+            border-radius: 50%; display: grid; place-items: center;
+            font-size: 1.4rem; font-weight: 700; color: #fff;
+            background: #267449;
+        }
+        .notificacion-icono.error { background: #c0453a; }
+        .notificacion-icono.exito { background: #267449; }
+        .notificacion-card h3 {
+            margin: 0 0 8px; font-size: 1.15rem; color: #1f2d22;
+        }
+        .notificacion-card p {
+            margin: 0 0 18px; color: #5a6b60; font-size: .9rem; line-height: 1.5;
+        }
+        .notificacion-card button, .notificacion-cerrar {
+            appearance: none; border: 0; border-radius: 999px;
+            padding: 11px 22px; font: inherit; font-weight: 600;
+            background: #267449; color: #fff; cursor: pointer;
+        }
+        .notificacion-card button:hover { background: #1e5a38; }
     </style>
 </head>
 <body class="checkout-body">
@@ -569,11 +611,53 @@
         </div>
     </div>
 
+
+<div id="notificacion-personalizada" class="notificacion-overlay" role="alertdialog" aria-modal="true">
+    <div class="notificacion-card">
+        <div class="notificacion-icono" id="notificacion-icono">✓</div>
+        <h3 id="notificacion-titulo">Listo</h3>
+        <p id="notificacion-mensaje"></p>
+        <button type="button" id="notificacion-cerrar" class="notificacion-cerrar">Aceptar</button>
+    </div>
+</div>
+
 <script>
 (() => {
     const $ = id => document.getElementById(id);
     const money = n => '$' + (Number(n) || 0).toFixed(2);
     const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    function mostrarNotificacion(titulo, mensaje, tipo = 'exito') {
+        const overlay = $('notificacion-personalizada');
+        const tituloEl = $('notificacion-titulo');
+        const mensajeEl = $('notificacion-mensaje');
+        const icono = $('notificacion-icono');
+        if (!overlay) return;
+        if (tituloEl) tituloEl.textContent = titulo;
+        if (mensajeEl) mensajeEl.innerHTML = mensaje;
+        if (icono) {
+            if (tipo === 'error') {
+                icono.textContent = '!';
+                icono.className = 'notificacion-icono error';
+            } else {
+                icono.textContent = '✓';
+                icono.className = 'notificacion-icono exito';
+            }
+        }
+        overlay.classList.add('activo');
+    }
+    function cerrarNotificacion() {
+        const overlay = $('notificacion-personalizada');
+        if (overlay) overlay.classList.remove('activo');
+    }
+    const btnCerrarNotif = $('notificacion-cerrar');
+    if (btnCerrarNotif) btnCerrarNotif.addEventListener('click', cerrarNotificacion);
+    const overlayNotif = $('notificacion-personalizada');
+    if (overlayNotif) {
+        overlayNotif.addEventListener('click', e => {
+            if (e.target === overlayNotif) cerrarNotificacion();
+        });
+    }
 
     function claveCarrito() {
         const u = sessionStorage.getItem('usuario') || 'usuario_sin_correo';
@@ -600,6 +684,14 @@
 
     let paso = 1;
     let carrito = leerCarrito();
+    let usandoPendiente = false;
+    try {
+        const pend = JSON.parse(sessionStorage.getItem('checkoutPendiente') || 'null');
+        if (Array.isArray(pend) && pend.length) {
+            carrito = pend;
+            usandoPendiente = true;
+        }
+    } catch (e) {}
     let pedidoActual = null;
 
     const labelsMetodo = {
@@ -820,7 +912,11 @@
         /* Último pedido para ticket / nota */
         try { sessionStorage.setItem('ultimoPedidoSanGerardo', JSON.stringify(nuevo)); } catch (e) {}
 
-        guardarCarrito([]);
+        if (usandoPendiente) {
+            try { sessionStorage.removeItem('checkoutPendiente'); } catch (e) {}
+        } else {
+            guardarCarrito([]);
+        }
         carrito = [];
         return nuevo;
     }
@@ -863,14 +959,14 @@
     $('btn-atras3').addEventListener('click', () => setPaso(2));
     $('btn-pagar').addEventListener('click', () => {
         if (!carrito.length) {
-            alert('El carrito está vacío.');
+            mostrarNotificacion('Carrito vacío', 'Agrega productos desde el catálogo antes de pagar.', 'error');
             return;
         }
         const pedido = registrarPedido();
         mostrarExito(pedido);
     });
     $('btn-descargar').addEventListener('click', () => {
-        alert('Descarga de PDF simulada. En un sistema real se generaría el archivo del ticket ' + (pedidoActual?.id || '') + '.');
+        mostrarNotificacion('Descarga simulada', 'En un sistema real se generaría el archivo PDF del ticket <strong>' + (pedidoActual?.id || '') + '</strong>.');
     });
 
     prefill();
